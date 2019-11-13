@@ -80,3 +80,7 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
+
+# Google API Keys
+google_apis.xml
+app/src/main/res/values/google_apis.xml
