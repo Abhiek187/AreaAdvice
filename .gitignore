@@ -83,4 +83,3 @@ lint/tmp/
 
 # Google API Keys
 google_apis.xml
-app/src/main/res/values/google_apis.xml
