@@ -1,23 +1,23 @@
 package com.example.areaadvice
 
-import android.Manifest
-import android.content.pm.PackageManager
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import org.json.JSONObject
 import java.net.URL
+import java.net.URLEncoder
 import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
     // UI elements
     private lateinit var textViewPlacesInfo: TextView
-
-    // Permission codes
-    private val internetCode = 0
+    private lateinit var editTextSearch: EditText
 
     /* Steps to hide your API key:
      * 1. Create google_apis.xml in values folder (Git will ignore this file)
@@ -25,58 +25,41 @@ class MainActivity : AppCompatActivity() {
      * 3. Protect yourself from Chrysnosis (sorry Krishna)
      */
     private lateinit var apiKey: String
-    private val input = "Busch"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         textViewPlacesInfo = findViewById(R.id.textViewPlacesInfo)
+        editTextSearch = findViewById(R.id.editTextSearch)
+        val imageButtonSearch = findViewById<ImageButton>(R.id.imageButtonSearch)
         apiKey = getString(R.string.google_places_key)
 
-        // Check if all permissions are enabled
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET)
-            != PackageManager.PERMISSION_GRANTED) {
+        imageButtonSearch.setOnClickListener {
+            // Initiate search
+            val query = editTextSearch.text.toString()
 
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-                // User denied permission, so we give an explanation
-                Toast.makeText(this, "The internet is needed to look up places.",
-                    Toast.LENGTH_LONG).show()
-            }
-
-            // Try requesting permission to use the internet
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.INTERNET),
-                internetCode)
-        } else {
-            // Permission has already been granted
-            lookupPlaces()
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
-                                            grantResults: IntArray) {
-        when (requestCode) {
-            internetCode -> {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.isNotEmpty()
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    lookupPlaces()
-                } else {
-                    println("The user still refuses to access the internet.")
-                }
-                return
+            if (!isOnline(this)) {
+                Toast.makeText(this, "Can't access the internet.", Toast.LENGTH_SHORT)
+                    .show()
+            } else if (query.isEmpty()) {
+                Toast.makeText(this, "Search query is empty.", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                textViewPlacesInfo.text = getString(R.string.loading)
+                lookupPlaces(query)
             }
         }
     }
 
-    private fun lookupPlaces() {
+    private fun lookupPlaces(input: String) {
         // Use Google Places API to lookup locations (must be done on a separate thread)
         thread {
+            // Need to convert user input to query string
+            val encodedInput = URLEncoder.encode(input, "UTF-8")
             val jsonStr = URL("https://maps.googleapis.com/maps/api/place/" +
-                    "findplacefromtext/json?key=$apiKey&input=$input&inputtype=textquery" +
-                    "&fields=name,place_id,rating,formatted_address")
-                .readText()
+                    "findplacefromtext/json?key=$apiKey&input=$encodedInput&inputtype=textquery" +
+                    "&fields=name,place_id,rating,formatted_address").readText()
             val json = JSONObject(jsonStr)
 
             runOnUiThread {
@@ -84,5 +67,17 @@ class MainActivity : AppCompatActivity() {
                 textViewPlacesInfo.text = json.toString(2)
             }
         }
+    }
+
+    private fun isOnline(context: Context): Boolean {
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val n = cm.activeNetwork
+        n?.let {
+            val nc = cm.getNetworkCapabilities(n)
+            // Check for both wifi and cellular network
+            return nc!!.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+                    nc.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+        }
+        return false
     }
 }
