@@ -57,14 +57,31 @@ class MainActivity : AppCompatActivity() {
         thread {
             // Need to convert user input to query string
             val encodedInput = URLEncoder.encode(input, "UTF-8")
-            val jsonStr = URL("https://maps.googleapis.com/maps/api/place/" +
+            val placesStr = URL("https://maps.googleapis.com/maps/api/place/" +
                     "findplacefromtext/json?key=$apiKey&input=$encodedInput&inputtype=textquery" +
-                    "&fields=name,place_id,rating,formatted_address").readText()
-            val json = JSONObject(jsonStr)
+                    "&fields=place_id").readText()
+            val placesJSON = JSONObject(placesStr)
 
-            runOnUiThread {
-                // Remember that you can only change UI elements in the main thread
-                textViewPlacesInfo.text = json.toString(2)
+            if (placesJSON.getString("status") == "OK") {
+                // At least one result is available
+                val placeID = placesJSON.getJSONArray("candidates").getJSONObject(0)
+                    .getString("place_id")
+
+                val detailsStr = URL("https://maps.googleapis.com/maps/api/place/details/" +
+                        "json?key=$apiKey&place_id=$placeID&fields=name,formatted_address," +
+                        "opening_hours,rating,review").readText()
+                val detailsJSON = JSONObject(detailsStr)
+
+                runOnUiThread {
+                    // Remember that you can only change UI elements in the main thread
+                    textViewPlacesInfo.text = detailsJSON.toString(2)
+                }
+            } else {
+                // Try to output an error message, else show a generic "no results" message
+                runOnUiThread {
+                    textViewPlacesInfo.text = placesJSON.optString("error_message",
+                        getString(R.string.no_results))
+                }
             }
         }
     }
