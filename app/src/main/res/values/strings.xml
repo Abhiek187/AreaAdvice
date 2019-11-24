@@ -4,4 +4,8 @@
     <string name="search">Search</string>
     <string name="loading">Loading results…</string>
     <string name="no_results">No results found.</string>
+    <string name="place_details">
+        Images: %1$d\nName: %2$s\nAddress: %3$s\nRating: %4$s\nReviews: %5$d\nLocation: %6$s\n
+        Open?: %7$b\nSchedule: %8$s\nURL: %9$s
+    </string>
 </resources>

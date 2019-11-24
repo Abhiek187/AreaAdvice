@@ -68,13 +68,30 @@ class MainActivity : AppCompatActivity() {
                     .getString("place_id")
 
                 val detailsStr = URL("https://maps.googleapis.com/maps/api/place/details/" +
-                        "json?key=$apiKey&place_id=$placeID&fields=name,formatted_address," +
-                        "opening_hours,rating,review").readText()
+                        "json?key=$apiKey&place_id=$placeID&fields=photo,name,formatted_address," +
+                        "rating,review,geometry,opening_hours,url").readText()
                 val detailsJSON = JSONObject(detailsStr)
+                println(detailsJSON.toString(2))
+                val result = detailsJSON.getJSONObject("result")
+
+                val address = result.getString("formatted_address")
+                val location = result.getJSONObject("geometry")
+                    .getJSONObject("location")
+                val name = result.getString("name")
+                val hours = result.optJSONObject("opening_hours")
+                val isOpen = hours?.getBoolean("open_now")
+                val schedule = hours?.getJSONArray("weekday_text")
+                val photos = result.optJSONArray("photos")
+                val rating = result.optDouble("rating", 0.0)
+                val reviews = result.optJSONArray("reviews")
+                val url = result.getString("url")
 
                 runOnUiThread {
                     // Remember that you can only change UI elements in the main thread
-                    textViewPlacesInfo.text = detailsJSON.toString(2)
+                    textViewPlacesInfo.text = getString(R.string.place_details, photos?.length(),
+                        name, address, "%.2f".format(rating), reviews?.length(),
+                        location.toString(2), isOpen, schedule?.toString(2),
+                        url)
                 }
             } else {
                 // Try to output an error message, else show a generic "no results" message
