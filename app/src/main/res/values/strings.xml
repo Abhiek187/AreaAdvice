@@ -2,5 +2,9 @@
     <string name="app_name">Area Advice</string>
     <string name="search_hint">Enter search query…</string>
     <string name="search">Search</string>
+    <string name="filter">Filter</string>
     <string name="loading">Loading results…</string>
+    <string name="menu_Home">Home</string>
+    <string name="menu_Settings">Settings</string>
+    <string name="mainpagetitle">MAIN PAGE BOII!!</string>
 </resources>

@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
     /* Steps to hide your API key:
      * 1. Create google_apis.xml in values folder (Git will ignore this file)
      * 2. Add API key as string resource named google_places_key
-     * 3. Protect yourself from Chrysnosis (sorry Krishna)
+     * 3. Protect yourself from Chrysnosis by deleting his GitHub branch to avoid any running errors (sorry Krishna)
      */
     private lateinit var apiKey: String
 
