@@ -1,24 +1,34 @@
 package com.example.areaadvice
 
 import android.content.Context
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import org.json.JSONObject
 import java.net.URL
 import java.net.URLEncoder
 import kotlin.concurrent.thread
+import kotlin.math.abs
 
-class MainActivity : AppCompatActivity() {
+
+class MainActivity : AppCompatActivity(),SensorEventListener {
     // UI elements
     private lateinit var textViewPlacesInfo: TextView
     private lateinit var editTextSearch: EditText
-
+    private lateinit var sensorManager: SensorManager
+    private var currentTemp: Sensor? =null
+    private var light: Sensor?=null
+    private var prevTemp: Float? = null
+    private var prevLight:Float?=null
     /* Steps to hide your API key:
      * 1. Create google_apis.xml in values folder (Git will ignore this file)
      * 2. Add API key as string resource named google_places_key
@@ -29,7 +39,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        this.sensorManager= getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        currentTemp=sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)
+        light=sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
         textViewPlacesInfo = findViewById(R.id.textViewPlacesInfo)
         editTextSearch = findViewById(R.id.editTextSearch)
         val imageButtonSearch = findViewById<ImageButton>(R.id.imageButtonSearch)
@@ -50,6 +62,17 @@ class MainActivity : AppCompatActivity() {
                 lookupPlaces(query)
             }
         }
+    }
+
+    override  fun onResume(){
+        super.onResume()
+        sensorManager.registerListener(this,currentTemp,SensorManager.SENSOR_DELAY_NORMAL)
+        sensorManager.registerListener(this,light,SensorManager.SENSOR_DELAY_NORMAL)
+    }
+
+    override fun onPause(){
+        super.onPause()
+        sensorManager.unregisterListener(this)
     }
 
     private fun lookupPlaces(input: String) {
@@ -80,4 +103,51 @@ class MainActivity : AppCompatActivity() {
         }
         return false
     }
+
+    override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
+        if(p0==currentTemp){
+            //println("accuracy is $p1")
+            if(p1==0){
+                println("unreliable")
+            }
+            if(p1==1){
+                println("low accuracy")
+            }
+            if(p1==2){
+                println("Medium accuracy")
+            }
+            if(p1==3){
+                println("Very accurate")
+            }
+        }
+    }
+
+    override fun onSensorChanged(p0: SensorEvent?) {
+        when(p0?.sensor?.type){
+            Sensor.TYPE_AMBIENT_TEMPERATURE->{
+                val temp= p0.values?.get(0)
+                if(prevTemp!=null){
+                    val diff= temp?.minus(prevTemp!!)
+                    if(diff?.let { abs(it) }!! >=2){
+                        prevTemp=temp
+                        println("temp is $temp")
+                    }
+                }
+                prevTemp=temp
+            }
+            Sensor.TYPE_LIGHT->{
+                val bright= p0.values[0]
+                if(prevLight!=null){
+                    val diff2= bright.minus(prevLight!!)
+                    if(abs(diff2)>=2){
+                        prevLight=bright
+                        println("Light levels are $bright")
+                    }
+                }
+                prevLight=bright
+            }
+        }
+    }
+
+
 }
