@@ -9,6 +9,9 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.fragment.app.Fragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.json.JSONObject
 import java.net.URL
 import java.net.URLEncoder
@@ -18,6 +21,7 @@ class MainActivity : AppCompatActivity() {
     // UI elements
     private lateinit var textViewPlacesInfo: TextView
     private lateinit var editTextSearch: EditText
+    private lateinit var navbar: BottomNavigationView
 
     /* Steps to hide your API key:
      * 1. Create google_apis.xml in values folder (Git will ignore this file)
@@ -32,8 +36,26 @@ class MainActivity : AppCompatActivity() {
 
         textViewPlacesInfo = findViewById(R.id.textViewPlacesInfo)
         editTextSearch = findViewById(R.id.editTextSearch)
+        navbar = findViewById(R.id.nav_bar)
         val imageButtonSearch = findViewById<ImageButton>(R.id.imageButtonSearch)
         apiKey = getString(R.string.google_places_key)
+
+        navbar.setOnNavigationItemSelectedListener {item ->
+            when(item.itemId){
+                R.id.Home ->{
+                    println("Home Clicked")
+                    changeFragment(Home())
+                    return@setOnNavigationItemSelectedListener true
+                }
+                R.id.Settings ->{
+                    println("Settings Clicked")
+                    changeFragment(SettingsMenu())
+                    return@setOnNavigationItemSelectedListener true
+                }
+            }
+            false
+
+        }
 
         imageButtonSearch.setOnClickListener {
             // Initiate search
@@ -50,6 +72,12 @@ class MainActivity : AppCompatActivity() {
                 lookupPlaces(query)
             }
         }
+    }
+
+    private fun changeFragment(fragment: Fragment){
+        val fragmentToChange = supportFragmentManager.beginTransaction()
+        fragmentToChange.replace(R.id.fragmentContainer, fragment)
+        fragmentToChange.commit()
     }
 
     private fun lookupPlaces(input: String) {

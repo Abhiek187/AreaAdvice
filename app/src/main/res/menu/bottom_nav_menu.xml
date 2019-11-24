@@ -5,5 +5,5 @@
         android:icon="@mipmap/outline_home_black_18dp"/>
     <item android:id="@+id/Settings"
         android:title="@string/menu_Settings"
-        android:icon="@mipmap/outline_settings_applications_black_18dp"/>
+        android:icon="@mipmap/outline_settings_applications_black_18dp" />
 </menu>

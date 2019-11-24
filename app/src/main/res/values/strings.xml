@@ -7,4 +7,6 @@
     <string name="menu_Home">Home</string>
     <string name="menu_Settings">Settings</string>
     <string name="mainpagetitle">MAIN PAGE BOII!!</string>
+    <string name="hello_home_fragment">Hello Home Fragment</string>
+    <string name="hello_settings_fragment">Hello Settings Fragment</string>
 </resources>
