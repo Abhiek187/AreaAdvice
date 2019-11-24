@@ -1,6 +1,9 @@
 package com.example.areaadvice
 
+import android.Manifest
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import androidx.appcompat.app.AppCompatActivity
@@ -9,9 +12,14 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import com.google.android.gms.location.*
+import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONObject
 import java.net.URL
 import java.net.URLEncoder
+import kotlin.collections.Map
 import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
@@ -25,10 +33,38 @@ class MainActivity : AppCompatActivity() {
      * 3. Protect yourself from Chrysnosis (sorry Krishna)
      */
     private lateinit var apiKey: String
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var locationRequest: LocationRequest
+    private lateinit var locationCallback: LocationCallback
+    var lat = 0.0
+    var lon = 0.0
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            // Permission is not granted
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                0
+            )
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            // Permission is not granted
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+                0
+            )
+        }
+
 
         textViewPlacesInfo = findViewById(R.id.textViewPlacesInfo)
         editTextSearch = findViewById(R.id.editTextSearch)
@@ -50,6 +86,56 @@ class MainActivity : AppCompatActivity() {
                 lookupPlaces(query)
             }
         }
+
+        getLocationUpdates()
+        Map.setOnClickListener {
+            val intent = Intent(this@MainActivity, MapsActivity::class.java)
+            intent.putExtra("lat",lat)
+            intent.putExtra("long",lon)
+            startActivity(intent)
+        }
+
+    }
+
+    private fun getLocationUpdates() {
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this!!)
+        locationRequest = LocationRequest()
+        locationRequest.interval = 5000
+        locationRequest.fastestInterval = 5000
+        locationRequest.smallestDisplacement = 10f // 170 m = 0.1 mile
+        locationRequest.priority =
+            LocationRequest.PRIORITY_HIGH_ACCURACY //set according to your app function
+        println("get Location")
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult?) {
+                locationResult ?: return
+
+                if (locationResult.locations.isNotEmpty()) {
+
+                    // get latest location
+                    val location =
+                        locationResult.lastLocation
+                    // use your location object
+                    // get latitude , longitude and other info from this
+                    //Lat.text = "Lat: " + location.latitude
+                    // println("Lat: "+location.latitude)
+                    //Long.text = "Long: " + location.longitude
+                    lat = location.latitude
+                    lon = location.longitude
+
+
+                }
+            }
+        }
+        startLocationUpdates()
+    }
+    private fun startLocationUpdates() {
+        fusedLocationClient.requestLocationUpdates(
+            locationRequest,
+            locationCallback,
+            null /* Looper */
+        )
     }
 
     private fun lookupPlaces(input: String) {
