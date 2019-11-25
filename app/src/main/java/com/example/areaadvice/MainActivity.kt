@@ -272,6 +272,7 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
     }
 
     override fun onSensorChanged(p0: SensorEvent?) {
+        var recommendatons: String
         when(p0?.sensor?.type){
             Sensor.TYPE_AMBIENT_TEMPERATURE->{
                 val temp= p0.values?.get(0)
@@ -280,9 +281,31 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
                     if(diff?.let { abs(it) }!! >=2){
                         prevTemp=temp
                         println("temp is $temp")
+                        if(temp<0){
+                            recommendatons="Restaurant"
+                            lookupPlaces(recommendatons)
+                        }
+                        else if(temp> 0 && temp <5){
+                            recommendatons="university"
+                            lookupPlaces(recommendatons)
+                        }
+                        else if(temp>5 && temp<15){
+                            recommendatons="library"
+                            lookupPlaces(recommendatons)
+                        }
+                        else if(temp>15 && temp<20){
+                            recommendatons="gym"
+                            lookupPlaces(recommendatons)
+                        }
+                        else{
+                            recommendatons="park"
+                            lookupPlaces(recommendatons)
+                        }
                     }
                 }
-                prevTemp=temp
+                else {
+                    prevTemp = temp
+                }
             }
             Sensor.TYPE_LIGHT->{
                 val bright= p0.values[0]
