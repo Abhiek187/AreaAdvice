@@ -2,7 +2,6 @@ package com.example.areaadvice
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
 import com.google.android.gms.location.*
 
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -10,7 +9,6 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -48,8 +46,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         mMap.uiSettings.isCompassEnabled = true
-        mMap.setMyLocationEnabled(true);
-        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        mMap.isMyLocationEnabled = true
+        mMap.uiSettings.isMyLocationButtonEnabled = true
 
         mMap.uiSettings.isZoomControlsEnabled=true
 
@@ -57,9 +55,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         // Add a marker in Sydney and move the camera
         //val sydney = LatLng(-34.0, 151.0)
         //handler.post(runnableCode)
-        var location= LatLng(lat,lon)
-        println( " lat "+lat)
-        println(" long "+lon)
+        val location= LatLng(lat,lon)
+        println(" lat $lat")
+        println(" long $lon")
 
        // mMap.addMarker(MarkerOptions().position(location).title("Current Location"))
         mMap.moveCamera(CameraUpdateFactory.newLatLng(location))
@@ -75,7 +73,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun getLocationUpdates() {
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this!!)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         locationRequest = LocationRequest()
         locationRequest.interval = 5000
         locationRequest.fastestInterval = 5000

@@ -19,7 +19,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONObject
 import java.net.URL
 import java.net.URLEncoder
-import kotlin.collections.Map
 import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
@@ -99,7 +98,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun getLocationUpdates() {
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this!!)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         locationRequest = LocationRequest()
         locationRequest.interval = 5000
         locationRequest.fastestInterval = 5000
