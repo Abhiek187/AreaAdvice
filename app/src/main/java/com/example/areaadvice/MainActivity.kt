@@ -206,7 +206,7 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
 
                 val detailsStr = URL("https://maps.googleapis.com/maps/api/place/details/" +
                         "json?key=$apiKey&place_id=$placeID&fields=photo,name,formatted_address," +
-                        "rating,review,geometry,opening_hours,url").readText()
+                        "rating,review,geometry,type,opening_hours,url").readText()
                 val detailsJSON = JSONObject(detailsStr)
                 println(detailsJSON.toString(2))
                 val result = detailsJSON.getJSONObject("result")
@@ -221,12 +221,13 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
                 val photos = result.optJSONArray("photos")
                 val rating = result.optDouble("rating", 0.0)
                 val reviews = result.optJSONArray("reviews")
+                val placeType=result.optJSONArray("types")
                 val url = result.getString("url")
 
                 runOnUiThread {
                     // Remember that you can only change UI elements in the main thread
                     textViewPlacesInfo.text = getString(R.string.place_details, photos?.length(),
-                        name, address, "%.1f".format(rating), reviews?.length(),
+                        name, address, "%.1f".format(rating), reviews?.length(),placeType?.toString(),
                         location.toString(2), isOpen, schedule?.toString(2),
                         url)
                 }
