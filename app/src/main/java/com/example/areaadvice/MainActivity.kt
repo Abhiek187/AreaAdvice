@@ -9,7 +9,6 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.json.JSONObject
@@ -117,7 +116,7 @@ class MainActivity : AppCompatActivity() {
                 runOnUiThread {
                     // Remember that you can only change UI elements in the main thread
                     textViewPlacesInfo.text = getString(R.string.place_details, photos?.length(),
-                        name, address, "%.2f".format(rating), reviews?.length(),
+                        name, address, "%.1f".format(rating), reviews?.length(),
                         location.toString(2), isOpen, schedule?.toString(2),
                         url)
                 }
