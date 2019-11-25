@@ -16,4 +16,7 @@
         Images: %1$d\nName: %2$s\nAddress: %3$s\nRating: %4$s\nReviews: %5$d\nLocation: %6$s\n
         Open?: %7$b\nSchedule: %8$s\nURL: %9$s
     </string>
+    <!-- Mahadas -->
+    <string name="title_activity_maps">Map</string>
+    <string name="maps">Maps</string>
 </resources>
