@@ -85,14 +85,48 @@ class MainActivity : AppCompatActivity() {
         thread {
             // Need to convert user input to query string
             val encodedInput = URLEncoder.encode(input, "UTF-8")
-            val jsonStr = URL("https://maps.googleapis.com/maps/api/place/" +
+            val placesStr = URL("https://maps.googleapis.com/maps/api/place/" +
                     "findplacefromtext/json?key=$apiKey&input=$encodedInput&inputtype=textquery" +
-                    "&fields=name,place_id,rating,formatted_address").readText()
-            val json = JSONObject(jsonStr)
+                    "&fields=place_id").readText()
+            val placesJSON = JSONObject(placesStr)
 
-            runOnUiThread {
-                // Remember that you can only change UI elements in the main thread
-                textViewPlacesInfo.text = json.toString(2)
+            if (placesJSON.getString("status") == "OK") {
+                // At least one result is available
+                val placeID = placesJSON.getJSONArray("candidates").getJSONObject(0)
+                    .getString("place_id")
+
+                val detailsStr = URL("https://maps.googleapis.com/maps/api/place/details/" +
+                        "json?key=$apiKey&place_id=$placeID&fields=photo,name,formatted_address," +
+                        "rating,review,geometry,opening_hours,url").readText()
+                val detailsJSON = JSONObject(detailsStr)
+                println(detailsJSON.toString(2))
+                val result = detailsJSON.getJSONObject("result")
+
+                val address = result.getString("formatted_address")
+                val location = result.getJSONObject("geometry")
+                    .getJSONObject("location")
+                val name = result.getString("name")
+                val hours = result.optJSONObject("opening_hours")
+                val isOpen = hours?.getBoolean("open_now")
+                val schedule = hours?.getJSONArray("weekday_text")
+                val photos = result.optJSONArray("photos")
+                val rating = result.optDouble("rating", 0.0)
+                val reviews = result.optJSONArray("reviews")
+                val url = result.getString("url")
+
+                runOnUiThread {
+                    // Remember that you can only change UI elements in the main thread
+                    textViewPlacesInfo.text = getString(R.string.place_details, photos?.length(),
+                        name, address, "%.2f".format(rating), reviews?.length(),
+                        location.toString(2), isOpen, schedule?.toString(2),
+                        url)
+                }
+            } else {
+                // Try to output an error message, else show a generic "no results" message
+                runOnUiThread {
+                    textViewPlacesInfo.text = placesJSON.optString("error_message",
+                        getString(R.string.no_results))
+                }
             }
         }
     }
