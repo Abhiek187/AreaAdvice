@@ -129,6 +129,10 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
             startActivity(intent)
         }
 
+        Clear.setOnClickListener {
+        textViewPlacesInfo.text=""
+        }
+
     }
 
     private fun getLocationUpdates() {
