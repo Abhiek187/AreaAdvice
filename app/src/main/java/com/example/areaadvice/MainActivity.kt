@@ -11,10 +11,7 @@ import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -34,6 +31,7 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
     private lateinit var textViewPlacesInfo: TextView
     private lateinit var editTextSearch: EditText
     private lateinit var navbar: BottomNavigationView
+    private lateinit var Map: Button
 
     private lateinit var sensorManager: SensorManager
     private var currentTemp: Sensor? =null
@@ -49,6 +47,7 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationRequest: LocationRequest
     private lateinit var locationCallback: LocationCallback
+
     var lat = 0.0
     var lon = 0.0
 
@@ -85,6 +84,7 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
         textViewPlacesInfo = findViewById(R.id.textViewPlacesInfo)
         editTextSearch = findViewById(R.id.editTextSearch)
         navbar = findViewById(R.id.nav_bar)
+        Map = findViewById(R.id.Map)
         val imageButtonSearch = findViewById<ImageButton>(R.id.imageButtonSearch)
         apiKey = getString(R.string.google_places_key)
 
