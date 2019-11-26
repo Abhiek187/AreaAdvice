@@ -123,6 +123,7 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
 
         getLocationUpdates()
         Map.setOnClickListener {
+            getLocationUpdates()
             val intent = Intent(this@MainActivity, MapsActivity::class.java)
             intent.putExtra("lat",lat)
             intent.putExtra("long",lon)
@@ -137,7 +138,7 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
 
     private fun getLocationUpdates() {
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this!!)
         locationRequest = LocationRequest()
         locationRequest.interval = 5000
         locationRequest.fastestInterval = 5000
@@ -159,8 +160,10 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
                     //Lat.text = "Lat: " + location.latitude
                     // println("Lat: "+location.latitude)
                     //Long.text = "Long: " + location.longitude
+
                     lat = location.latitude
                     lon = location.longitude
+                    println("Main Lat: "+lat)
 
 
                 }
@@ -184,6 +187,7 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
 
     override  fun onResume(){
         super.onResume()
+        startLocationUpdates()
         sensorManager.registerListener(this,currentTemp,SensorManager.SENSOR_DELAY_NORMAL)
         sensorManager.registerListener(this,light,SensorManager.SENSOR_DELAY_NORMAL)
     }
