@@ -40,6 +40,7 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
     private var light: Sensor?=null
     private var prevTemp: Float? = null
     private var prevLight:Float?=null
+    private var recommendatons: String=""
     /* Steps to hide your API key:
      * 1. Create google_apis.xml in values folder (Git will ignore this file)
      * 2. Add API key as string resource named google_places_key
@@ -253,29 +254,28 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
         return false
     }
 
-    override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
-        if(p0==currentTemp){
+    override fun onAccuracyChanged(event: Sensor?, accuracy: Int) {
+        if(event==currentTemp||event==light){
             //println("accuracy is $p1")
-            if(p1==0){
+            if(accuracy==0){
                 println("unreliable")
             }
-            if(p1==1){
+            if(accuracy==1){
                 println("low accuracy")
             }
-            if(p1==2){
+            if(accuracy==2){
                 println("Medium accuracy")
             }
-            if(p1==3){
+            if(accuracy==3){
                 println("Very accurate")
             }
         }
     }
 
-    override fun onSensorChanged(p0: SensorEvent?) {
-        var recommendatons: String
-        when(p0?.sensor?.type){
+    override fun onSensorChanged(event: SensorEvent?) {
+        when(event?.sensor?.type){
             Sensor.TYPE_AMBIENT_TEMPERATURE->{
-                val temp= p0.values?.get(0)
+                val temp= event.values?.get(0)
                 if(prevTemp!=null){
                     val diff= temp?.minus(prevTemp!!)
                     if(diff?.let { abs(it) }!! >=2){
@@ -308,12 +308,32 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
                 }
             }
             Sensor.TYPE_LIGHT->{
-                val bright= p0.values[0]
+                val bright= event.values[0]
                 if(prevLight!=null){
                     val diff2= bright.minus(prevLight!!)
                     if(abs(diff2)>=2){
                         prevLight=bright
                         println("Light levels are $bright")
+                        if(bright<10){
+                            recommendatons="restaurant"
+                            lookupPlaces(recommendatons)
+                        }
+                        else if(bright>10 && bright<25){
+                            recommendatons="university"
+                            lookupPlaces(recommendatons)
+                        }
+                        else if(bright>25 && bright < 50){
+                            recommendatons="library"
+                            lookupPlaces(recommendatons)
+                        }
+                        else if(bright>50 && bright<70){
+                            recommendatons="gym"
+                            lookupPlaces(recommendatons)
+                        }
+                        else{
+                            recommendatons="park"
+                            lookupPlaces(recommendatons)
+                        }
                     }
                 }
                 prevLight=bright
