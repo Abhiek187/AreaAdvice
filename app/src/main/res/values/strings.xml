@@ -15,8 +15,8 @@
     <!-- Abhishek -->
     <string name="no_results">No results found.</string>
     <string name="place_details">
-        Images: %1$d\nName: %2$s\nAddress: %3$s\nRating: %4$s\nReviews: %5$d\nLocation: %6$s\n
-        Open?: %7$b\nSchedule: %8$s\nURL: %9$s
+        Images: %1$d\nName: %2$s\nAddress: %3$s\nRating: %4$s\nReviews: %5$d\nType: %6$s\nLocation: %7$s\n
+        Open?: %8$b\nSchedule: %9$s\nURL: %10$s
     </string>
     <!-- Mahadas -->
     <string name="title_activity_maps">Map</string>

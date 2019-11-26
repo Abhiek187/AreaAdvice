@@ -38,6 +38,7 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
     private var light: Sensor?=null
     private var prevTemp: Float? = null
     private var prevLight:Float?=null
+    private var recommendatons: String=""
     /* Steps to hide your API key:
      * 1. Create google_apis.xml in values folder (Git will ignore this file)
      * 2. Add API key as string resource named google_places_key
@@ -206,7 +207,7 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
 
                 val detailsStr = URL("https://maps.googleapis.com/maps/api/place/details/" +
                         "json?key=$apiKey&place_id=$placeID&fields=photo,name,formatted_address," +
-                        "rating,review,geometry,opening_hours,url").readText()
+                        "rating,review,geometry,type,opening_hours,url").readText()
                 val detailsJSON = JSONObject(detailsStr)
                 println(detailsJSON.toString(2))
                 val result = detailsJSON.getJSONObject("result")
@@ -221,12 +222,13 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
                 val photos = result.optJSONArray("photos")
                 val rating = result.optDouble("rating", 0.0)
                 val reviews = result.optJSONArray("reviews")
+                val placeType=result.optJSONArray("types")
                 val url = result.getString("url")
 
                 runOnUiThread {
                     // Remember that you can only change UI elements in the main thread
                     textViewPlacesInfo.text = getString(R.string.place_details, photos?.length(),
-                        name, address, "%.1f".format(rating), reviews?.length(),
+                        name, address, "%.1f".format(rating), reviews?.length(),placeType?.toString(),
                         location.toString(2), isOpen, schedule?.toString(2),
                         url)
                 }
@@ -252,44 +254,85 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
         return false
     }
 
-    override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
-        if(p0==currentTemp){
-            //println("accuracy is $p1")
-            if(p1==0){
+    override fun onAccuracyChanged(event: Sensor?, accuracy: Int) {
+        if(event==currentTemp||event==light){
+            if(accuracy==0){
                 println("unreliable")
             }
-            if(p1==1){
+            if(accuracy==1){
                 println("low accuracy")
             }
-            if(p1==2){
+            if(accuracy==2){
                 println("Medium accuracy")
             }
-            if(p1==3){
+            if(accuracy==3){
                 println("Very accurate")
             }
         }
     }
 
-    override fun onSensorChanged(p0: SensorEvent?) {
-        when(p0?.sensor?.type){
+    override fun onSensorChanged(event: SensorEvent?) {
+        when(event?.sensor?.type){
             Sensor.TYPE_AMBIENT_TEMPERATURE->{
-                val temp= p0.values?.get(0)
+                val temp= event.values?.get(0)
                 if(prevTemp!=null){
                     val diff= temp?.minus(prevTemp!!)
                     if(diff?.let { abs(it) }!! >=2){
                         prevTemp=temp
                         println("temp is $temp")
+                        if(temp<0){
+                            recommendatons="Restaurant"
+                            lookupPlaces(recommendatons)
+                        }
+                        else if(temp> 0 && temp <5){
+                            recommendatons="university"
+                            lookupPlaces(recommendatons)
+                        }
+                        else if(temp>5 && temp<15){
+                            recommendatons="library"
+                            lookupPlaces(recommendatons)
+                        }
+                        else if(temp>15 && temp<20){
+                            recommendatons="gym"
+                            lookupPlaces(recommendatons)
+                        }
+                        else{
+                            recommendatons="park"
+                            lookupPlaces(recommendatons)
+                        }
                     }
                 }
-                prevTemp=temp
+                else {
+                    prevTemp = temp
+                }
             }
             Sensor.TYPE_LIGHT->{
-                val bright= p0.values[0]
+                val bright= event.values[0]
                 if(prevLight!=null){
                     val diff2= bright.minus(prevLight!!)
                     if(abs(diff2)>=2){
                         prevLight=bright
                         println("Light levels are $bright")
+                        if(bright<10){
+                            recommendatons="restaurant"
+                            lookupPlaces(recommendatons)
+                        }
+                        else if(bright>10 && bright<25){
+                            recommendatons="university"
+                            lookupPlaces(recommendatons)
+                        }
+                        else if(bright>25 && bright < 50){
+                            recommendatons="library"
+                            lookupPlaces(recommendatons)
+                        }
+                        else if(bright>50 && bright<70){
+                            recommendatons="gym"
+                            lookupPlaces(recommendatons)
+                        }
+                        else{
+                            recommendatons="park"
+                            lookupPlaces(recommendatons)
+                        }
                     }
                 }
                 prevLight=bright
