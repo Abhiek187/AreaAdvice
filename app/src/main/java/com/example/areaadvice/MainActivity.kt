@@ -256,7 +256,6 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
 
     override fun onAccuracyChanged(event: Sensor?, accuracy: Int) {
         if(event==currentTemp||event==light){
-            //println("accuracy is $p1")
             if(accuracy==0){
                 println("unreliable")
             }

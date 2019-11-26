@@ -38,7 +38,7 @@
         android:padding="5dp"
         android:contentDescription="@string/filter"
         android:src="@mipmap/outline_filter_list_black_18dp"
-        app:layout_constraintBottom_toTopOf="@id/recycle"
+        app:layout_constraintBottom_toTopOf="@id/Map"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <ScrollView
@@ -76,7 +76,7 @@
         android:padding="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imageButtonFilter" />
+        app:layout_constraintTop_toBottomOf="@id/Map" />
 
     <!--<androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager"
@@ -103,13 +103,12 @@
         app:menu="@menu/bottom_nav_menu"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
-
+    <!--Abhishek you should add this layout to the master branch-->
     <Button
         android:id="@+id/Map"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
         android:text="@string/maps"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imageButtonSearch" />
