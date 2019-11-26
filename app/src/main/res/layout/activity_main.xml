@@ -8,91 +8,12 @@
     android:orientation="vertical"
     android:id="@+id/fragmentContainer">
 
-    <EditText
-        android:id="@+id/editTextSearch"
-        android:layout_width="320dp"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:textSize="18sp"
-        android:hint="@string/search_hint"
-        android:inputType="text"
-        app:layout_constraintRight_toLeftOf="@+id/imageButtonSearch"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
-        android:id="@+id/imageButtonSearch"
-        android:layout_width="70dp"
-        android:layout_height="50dp"
-        android:contentDescription="@string/search"
-        android:padding="5dp"
-        android:src="@mipmap/outline_search_black_18dp"
-        app:layout_constraintBottom_toTopOf="@id/imageButtonFilter"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/editTextSearch" />
-
-    <ImageButton
-        android:id="@+id/imageButtonFilter"
-        android:layout_width="70dp"
-        android:layout_height="50dp"
-        android:padding="5dp"
-        android:contentDescription="@string/filter"
-        android:src="@mipmap/outline_filter_list_black_18dp"
-        app:layout_constraintBottom_toTopOf="@id/recycle"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <ScrollView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@id/nav_bar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/imageButtonFilter"
-        app:layout_constraintTop_toBottomOf="@+id/editTextSearch">
-
-        <TextView
-            android:id="@+id/textViewPlacesInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hello World!"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-    </ScrollView>
-
-    <!--<TextView
-        app:layout_constraintTop_toBottomOf="@id/imageButtonFilter"
-        app:layout_constraintStart_toStartOf="parent"
-        android:id="@+id/textViewPlacesInfo"
-        android:layout_width="wrap_content"
-        android:textSize="29sp"
-        android:layout_height="wrap_content" />-->
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/Map"
-        app:layout_constraintTop_toBottomOf="@id/imageButtonFilter" />
-
-    <!--<androidx.viewpager.widget.ViewPager
-        android:id="@+id/view_pager"
+    <fragment
+        android:id="@+id/homefrag"
+        android:name="com.example.areaadvice.Home"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/nav_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:menu="@menu/bottom_nav_menu"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>-->
+        android:layout_height="match_parent" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_bar"
@@ -103,21 +24,15 @@
         app:menu="@menu/bottom_nav_menu"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
-
-    <Button
-        android:id="@+id/Map"
-        android:layout_width="70dp"
-        android:layout_height="50dp"
-        android:text="Map"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imageButtonFilter" />
-    <Button
+    <!--Abhishek you should add this layout to the master branch-->
+    <!-- ^??? Mahadas what to do with this clear button? -->
+    <!--<Button
         android:id="@+id/Clear"
         android:layout_width="70dp"
         android:layout_height="50dp"
         android:text="Clear"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/Map" />
+        app:layout_constraintTop_toBottomOf="@id/Map" />-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
