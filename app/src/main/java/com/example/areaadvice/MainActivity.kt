@@ -18,7 +18,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.*
-import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONObject
 import java.net.URL
 import java.net.URLEncoder
@@ -31,7 +30,7 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
     private lateinit var textViewPlacesInfo: TextView
     private lateinit var editTextSearch: EditText
     private lateinit var navbar: BottomNavigationView
-    private lateinit var Map: Button
+    private lateinit var map: Button
 
     private lateinit var sensorManager: SensorManager
     private var currentTemp: Sensor? =null
@@ -85,7 +84,7 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
         textViewPlacesInfo = findViewById(R.id.textViewPlacesInfo)
         editTextSearch = findViewById(R.id.editTextSearch)
         navbar = findViewById(R.id.nav_bar)
-        Map = findViewById(R.id.Map)
+        map = findViewById(R.id.Map)
         val imageButtonSearch = findViewById<ImageButton>(R.id.imageButtonSearch)
         apiKey = getString(R.string.google_places_key)
 
@@ -123,16 +122,16 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
         }
 
         getLocationUpdates()
-        Map.setOnClickListener {
+        map.setOnClickListener {
             val intent = Intent(this@MainActivity, MapsActivity::class.java)
             intent.putExtra("lat",lat)
             intent.putExtra("long",lon)
             startActivity(intent)
         }
 
-        Clear.setOnClickListener {
-        textViewPlacesInfo.text=""
-        }
+        /*Clear.setOnClickListener {
+            textViewPlacesInfo.text=""
+        }*/
 
     }
 
