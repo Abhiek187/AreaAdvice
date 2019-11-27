@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
     private var light: Sensor?=null
     private var prevTemp: Float? = null
     private var prevLight:Float?=null
-    private var recommendatons: String=""
+    private var recommendations: String=""
    // private var manualRec=false;
     /* Steps to hide your API key:
      * 1. Create google_apis.xml in values folder (Git will ignore this file)
@@ -144,7 +144,7 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
 
     private fun getLocationUpdates() {
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this!!)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         locationRequest = LocationRequest()
         locationRequest.interval = 5000
         locationRequest.fastestInterval = 5000
@@ -169,7 +169,7 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
 
                     lat = location.latitude
                     lon = location.longitude
-                    println("Main Lat: "+lat)
+                    println("Main Lat: $lat")
 
 
                 }
@@ -293,25 +293,16 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
                     if(diff?.let { abs(it) }!! >=2){
                         prevTemp=temp
                         println("temp is $temp")
-                        if(temp<0){
-                            recommendatons="Restaurant"
-                            //lookupPlaces(recommendatons)
-                        }
-                        else if(temp> 0 && temp <5){
-                            recommendatons="university"
-                            //lookupPlaces(recommendatons)
-                        }
-                        else if(temp>5 && temp<15){
-                            recommendatons="library"
-                            //lookupPlaces(recommendatons)
-                        }
-                        else if(temp>15 && temp<20){
-                            recommendatons="gym"
-                            //lookupPlaces(recommendatons)
-                        }
-                        else{
-                            recommendatons="park"
-                            //lookupPlaces(recommendatons)
+                        recommendations = if(temp<0){
+                            "Restaurant"
+                        } else if(temp> 0 && temp <5){
+                            "university"
+                        } else if(temp>5 && temp<15){
+                            "library"
+                        } else if(temp>15 && temp<20){
+                            "gym"
+                        } else{
+                            "park"
                         }
                         if (!isOnline(this)) {
                             Toast.makeText(this, "Can't access the internet.", Toast.LENGTH_SHORT)
@@ -319,7 +310,7 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
                         }
                          else {
                             textViewPlacesInfo.text = getString(R.string.loading)
-                            lookupPlaces(recommendatons)
+                            lookupPlaces(recommendations)
                         }
                     }
                 }
@@ -334,25 +325,16 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
                     if(abs(diff2)>=2){
                         prevLight=bright
                         println("Light levels are $bright")
-                        if(bright<10){
-                            recommendatons="restaurant"
-                            //lookupPlaces(recommendatons)
-                        }
-                        else if(bright>10 && bright<25){
-                            recommendatons="university"
-                            //lookupPlaces(recommendatons)
-                        }
-                        else if(bright>25 && bright < 50){
-                            recommendatons="library"
-                           // lookupPlaces(recommendatons)
-                        }
-                        else if(bright>50 && bright<70){
-                            recommendatons="gym"
-                           // lookupPlaces(recommendatons)
-                        }
-                        else{
-                            recommendatons="park"
-                           // lookupPlaces(recommendatons)
+                        recommendations = if(bright<10){
+                            "restaurant"
+                        } else if(bright>10 && bright<25){
+                            "university"
+                        } else if(bright>25 && bright < 50){
+                            "library"
+                        } else if(bright>50 && bright<70){
+                            "gym"
+                        } else{
+                            "park"
                         }
                         if (!isOnline(this)) {
                             Toast.makeText(this, "Can't access the internet.", Toast.LENGTH_SHORT)
@@ -360,7 +342,7 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
                         }
                         else {
                             textViewPlacesInfo.text = getString(R.string.loading)
-                            lookupPlaces(recommendatons)
+                            lookupPlaces(recommendations)
                         }
                     }
                 }
