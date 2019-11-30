@@ -53,7 +53,6 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@id/nav_bar"
         app:layout_constraintEnd_toStartOf="@+id/imageButtonFilter"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextSearch">
@@ -66,14 +65,6 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
     </ScrollView>
 
-    <!--<TextView
-        app:layout_constraintTop_toBottomOf="@id/imageButtonFilter"
-        app:layout_constraintStart_toStartOf="parent"
-        android:id="@+id/textViewPlacesInfo"
-        android:layout_width="wrap_content"
-        android:textSize="29sp"
-        android:layout_height="wrap_content" />-->
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycle"
         android:layout_width="0dp"
@@ -83,7 +74,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imageButtonFilter" />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
+    <!--<com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -91,13 +82,13 @@
         android:background="@color/navbarbackground"
         app:menu="@menu/bottom_nav_menu"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"/>-->
 
     <Button
         android:id="@+id/map"
         android:layout_width="70dp"
         android:layout_height="50dp"
-        android:text="Map"
+        android:text="@string/mapButtonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imageButtonFilter"
         />
@@ -106,7 +97,7 @@
         android:id="@+id/clear"
         android:layout_width="70dp"
         android:layout_height="50dp"
-        android:text="Clear"
+        android:text="@string/clrbuttonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/map"
         />
