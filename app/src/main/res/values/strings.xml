@@ -7,17 +7,27 @@
     <string name="filter">Filter</string>
     <string name="menu_Home">Home</string>
     <string name="menu_Settings">Settings</string>
-    <string name="mainpagetitle">MAIN PAGE BOII!!</string>
-    <string name="hello_home_fragment">Hello Home Fragment</string>
-    <string name="hello_settings_fragment">Hello Settings Fragment</string>
-    <string name="enableSensor">Enable Sensors</string>
-    <string name="sensorrecommendations">Enable Sensor Recommendations</string>
+    <string name="sensorRecOnorOff">On</string>
+    <string name="sensorrecommendations">Sensor Recommendations</string>
+    <string name="maxRadius">Maximum Radius</string>
+    <string name="startval">1</string>
+    <string name="tempChoiceText">Temperature Unit</string>
+    <string name="tempChoiceForC">°C</string>
+    <string name="distChoiceText">Distance Unit</string>
+    <string name="distChoicekmormi">km</string>
     <!-- Abhishek -->
     <string name="no_results">No results found.</string>
     <string name="place_details">
         Images: %1$d\nName: %2$s\nAddress: %3$s\nRating: %4$s\nReviews: %5$d\nType: %6$s\nLocation: %7$s\n
         Open?: %8$b\nSchedule: %9$s\nURL: %10$s
     </string>
+    <!-- Unit conversions -->
+    <string name="dist_meters">m</string>
+    <string name="dist_miles">mi</string>
+    <string name="temp_celsius">\u00B0C</string>
+    <string name="temp_fahrenheit">\u00B0F</string>
+    <string name="light_lux">lx</string> <!-- aka the abundance of RU buses -->
+    <string name="light_foot_candle">fc</string> <!-- legit never heard of this -->
     <!-- Mahadas -->
     <string name="title_activity_maps">Map</string>
     <string name="mapButtonName">Maps</string>

@@ -44,8 +44,14 @@ class Home : Fragment(), SensorEventListener {
     private var prevLight:Float?=null
     private var recommendations: String=""
     private var recPrev: String=""
+
     private var senEnable=true
 
+    //private var lightSen=true
+
+
+    private lateinit var unitTemp: String
+    private lateinit var unitLight: String
     private lateinit var apiKey: String
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationRequest: LocationRequest
@@ -53,6 +59,11 @@ class Home : Fragment(), SensorEventListener {
 
     var lat = 0.0
     var lon = 0.0
+
+    override fun onAttach(context: Context){
+        super.onAttach(context)
+        mContext = context
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,6 +75,8 @@ class Home : Fragment(), SensorEventListener {
         this.sensorManager = activity!!.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         currentTemp=sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)
         light=sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
+        unitTemp = getString(R.string.temp_celsius)
+        unitLight = getString(R.string.light_lux)
 
         if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION)
             != PackageManager.PERMISSION_GRANTED
@@ -136,11 +149,6 @@ class Home : Fragment(), SensorEventListener {
 
         // Inflate the layout for this fragment
         return view
-    }
-
-    override fun onAttach(context: Context){
-        super.onAttach(context)
-        mContext = context
     }
 
     private fun getLocationUpdates() {
@@ -289,7 +297,8 @@ class Home : Fragment(), SensorEventListener {
                     val diff= temp?.minus(prevTemp!!)
                     if(diff?.let { abs(it) }!! >=2){
                         prevTemp=temp
-                        println("temp is $temp")
+                        println("temp is $temp $unitTemp " +
+                                "(${cToF(temp)} ${getString(R.string.temp_fahrenheit)})")
                         recommendations = if(temp<0){
                             "Restaurant"
                         } else if(temp> 0 && temp <5){
@@ -321,7 +330,8 @@ class Home : Fragment(), SensorEventListener {
                     val diff2= bright.minus(prevLight!!)
                     if(abs(diff2)>=2){
                         prevLight=bright
-                        println("Light levels are $bright")
+                        println("Light levels are $bright $unitLight " +
+                                "(${lxToFc(bright)} ${getString(R.string.light_foot_candle)})")
                         recPrev = recommendations
 
                         recommendations = if(bright<500){
