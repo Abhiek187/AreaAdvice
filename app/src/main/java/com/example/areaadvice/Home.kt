@@ -1,6 +1,5 @@
 package com.example.areaadvice
 
-
 import android.Manifest
 import android.content.Context
 import android.hardware.Sensor
@@ -350,3 +349,4 @@ class Home : Fragment(), SensorEventListener {
 
 
 }
+
