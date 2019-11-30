@@ -5,15 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:orientation="vertical"
-    android:id="@+id/fragmentContainer">
+    android:orientation="vertical">
 
-
-    <fragment
-        android:id="@+id/homefrag"
-        android:name="com.example.areaadvice.Home"
+    <FrameLayout
+        android:id="@+id/fragmentcontainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toTopOf="@+id/nav_bar" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_bar"
@@ -24,15 +22,5 @@
         app:menu="@menu/bottom_nav_menu"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
-    <!--Abhishek you should add this layout to the master branch-->
-    <!-- ^??? Mahadas what to do with this clear button? -->
-    <!--<Button
-        android:id="@+id/Clear"
-        android:layout_width="70dp"
-        android:layout_height="50dp"
-        android:text="Clear"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/Map" />-->
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
