@@ -11,14 +11,12 @@ import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
-import android.provider.Settings
 import android.widget.*
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.FragmentManager
 import com.google.android.gms.location.*
 import org.json.JSONObject
 import java.net.URL
@@ -41,7 +39,6 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
     private var prevTemp: Float? = null
     private var prevLight:Float?=null
     private var recommendations: String=""
-
    // private var manualRec=false;
     /* Steps to hide your API key:
      * 1. Create google_apis.xml in values folder (Git will ignore this file)
@@ -64,7 +61,6 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
         currentTemp=sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)
         light=sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
 
-        changeFragment(Home())
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
             != PackageManager.PERMISSION_GRANTED
         ) {
@@ -96,24 +92,15 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
         apiKey = getString(R.string.google_places_key)
 
         navbar.setOnNavigationItemSelectedListener {item ->
-            val fm = supportFragmentManager.beginTransaction()
             when(item.itemId){
                 R.id.Home ->{
                     println("Home Clicked")
-                    /*val active = SettingsMenu()
-                    fm.hide(active).show(Home()).commit()*/
-                    val fragment = Home()
-                    fm.hide(SettingsMenu())
-                    changeFragment(fragment)
+                    changeFragment(Home())
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.Settings ->{
                     println("Settings Clicked")
-                    /*val active = Home()
-                    fm.hide(active).show(SettingsMenu()).commit()*/
-                    val fragment = SettingsMenu()
-                    fm.hide(Home())
-                    changeFragment(fragment)
+                    changeFragment(SettingsMenu())
                     return@setOnNavigationItemSelectedListener true
                 }
             }
@@ -128,8 +115,6 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
             if (!isOnline(this)) {
                 Toast.makeText(this, "Can't access the internet.", Toast.LENGTH_SHORT)
                     .show()
-                    /*val intent = Intent(Settings.ACTION_WIFI_SETTINGS)
-                    startActivity(intent)*/
             } else if (query.isEmpty()) {
                 Toast.makeText(this, "Search query is empty.", Toast.LENGTH_SHORT)
                     .show()
@@ -200,9 +185,10 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
         )
     }
 
-    private fun changeFragment(fragment: Fragment): Boolean {
-        supportFragmentManager.beginTransaction().replace(R.id.fragmentcontainer, fragment).commit()
-        return true
+    private fun changeFragment(fragment: Fragment) {
+        val fragmentToChange = supportFragmentManager.beginTransaction()
+        fragmentToChange.replace(R.id.fragmentContainer, fragment)
+        fragmentToChange.commit()
     }
 
     override  fun onResume(){
