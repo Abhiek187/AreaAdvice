@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
     private var prevLight:Float?=null
     private var recommendations: String=""
     private var recPrev: String=""
-    private var lightSen=false;
+    private var lightSen=true;
    // private var manualRec=false;
     /* Steps to hide your API key:
      * 1. Create google_apis.xml in values folder (Git will ignore this file)
@@ -298,13 +298,13 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
                         recommendations = if(temp<0){
                             "Restaurant"
                         } else if(temp> 0 && temp <5){
-                            "university"
+                            "Movie"
                         } else if(temp>5 && temp<15){
-                            "library"
+                            "Mall"
                         } else if(temp>15 && temp<20){
-                            "gym"
+                            "Sports"
                         } else{
-                            "park"
+                            "Beach"
                         }
                         if (!isOnline(this)) {
                             Toast.makeText(this, "Can't access the internet.", Toast.LENGTH_SHORT)
@@ -337,9 +337,9 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
                         } else if(bright>500 && bright<2000){
                             "university"
                         } else if(bright>2000 && bright < 10000){
-                            "library"
-                        } else if(bright>10000 && bright<20000){
                             "gym"
+                        } else if(bright>10000 && bright<20000){
+                            "tourist"
                         } else{
                             "park"
                         }
