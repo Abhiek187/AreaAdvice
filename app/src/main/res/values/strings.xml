@@ -20,5 +20,6 @@
     </string>
     <!-- Mahadas -->
     <string name="title_activity_maps">Map</string>
-    <string name="maps">Maps</string>
+    <string name="mapButtonName">Maps</string>
+    <string name="clrButtonName">Clear</string>
 </resources>
