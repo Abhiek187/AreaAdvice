@@ -6,13 +6,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Home">
 
-    <!--<TextView
-        android:textSize="20sp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_home_fragment"
-        android:gravity="center"/>-->
-
     <EditText
         android:id="@+id/editTextSearch"
         android:layout_width="320dp"
@@ -55,7 +48,8 @@
         android:layout_marginBottom="8dp"
         app:layout_constraintEnd_toStartOf="@+id/imageButtonFilter"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextSearch">
+        app:layout_constraintTop_toBottomOf="@+id/editTextSearch"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <TextView
             android:id="@+id/textViewPlacesInfo"
@@ -73,16 +67,6 @@
         app:layout_constraintEnd_toStartOf="@+id/imageButtonFilter"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imageButtonFilter" />
-
-    <!--<com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/nav_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:background="@color/navbarbackground"
-        app:menu="@menu/bottom_nav_menu"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>-->
 
     <Button
         android:id="@+id/map"
