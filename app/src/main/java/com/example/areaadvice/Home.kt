@@ -315,13 +315,13 @@ class Home : Fragment(), SensorEventListener {
                     if(abs(diff2)>=2){
                         prevLight=bright
                         println("Light levels are $bright")
-                        recommendations = if(bright<10){
+                        recommendations = if(bright<500){
                             "restaurant"
-                        } else if(bright>10 && bright<25){
+                        } else if(bright>500 && bright<2000){
                             "university"
-                        } else if(bright>25 && bright < 50){
+                        } else if(bright>2000 && bright < 10000){
                             "library"
-                        } else if(bright>50 && bright<70){
+                        } else if(bright>10000 && bright<20000){
                             "gym"
                         } else{
                             "park"
