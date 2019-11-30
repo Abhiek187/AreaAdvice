@@ -12,6 +12,8 @@
     <string name="hello_settings_fragment">Hello Settings Fragment</string>
     <string name="enableSensor">Enable Sensors</string>
     <string name="sensorrecommendations">Enable Sensor Recommendations</string>
+    <string name="maxRadius">Maximum Radius:</string>
+    <string name="startval">1</string>
     <!-- Abhishek -->
     <string name="no_results">No results found.</string>
     <string name="place_details">
