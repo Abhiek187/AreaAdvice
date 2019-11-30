@@ -7,13 +7,14 @@
     <string name="filter">Filter</string>
     <string name="menu_Home">Home</string>
     <string name="menu_Settings">Settings</string>
-    <string name="mainpagetitle">MAIN PAGE BOII!!</string>
-    <string name="hello_home_fragment">Hello Home Fragment</string>
-    <string name="hello_settings_fragment">Hello Settings Fragment</string>
-    <string name="enableSensor">Enable Sensors</string>
-    <string name="sensorrecommendations">Enable Sensor Recommendations</string>
-    <string name="maxRadius">Maximum Radius:</string>
+    <string name="sensorRecOnorOff">On</string>
+    <string name="sensorrecommendations">Sensor Recommendations</string>
+    <string name="maxRadius">Maximum Radius</string>
     <string name="startval">1</string>
+    <string name="tempChoiceText">Temperature Unit</string>
+    <string name="tempChoiceForC">°C</string>
+    <string name="distChoiceText">Distance Unit</string>
+    <string name="distChoicekmormi">km</string>
     <!-- Abhishek -->
     <string name="no_results">No results found.</string>
     <string name="place_details">
