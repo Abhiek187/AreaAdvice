@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.hardware.SensorManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.*
@@ -57,6 +58,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
             != PackageManager.PERMISSION_GRANTED
         ) {
+            Toast.makeText(this, "Location permission not granted", Toast.LENGTH_SHORT)
+                .show()
             // Permission is not granted
         }
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
