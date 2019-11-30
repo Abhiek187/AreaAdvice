@@ -9,7 +9,6 @@ import android.hardware.SensorManager
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.hardware.SensorEventListener
-import android.media.Image
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
@@ -18,11 +17,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.*
-import kotlinx.android.synthetic.main.fragment_home.*
 import org.json.JSONObject
 import java.net.URL
 import java.net.URLEncoder
@@ -34,7 +31,6 @@ class Home : Fragment(), SensorEventListener {
     private lateinit var mContext: Context
     private lateinit var textViewPlacesInfo: TextView
     private lateinit var editTextSearch: EditText
-    private lateinit var navbar: BottomNavigationView
     private lateinit var mapBtn: Button
     private lateinit var clearBtn: Button
     private lateinit var imageButtonSearch: ImageButton
@@ -45,6 +41,8 @@ class Home : Fragment(), SensorEventListener {
     private var prevTemp: Float? = null
     private var prevLight:Float?=null
     private var recommendations: String=""
+    private var recPrev: String=""
+    private var lightSen=true
 
     private lateinit var apiKey: String
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -92,6 +90,11 @@ class Home : Fragment(), SensorEventListener {
         imageButtonSearch = view.findViewById(R.id.imageButtonSearch)
         mapBtn = view.findViewById(R.id.map)
         clearBtn = view.findViewById(R.id.clear)
+        /* Steps to hide your API key:
+         * 1. Create google_apis.xml in values folder (Git will ignore this file)
+         * 2. Add API key as string resource named google_places_key
+         * 3. Protect yourself from Chrysnosis by deleting his GitHub branch to avoid any running errors (sorry Krishna)
+         */
         apiKey = getString(R.string.google_places_key)
 
 
@@ -99,7 +102,7 @@ class Home : Fragment(), SensorEventListener {
             // Initiate search
             val query = editTextSearch.text.toString()
 
-            if (!isOnline(this)) {
+            if (!isOnline()) {
                 Toast.makeText(mContext, "Can't access the internet.", Toast.LENGTH_SHORT)
                     .show()
                 /*val intent = Intent(Settings.ACTION_WIFI_SETTINGS)
@@ -245,7 +248,7 @@ class Home : Fragment(), SensorEventListener {
         }
     }
 
-    private fun isOnline(context: Home): Boolean {
+    private fun isOnline(): Boolean {
         val cm = mContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val n = cm.activeNetwork
         n?.let {
@@ -294,7 +297,7 @@ class Home : Fragment(), SensorEventListener {
                         } else{
                             "park"
                         }
-                        if (!isOnline(this@Home)) {
+                        if (!isOnline()) {
                             Toast.makeText(mContext, "Can't access the internet.", Toast.LENGTH_SHORT)
                                 .show()
                         }
@@ -315,24 +318,28 @@ class Home : Fragment(), SensorEventListener {
                     if(abs(diff2)>=2){
                         prevLight=bright
                         println("Light levels are $bright")
+                        recPrev = recommendations
+
                         recommendations = if(bright<500){
                             "restaurant"
                         } else if(bright>500 && bright<2000){
                             "university"
                         } else if(bright>2000 && bright < 10000){
-                            "library"
-                        } else if(bright>10000 && bright<20000){
                             "gym"
+                        } else if(bright>10000 && bright<20000){
+                            "tourist"
                         } else{
                             "park"
                         }
-                        if (!isOnline(this@Home)) {
+                        if (!isOnline()) {
                             Toast.makeText(mContext, "Can't access the internet.", Toast.LENGTH_SHORT)
                                 .show()
                         }
                         else {
-                            textViewPlacesInfo.text = getString(R.string.loading)
-                            lookupPlaces(recommendations)
+                            if (lightSen && recPrev != recommendations){
+                                textViewPlacesInfo.text = getString(R.string.loading)
+                                lookupPlaces(recommendations)
+                            }
                         }
                     }
                 }
