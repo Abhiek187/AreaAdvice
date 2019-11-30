@@ -2,12 +2,13 @@ package com.example.areaadvice
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
+import android.content.Intent.getIntent
+import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.hardware.SensorEvent
-import android.hardware.SensorManager
-import android.content.Intent
-import android.content.pm.PackageManager
 import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
@@ -15,15 +16,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.fragment.app.Fragment
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.google.android.gms.location.*
 import org.json.JSONObject
 import java.net.URL
 import java.net.URLEncoder
 import kotlin.concurrent.thread
 import kotlin.math.abs
+
 
 class Home : Fragment(), SensorEventListener {
 
@@ -34,6 +36,7 @@ class Home : Fragment(), SensorEventListener {
     private lateinit var clearBtn: Button
     private lateinit var imageButtonSearch: ImageButton
 
+
     private lateinit var sensorManager: SensorManager
     private var currentTemp: Sensor? =null
     private var light: Sensor?=null
@@ -41,7 +44,7 @@ class Home : Fragment(), SensorEventListener {
     private var prevLight:Float?=null
     private var recommendations: String=""
     private var recPrev: String=""
-    private var lightSen=true
+    private var senEnable=true
 
     private lateinit var apiKey: String
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -186,6 +189,8 @@ class Home : Fragment(), SensorEventListener {
     override  fun onResume(){
         super.onResume()
         startLocationUpdates()
+       val intent = Intent()
+        senEnable = intent.getBooleanExtra("recSwitch",true)
         sensorManager.registerListener(this,currentTemp,SensorManager.SENSOR_DELAY_NORMAL)
         sensorManager.registerListener(this,light,SensorManager.SENSOR_DELAY_NORMAL)
     }
@@ -335,7 +340,7 @@ class Home : Fragment(), SensorEventListener {
                                 .show()
                         }
                         else {
-                            if (lightSen && recPrev != recommendations){
+                            if (senEnable && recPrev != recommendations){
                                 textViewPlacesInfo.text = getString(R.string.loading)
                                 lookupPlaces(recommendations)
                             }

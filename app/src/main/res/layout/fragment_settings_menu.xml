@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".SettingsMenu">
-
+<!--
     <TextView
         android:id="@+id/enableSensorText"
         android:layout_width="wrap_content"
@@ -27,18 +27,19 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/enableSensorText"
         app:layout_constraintEnd_toEndOf="parent"
+        android:checked="true"
         android:padding="5dp"/>
-
+-->
     <TextView
         android:id="@+id/sensorrec"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/sensorrecommendations"
         android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@+id/enableSensorText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         android:padding="5dp"/>
 
     <Switch
@@ -47,10 +48,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:layout_marginEnd="10dp"
-        app:layout_constraintTop_toBottomOf="@id/enableSensorToggle"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/sensorrec"
         app:layout_constraintEnd_toEndOf="parent"
-        android:padding="5dp" />
+        android:padding="5dp"
+        android:checked="true"/>
 
 
 
