@@ -33,13 +33,15 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
     private lateinit var editTextSearch: EditText
     private lateinit var navbar: BottomNavigationView
     private lateinit var map: Button
+    private lateinit var clear:Button
 
     private lateinit var sensorManager: SensorManager
     private var currentTemp: Sensor? =null
     private var light: Sensor?=null
     private var prevTemp: Float? = null
     private var prevLight:Float?=null
-    private var recommendatons: String=""
+    private var recommendations: String=""
+   // private var manualRec=false;
     /* Steps to hide your API key:
      * 1. Create google_apis.xml in values folder (Git will ignore this file)
      * 2. Add API key as string resource named google_places_key
@@ -86,7 +88,8 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
         textViewPlacesInfo = findViewById(R.id.textViewPlacesInfo)
         editTextSearch = findViewById(R.id.editTextSearch)
         navbar = findViewById(R.id.nav_bar)
-        map = findViewById(R.id.Map)
+        map = findViewById(R.id.map)
+        clear=findViewById(R.id.clear)
         val imageButtonSearch = findViewById<ImageButton>(R.id.imageButtonSearch)
         apiKey = getString(R.string.google_places_key)
 
@@ -126,16 +129,20 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
         }
 
         getLocationUpdates()
+
+
+
         map.setOnClickListener {
+
             val intent = Intent(this@MainActivity, MapsActivity::class.java)
             intent.putExtra("lat",lat)
             intent.putExtra("long",lon)
             startActivity(intent)
         }
 
-        /*Clear.setOnClickListener {
+        clear.setOnClickListener {
             textViewPlacesInfo.text=""
-        }*/
+        }
 
     }
 
@@ -163,8 +170,10 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
                     //Lat.text = "Lat: " + location.latitude
                     // println("Lat: "+location.latitude)
                     //Long.text = "Long: " + location.longitude
+
                     lat = location.latitude
                     lon = location.longitude
+                    println("Main Lat: $lat")
 
 
                 }
@@ -188,6 +197,7 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
 
     override  fun onResume(){
         super.onResume()
+        startLocationUpdates()
         sensorManager.registerListener(this,currentTemp,SensorManager.SENSOR_DELAY_NORMAL)
         sensorManager.registerListener(this,light,SensorManager.SENSOR_DELAY_NORMAL)
     }
@@ -287,25 +297,24 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
                     if(diff?.let { abs(it) }!! >=2){
                         prevTemp=temp
                         println("temp is $temp")
-                        if(temp<0){
-                            recommendatons="Restaurant"
-                            lookupPlaces(recommendatons)
+                        recommendations = if(temp<0){
+                            "Restaurant"
+                        } else if(temp> 0 && temp <5){
+                            "university"
+                        } else if(temp>5 && temp<15){
+                            "library"
+                        } else if(temp>15 && temp<20){
+                            "gym"
+                        } else{
+                            "park"
                         }
-                        else if(temp> 0 && temp <5){
-                            recommendatons="university"
-                            lookupPlaces(recommendatons)
+                        if (!isOnline(this)) {
+                            Toast.makeText(this, "Can't access the internet.", Toast.LENGTH_SHORT)
+                                .show()
                         }
-                        else if(temp>5 && temp<15){
-                            recommendatons="library"
-                            lookupPlaces(recommendatons)
-                        }
-                        else if(temp>15 && temp<20){
-                            recommendatons="gym"
-                            lookupPlaces(recommendatons)
-                        }
-                        else{
-                            recommendatons="park"
-                            lookupPlaces(recommendatons)
+                         else {
+                            textViewPlacesInfo.text = getString(R.string.loading)
+                            lookupPlaces(recommendations)
                         }
                     }
                 }
@@ -320,25 +329,24 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
                     if(abs(diff2)>=2){
                         prevLight=bright
                         println("Light levels are $bright")
-                        if(bright<10){
-                            recommendatons="restaurant"
-                            lookupPlaces(recommendatons)
+                        recommendations = if(bright<10){
+                            "restaurant"
+                        } else if(bright>10 && bright<25){
+                            "university"
+                        } else if(bright>25 && bright < 50){
+                            "library"
+                        } else if(bright>50 && bright<70){
+                            "gym"
+                        } else{
+                            "park"
                         }
-                        else if(bright>10 && bright<25){
-                            recommendatons="university"
-                            lookupPlaces(recommendatons)
+                        if (!isOnline(this)) {
+                            Toast.makeText(this, "Can't access the internet.", Toast.LENGTH_SHORT)
+                                .show()
                         }
-                        else if(bright>25 && bright < 50){
-                            recommendatons="library"
-                            lookupPlaces(recommendatons)
-                        }
-                        else if(bright>50 && bright<70){
-                            recommendatons="gym"
-                            lookupPlaces(recommendatons)
-                        }
-                        else{
-                            recommendatons="park"
-                            lookupPlaces(recommendatons)
+                        else {
+                            textViewPlacesInfo.text = getString(R.string.loading)
+                            lookupPlaces(recommendations)
                         }
                     }
                 }

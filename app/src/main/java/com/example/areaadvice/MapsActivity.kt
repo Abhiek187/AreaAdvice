@@ -1,7 +1,12 @@
 package com.example.areaadvice
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.hardware.SensorManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.google.android.gms.location.*
 
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -26,8 +31,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
 
+
         lat = intent.getDoubleExtra("lat", 0.0)
         lon = intent.getDoubleExtra("long", 0.0)
+        getLocationUpdates()
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
@@ -46,21 +53,35 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         mMap.uiSettings.isCompassEnabled = true
-        mMap.isMyLocationEnabled = true
-        mMap.uiSettings.isMyLocationButtonEnabled = true
+        mMap.uiSettings.isZoomControlsEnabled = true
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            // Permission is not granted
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+        }
+        else {
 
-        mMap.uiSettings.isZoomControlsEnabled=true
+            mMap.isMyLocationEnabled = true
+            mMap.uiSettings.isMyLocationButtonEnabled = true
+
+            //getLocationUpdates()
 
 
-        // Add a marker in Sydney and move the camera
-        //val sydney = LatLng(-34.0, 151.0)
-        //handler.post(runnableCode)
-        val location= LatLng(lat,lon)
-        println(" lat $lat")
-        println(" long $lon")
+            // Add a marker in Sydney and move the camera
+            //val sydney = LatLng(-34.0, 151.0)
+            //handler.post(runnableCode)
+            val location = LatLng(lat, lon)
+            println(" lat $lat")
+            println(" long $lon")
 
-       // mMap.addMarker(MarkerOptions().position(location).title("Current Location"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(location))
+            // mMap.addMarker(MarkerOptions().position(location).title("Current Location"))
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(location))
+        }
+
     }
 /*    val runnableCode = object : Runnable {
         override fun run() {
@@ -94,7 +115,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     // use your location object
                     // get latitude , longitude and other info from this
                     //Lat.text = "Lat: " + location.latitude
-                    // println("Lat: "+location.latitude)
+                     println("Map Lat: "+lat)
                     //Long.text = "Long: " + location.longitude
                     lat = location.latitude
                     lon = location.longitude
@@ -111,5 +132,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             locationCallback,
             null /* Looper */
         )
+    }
+    override  fun onResume(){
+        super.onResume()
+        startLocationUpdates()
     }
 }
