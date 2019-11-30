@@ -325,17 +325,20 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
                 val bright= event.values[0]
                 if(prevLight!=null){
                     val diff2= bright.minus(prevLight!!)
-                    if(abs(diff2)>=2){
+                    if(abs(diff2)>=200){
                         prevLight=bright
                         println("Light levels are $bright")
+
                         recPrev=recommendations
-                        recommendations = if(bright<10){
+
+
+                        recommendations = if(bright<500){
                             "restaurant"
-                        } else if(bright>10 && bright<25){
+                        } else if(bright>500 && bright<2000){
                             "university"
-                        } else if(bright>25 && bright < 50){
+                        } else if(bright>2000 && bright < 10000){
                             "library"
-                        } else if(bright>50 && bright<70){
+                        } else if(bright>10000 && bright<20000){
                             "gym"
                         } else{
                             "park"
@@ -349,7 +352,11 @@ class MainActivity : AppCompatActivity(),SensorEventListener {
                             if (lightSen){
                                 if (!recPrev.equals(recommendations)){
                             textViewPlacesInfo.text = getString(R.string.loading)
+
                             lookupPlaces(recommendations)}}
+
+                            //lookupPlaces(recommendations)
+
                         }
                     }
                 }
