@@ -17,7 +17,7 @@ class SettingsMenu : Fragment() {
     private lateinit var maxRadiusSeek: SeekBar
     private lateinit var maxRadiusSeekText: TextView
 
-    override fun onAttach(context: Context){
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         mContext = context
     }
@@ -26,14 +26,14 @@ class SettingsMenu : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         val view = inflater.inflate(R.layout.fragment_settings_menu, container, false)
 
         recommendSensor = view.findViewById(R.id.enableSensorRecToggle)
         maxRadiusSeek = view.findViewById(R.id.radiusSeekBar)
         maxRadiusSeekText = view.findViewById(R.id.radiusSeekBarText)
 
-        maxRadiusSeek.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
+        maxRadiusSeek.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
+
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 maxRadiusSeekText.text = progress.toString()
             }
@@ -45,9 +45,7 @@ class SettingsMenu : Fragment() {
             override fun onStopTrackingTouch(seekBar: SeekBar) {
                 maxRadiusSeekText.text = seekBar.progress.toString()
             }
-
         })
-
 
         return view
     }

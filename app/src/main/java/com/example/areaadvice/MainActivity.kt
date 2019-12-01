@@ -13,24 +13,20 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        changeFragment(Home())
+        changeFragment(Home()) // start at home fragment
         navBar = findViewById(R.id.nav_bar)
+
         navBar.setOnNavigationItemSelectedListener { item ->
             val fm = supportFragmentManager.beginTransaction()
-            when(item.itemId){
-                R.id.Home ->{
-                    println("Home Clicked")
-                    /*val active = SettingsMenu()
-                    fm.hide(active).show(Home()).commit()*/
+
+            when(item.itemId) {
+                R.id.Home -> {
                     val fragment = Home()
                     fm.hide(SettingsMenu())
                     changeFragment(fragment)
                     return@setOnNavigationItemSelectedListener true
                 }
-                R.id.Settings ->{
-                    println("Settings Clicked")
-                    /*val active = Home()
-                    fm.hide(active).show(SettingsMenu()).commit()*/
+                R.id.Settings -> {
                     val fragment = SettingsMenu()
                     fm.hide(Home())
                     changeFragment(fragment)
@@ -41,9 +37,9 @@ class MainActivity : AppCompatActivity() {
 
         }
     }
+
     private fun changeFragment(fragment: Fragment): Boolean {
         supportFragmentManager.beginTransaction().replace(R.id.fragmentcontainer, fragment).commit()
         return true
     }
 }
-

@@ -53,7 +53,7 @@ class Home : Fragment(), SensorEventListener {
     var lat = 0.0
     var lon = 0.0
 
-    override fun onAttach(context: Context){
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         mContext = context
     }
@@ -72,8 +72,7 @@ class Home : Fragment(), SensorEventListener {
         unitLight = getString(R.string.light_lux)
 
         if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED
-        ) {
+            != PackageManager.PERMISSION_GRANTED) {
             // Permission is not granted
             ActivityCompat.requestPermissions(
                 activity!!,
@@ -92,7 +91,6 @@ class Home : Fragment(), SensorEventListener {
             )
         }
 
-
         textViewPlacesInfo = view.findViewById(R.id.textViewPlacesInfo)
         editTextSearch = view.findViewById(R.id.editTextSearch)
         imageButtonSearch = view.findViewById(R.id.imageButtonSearch)
@@ -104,7 +102,7 @@ class Home : Fragment(), SensorEventListener {
          * 3. Protect yourself from Chrysnosis by deleting his GitHub branch to avoid any running errors (sorry Krishna)
          */
         apiKey = getString(R.string.google_places_key)
-
+        getLocationUpdates() // track location in the background
 
         imageButtonSearch.setOnClickListener {
             // Initiate search
@@ -124,12 +122,8 @@ class Home : Fragment(), SensorEventListener {
             }
         }
 
-        getLocationUpdates()
-
-
-
         mapBtn.setOnClickListener {
-
+            // Go to MapsActivity
             val intent = Intent(mContext, MapsActivity::class.java)
             intent.putExtra("lat",lat)
             intent.putExtra("long",lon)
@@ -145,21 +139,19 @@ class Home : Fragment(), SensorEventListener {
     }
 
     private fun getLocationUpdates() {
-
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity!!)
         locationRequest = LocationRequest()
         locationRequest.interval = 5000
         locationRequest.fastestInterval = 5000
-        locationRequest.smallestDisplacement = 10f // 170 m = 0.1 mile
-        locationRequest.priority =
-            LocationRequest.PRIORITY_HIGH_ACCURACY //set according to your app function
-        println("get Location")
+        locationRequest.smallestDisplacement = 10f
+        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        //println("get Location")
+
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult?) {
                 locationResult ?: return
 
                 if (locationResult.locations.isNotEmpty()) {
-
                     // get latest location
                     val location =
                         locationResult.lastLocation
@@ -172,8 +164,7 @@ class Home : Fragment(), SensorEventListener {
                     lat = location.latitude
                     lon = location.longitude
                     println("Main Lat: $lat")
-
-
+                    println("Main Lon: $lon")
                 }
             }
         }
@@ -183,19 +174,21 @@ class Home : Fragment(), SensorEventListener {
         fusedLocationClient.requestLocationUpdates(
             locationRequest,
             locationCallback,
-            null /* Looper */
+            null // looper
         )
     }
 
-    override  fun onResume(){
+    override  fun onResume() {
         super.onResume()
         startLocationUpdates()
+        // Enable sensors on resume
         sensorManager.registerListener(this,currentTemp,SensorManager.SENSOR_DELAY_NORMAL)
         sensorManager.registerListener(this,light,SensorManager.SENSOR_DELAY_NORMAL)
     }
 
-    override fun onPause(){
+    override fun onPause() {
         super.onPause()
+        // Stop sensors on pause
         sensorManager.unregisterListener(this)
     }
 
@@ -264,41 +257,48 @@ class Home : Fragment(), SensorEventListener {
     }
 
     override fun onAccuracyChanged(event: Sensor?, accuracy: Int) {
-        if(event==currentTemp||event==light){
-            if(accuracy==0){
-                println("unreliable")
-            }
-            if(accuracy==1){
-                println("low accuracy")
-            }
-            if(accuracy==2){
-                println("Medium accuracy")
-            }
-            if(accuracy==3){
-                println("Very accurate")
+        // Should be called once when sensors are enabled
+        if (event == currentTemp || event == light) {
+            when (accuracy) {
+                0 -> {
+                    println("Unreliable")
+                }
+                1 -> {
+                    println("Low accuracy")
+                }
+                2 -> {
+                    println("Medium accuracy")
+                }
+                else -> {
+                    println("Very accurate")
+                }
             }
         }
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
-        when(event?.sensor?.type){
-            Sensor.TYPE_AMBIENT_TEMPERATURE->{
-                val temp= event.values?.get(0)
-                if(prevTemp!=null){
-                    val diff= temp?.minus(prevTemp!!)
-                    if(diff?.let { abs(it) }!! >=2){
-                        prevTemp=temp
+        when (event?.sensor?.type) {
+            Sensor.TYPE_AMBIENT_TEMPERATURE -> {
+                val temp = event.values?.get(0)
+
+                if (prevTemp != null) {
+                    val diff = temp?.minus(prevTemp!!)
+                    // Check for temperature change when there's at least 2 degrees of change
+                    if (diff?.let { abs(it) }!! >= 2) {
+                        prevTemp = temp
                         println("temp is $temp $unitTemp " +
                                 "(${cToF(temp)} ${getString(R.string.temp_fahrenheit)})")
-                        recommendations = if(temp<0){
+
+                        // Sample recommendations based on temperature
+                        recommendations = if (temp <= 0) {
                             "Restaurant"
-                        } else if(temp> 0 && temp <5){
+                        } else if (temp > 0 && temp <= 5) {
                             "university"
-                        } else if(temp>5 && temp<15){
+                        } else if (temp > 5 && temp <= 15) {
                             "library"
-                        } else if(temp>15 && temp<20){
+                        } else if(temp > 15 && temp <= 20) {
                             "gym"
-                        } else{
+                        } else {
                             "park"
                         }
                         /*if (!isOnline()) {
@@ -310,30 +310,32 @@ class Home : Fragment(), SensorEventListener {
                             lookupPlaces(recommendations)
                         }*/
                     }
-                }
-                else {
+                } else {
                     prevTemp = temp
                 }
             }
-            Sensor.TYPE_LIGHT->{
+            Sensor.TYPE_LIGHT -> {
                 val bright= event.values[0]
-                if(prevLight!=null){
-                    val diff2= bright.minus(prevLight!!)
-                    if(abs(diff2)>=2){
-                        prevLight=bright
+
+                if (prevLight!=null) {
+                    val diff2 = bright.minus(prevLight!!)
+                    // Check for light if there's at least a 2 lx change
+                    if (abs(diff2) >= 2) {
+                        prevLight = bright
                         println("Light levels are $bright $unitLight " +
                                 "(${lxToFc(bright)} ${getString(R.string.light_foot_candle)})")
                         recPrev = recommendations
 
-                        recommendations = if(bright<500){
+                        // Sample recommendations based on light level
+                        recommendations = if (bright <= 500) {
                             "restaurant"
-                        } else if(bright>500 && bright<2000){
+                        } else if (bright > 500 && bright <= 2000) {
                             "university"
-                        } else if(bright>2000 && bright < 10000){
+                        } else if(bright > 2000 && bright <= 10000) {
                             "gym"
-                        } else if(bright>10000 && bright<20000){
+                        } else if(bright > 10000 && bright <= 20000) {
                             "tourist"
-                        } else{
+                        } else {
                             "park"
                         }
                         /*if (!isOnline()) {
@@ -341,18 +343,16 @@ class Home : Fragment(), SensorEventListener {
                                 .show()
                         }
                         else {
-                            if (lightSen && recPrev != recommendations){
+                            if (lightSen && recPrev != recommendations) {
                                 textViewPlacesInfo.text = getString(R.string.loading)
                                 lookupPlaces(recommendations)
                             }
                         }*/
                     }
+                } else {
+                    prevLight = bright
                 }
-                prevLight=bright
             }
         }
     }
-
-
 }
-
