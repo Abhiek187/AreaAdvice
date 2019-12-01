@@ -1,4 +1,4 @@
-package com.example.areaadvice
+package com.example.areaadvice.models
 
 data class Place(
     val address: String,

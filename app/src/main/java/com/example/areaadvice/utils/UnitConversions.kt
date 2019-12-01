@@ -1,4 +1,4 @@
-package com.example.areaadvice
+package com.example.areaadvice.utils
 
 fun mToMi(meters: Float): Float {
     return meters / 1609.344f

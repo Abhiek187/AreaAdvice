@@ -1,4 +1,4 @@
-package com.example.areaadvice
+package com.example.areaadvice.fragments
 
 import android.Manifest
 import android.content.ContentValues
@@ -20,6 +20,12 @@ import android.widget.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.example.areaadvice.R
+import com.example.areaadvice.activities.MapsActivity
+import com.example.areaadvice.storage.DatabasePlaces
+import com.example.areaadvice.utils.cToF
+import com.example.areaadvice.utils.lxToFc
+import com.example.areaadvice.utils.miToM
 import com.google.android.gms.location.*
 import org.json.JSONObject
 import java.net.URL
@@ -155,7 +161,9 @@ class Home : Fragment(), SensorEventListener {
                 return@setOnClickListener
             }
 
-            val reqParam = if (useRatings) "radius=${miToM(radius.toFloat())}" else "rankby=distance"
+            val reqParam = if (useRatings) "radius=${miToM(
+                radius.toFloat()
+            )}" else "rankby=distance"
             val rankByParam = when {
                 query.isNotEmpty() -> {
                     // Need to convert user input to encoded query string
@@ -192,7 +200,7 @@ class Home : Fragment(), SensorEventListener {
 
         saveBtn.setOnClickListener{
             result?.let {
-                val db = Database_Places(mContext)
+                val db = DatabasePlaces(mContext)
                 val newInfo = db.writableDatabase
                 val tempLoc = it.getJSONObject("geometry").getJSONObject("location").toString()
                 val tempLat1 = tempLoc.substringAfter("'lat: '")
@@ -200,13 +208,13 @@ class Home : Fragment(), SensorEventListener {
                 val tempLng = tempLoc.substringAfter("'lng: '")
                 val tempLng2 = tempLng.substringBefore("}")
                 val addVal = ContentValues().apply {
-                    put(Database_Places.Col_place_Name, it.getString("name"))
-                    put(Database_Places.Col_Address, it.getString("formatted_address"))
-                    put(Database_Places.Col_Rating, it.optDouble("rating"))
-                    put(Database_Places.Col_Lat, tempLat2)
-                    put(Database_Places.Col_Lng, tempLng2)
+                    put(DatabasePlaces.Col_place_Name, it.getString("name"))
+                    put(DatabasePlaces.Col_Address, it.getString("formatted_address"))
+                    put(DatabasePlaces.Col_Rating, it.optDouble("rating"))
+                    put(DatabasePlaces.Col_Lat, tempLat2)
+                    put(DatabasePlaces.Col_Lng, tempLng2)
                 }
-                val newRowId = newInfo?.insert(Database_Places.Table_Name, null, addVal)
+                val newRowId = newInfo?.insert(DatabasePlaces.Table_Name, null, addVal)
             }
         }
 
@@ -306,7 +314,8 @@ class Home : Fragment(), SensorEventListener {
 
                 activity!!.runOnUiThread {
                     // Remember that you can only change UI elements in the main thread
-                    textViewPlacesInfo.text = getString(R.string.place_details, photos?.length(),
+                    textViewPlacesInfo.text = getString(
+                        R.string.place_details, photos?.length(),
                         name, address, "%.1f".format(rating), reviews?.length(),placeType?.toString(),
                         location.toString(2), isOpen, schedule?.toString(2),
                         url)
@@ -364,7 +373,9 @@ class Home : Fragment(), SensorEventListener {
                     if (diff?.let { abs(it) }!! >= 2) {
                         prevTemp = temp
                         println("temp is $temp $unitTemp " +
-                                "(${cToF(temp)} ${getString(R.string.temp_fahrenheit)})")
+                                "(${cToF(temp)} ${getString(
+                                    R.string.temp_fahrenheit
+                                )})")
 
                         // Sample recommendations based on temperature
                         recommendations = if (temp <= 0) {
@@ -392,7 +403,9 @@ class Home : Fragment(), SensorEventListener {
                     if (abs(diff2) >= 2) {
                         prevLight = bright
                         println("Light levels are $bright $unitLight " +
-                                "(${lxToFc(bright)} ${getString(R.string.light_foot_candle)})")
+                                "(${lxToFc(bright)} ${getString(
+                                    R.string.light_foot_candle
+                                )})")
                         recPrev = recommendations
 
                         // Sample recommendations based on light level

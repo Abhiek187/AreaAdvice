@@ -1,9 +1,10 @@
-package com.example.areaadvice
+package com.example.areaadvice.adapters
 
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.areaadvice.models.Place
 
 class PlacesAdapter(private var context: Context, private var placesList: ArrayList<Place>)
     : RecyclerView.Adapter<ViewHolder>() {
