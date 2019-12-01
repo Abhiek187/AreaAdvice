@@ -11,7 +11,7 @@
     <string name="sensorRecOnorOff">On</string>
     <string name="sensorrecommendations">Sensor Recommendations</string>
     <string name="maxRadius">Maximum Radius</string>
-    <string name="startval">1</string>
+    <string name="startval">25</string>
     <string name="chooseUnit">Unit of Measurement</string>
     <string name="unitChoiceUSA">mi/°F</string>
     <string name="unitChoiceSI">km/°C</string>

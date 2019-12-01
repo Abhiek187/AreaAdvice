@@ -85,7 +85,7 @@ class SettingsMenu : Fragment() {
 
         val sharedPref: SharedPreferences = activity!!.getSharedPreferences("MyPref", 0)
 
-        radiusSeekBarText.text= sharedPref.getString("radius","1").toString()
+        radiusSeekBarText.text= sharedPref.getString("radius","25").toString()
         senEnable.isChecked = sharedPref.getBoolean("senEnable",true)
         sharedPref.getString("check", senEnable.text.toString())
 
@@ -107,10 +107,10 @@ class SettingsMenu : Fragment() {
             }
         }
 
-        radiusSeek = view.findViewById(R.id.radiusSeekBar)
-        radiusSeekBarText = view.findViewById(R.id.radiusSeekBarText)
+       // radiusSeek = view.findViewById(R.id.radiusSeekBar)
+       // radiusSeekBarText = view.findViewById(R.id.radiusSeekBarText)
 
-        radiusSeek.progress=sharedPref.getInt("bar",1)
+        radiusSeek.progress=sharedPref.getInt("bar",25)
 
         radiusSeek.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
 

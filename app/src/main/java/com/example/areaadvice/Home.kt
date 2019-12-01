@@ -59,7 +59,7 @@ class Home : Fragment(), SensorEventListener {
     private var critChoice: Int = 1
     private var tempDegree = true
     private var disUnit = true
-    private var radius = "16090" // placeholder: 16090 m = 10 mi
+    private var radius = "25" // placeholder: 16090 m = 10 mi
     private lateinit var unitTemp: String
     private lateinit var unitLight: String
     private var useRatings = true
@@ -103,7 +103,7 @@ class Home : Fragment(), SensorEventListener {
         critChoice = sharedPref.getInt("crit", 1)
         tempDegree=sharedPref.getBoolean("tempUnit",true)
         disUnit=sharedPref.getBoolean("disUnit",true)
-        radius= sharedPref.getString("radius","16090").toString()
+        radius= sharedPref.getString("radius","25").toString()
 
         if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION)
             != PackageManager.PERMISSION_GRANTED) {
