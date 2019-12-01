@@ -13,6 +13,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -70,7 +71,30 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             println(" long $lon")
 
             // mMap.addMarker(MarkerOptions().position(location).title("Current Location"))
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 16f))
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 12f))
+
+            val db = Database_Places(this)
+            val checkInfo=db.readableDatabase
+
+
+            val cursor2 = checkInfo.query(
+                Database_Places.Table_Name,   // The table to query
+                null,             // The array of columns to return (pass null to get all)
+                null,//selection,              // The columns for the WHERE clause
+                null,//selectionArgs,          // The values for the WHERE clause
+                null,                   // don't group the rows
+                null,                   // don't filter by row groups
+                null             // The sort order
+            )
+
+            var len = (cursor2.count > 0)
+            with(cursor2) {
+                while (moveToNext()) {
+
+                    val marklocation = LatLng(getString(getColumnIndexOrThrow(Database_Places.Col_Lat)).toDouble(),
+                        getString(getColumnIndexOrThrow(Database_Places.Col_Lng)).toDouble())
+                    mMap.addMarker(MarkerOptions().position(marklocation).title(getString(getColumnIndexOrThrow(Database_Places.Col_place_Name))))
+                }}
         }
 
     }
