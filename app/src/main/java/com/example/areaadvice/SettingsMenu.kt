@@ -62,6 +62,10 @@ class SettingsMenu : Fragment() {
 
 
         val editor = sharedPref.edit()
+        senEnable.isChecked=sharedPref.getBoolean("senEnable",true)
+        tempDegree.isChecked=sharedPref.getBoolean("tempUnit",true)
+        disUnit.isChecked=sharedPref.getBoolean("disUnit",true)
+        radiusSeekBarText.text= sharedPref.getString("radius","1").toString()
 
 
         senEnable.setOnCheckedChangeListener { buttonView, isChecked ->
