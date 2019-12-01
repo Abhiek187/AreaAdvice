@@ -78,6 +78,8 @@ class Home : Fragment(), SensorEventListener {
         mContext = context
     }
 
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -194,6 +196,32 @@ class Home : Fragment(), SensorEventListener {
             result?.let {
                 val db = Database_Places(mContext)
                 val newInfo = db.writableDatabase
+                val checkInfo=db.readableDatabase
+                var repeat=false
+
+                val cursor2 = checkInfo.query(
+                    Database_Places.Table_Name,   // The table to query
+                    null,             // The array of columns to return (pass null to get all)
+                    null,//selection,              // The columns for the WHERE clause
+                    null,//selectionArgs,          // The values for the WHERE clause
+                    null,                   // don't group the rows
+                    null,                   // don't filter by row groups
+                    null             // The sort order
+                )
+
+                var len = (cursor2.count > 0)
+                with(cursor2) {
+                    while (moveToNext()) {
+                        //println("database "+getString(getColumnIndexOrThrow(Database_Places.Col_place_Name)))
+                        //println("current "+it.getString("name"))
+                        if (getString(getColumnIndexOrThrow(Database_Places.Col_Address)).contentEquals(it.getString("formatted_address")))
+                        {repeat=true
+
+                        }
+                    }
+                    }
+                if (repeat){}
+                else{
                 val tempLoc = it.getJSONObject("geometry").getJSONObject("location").getDouble("lat")
                 //val tempLat1 = tempLoc.substringAfter(":")
                 //val tempLat2 = tempLat1.substringBefore(",")
@@ -208,7 +236,7 @@ class Home : Fragment(), SensorEventListener {
                 }
                 val newRowId = newInfo?.insert(Database_Places.Table_Name, null, addVal)
             }
-        }
+        }}
 
         // Inflate the layout for this fragment
         return view
