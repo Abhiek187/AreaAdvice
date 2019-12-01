@@ -39,7 +39,7 @@ class Home : Fragment(), SensorEventListener {
     private lateinit var mapBtn: Button
     private lateinit var clearBtn: Button
     private lateinit var saveBtn: Button
-    private lateinit var result: JSONObject
+    private var result: JSONObject? = null
 
     // Sensor variables
     private lateinit var sensorManager: SensorManager
@@ -191,21 +191,23 @@ class Home : Fragment(), SensorEventListener {
         }
 
         saveBtn.setOnClickListener{
-            val db=Database_Places(mContext)
-            val newInfo=db.writableDatabase
-            val tempLoc = result.getJSONObject("geometry").getJSONObject("location").toString()
-            val tempLat1=tempLoc.substringAfter("'lat: '")
-            val tempLat2=tempLat1.substringBefore(",")
-            val tempLng=tempLoc.substringAfter("'lng: '")
-            val tempLng2=tempLng.substringBefore("}")
-            val addVal =ContentValues().apply{
-                put(Database_Places.Col_place_Name,result.getString("name"))
-                put(Database_Places.Col_Address,result.getString("formatted_address"))
-                put(Database_Places.Col_Rating,result.optDouble("rating"))
-                put(Database_Places.Col_Lat,tempLat2)
-                put(Database_Places.Col_Lng,tempLng2)
+            result?.let {
+                val db = Database_Places(mContext)
+                val newInfo = db.writableDatabase
+                val tempLoc = it.getJSONObject("geometry").getJSONObject("location").toString()
+                val tempLat1 = tempLoc.substringAfter("'lat: '")
+                val tempLat2 = tempLat1.substringBefore(",")
+                val tempLng = tempLoc.substringAfter("'lng: '")
+                val tempLng2 = tempLng.substringBefore("}")
+                val addVal = ContentValues().apply {
+                    put(Database_Places.Col_place_Name, it.getString("name"))
+                    put(Database_Places.Col_Address, it.getString("formatted_address"))
+                    put(Database_Places.Col_Rating, it.optDouble("rating"))
+                    put(Database_Places.Col_Lat, tempLat2)
+                    put(Database_Places.Col_Lng, tempLng2)
+                }
+                val newRowId = newInfo?.insert(Database_Places.Table_Name, null, addVal)
             }
-            val newRowId=newInfo?.insert(Database_Places.Table_Name,null,addVal)
         }
 
         // Inflate the layout for this fragment
@@ -287,20 +289,20 @@ class Home : Fragment(), SensorEventListener {
                         "rating,review,geometry,type,opening_hours,url").readText()
                 val detailsJSON = JSONObject(detailsStr)
                 println(detailsJSON.toString(2))
-                 result = detailsJSON.getJSONObject("result")
+                result = detailsJSON.getJSONObject("result")
 
-                val address = result.getString("formatted_address")
-                val location = result.getJSONObject("geometry")
+                val address = result!!.getString("formatted_address")
+                val location = result!!.getJSONObject("geometry")
                     .getJSONObject("location")
-                val name = result.getString("name")
-                val hours = result.optJSONObject("opening_hours")
+                val name = result!!.getString("name")
+                val hours = result!!.optJSONObject("opening_hours")
                 val isOpen = hours?.getBoolean("open_now")
                 val schedule = hours?.getJSONArray("weekday_text")
-                val photos = result.optJSONArray("photos")
-                val rating = result.optDouble("rating", 0.0)
-                val reviews = result.optJSONArray("reviews")
-                val placeType=result.optJSONArray("types")
-                val url = result.getString("url")
+                val photos = result!!.optJSONArray("photos")
+                val rating = result!!.optDouble("rating", 0.0)
+                val reviews = result!!.optJSONArray("reviews")
+                val placeType=result!!.optJSONArray("types")
+                val url = result!!.getString("url")
 
                 activity!!.runOnUiThread {
                     // Remember that you can only change UI elements in the main thread
