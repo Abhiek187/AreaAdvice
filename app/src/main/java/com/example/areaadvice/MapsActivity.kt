@@ -2,11 +2,9 @@ package com.example.areaadvice
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.hardware.SensorManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.*
 
@@ -22,20 +20,19 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationRequest: LocationRequest
     private lateinit var locationCallback: LocationCallback
+
     var lat = 0.0
     var lon = 0.0
-    //val handler = Handler()
-    //var repeat =0;
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
 
-
         lat = intent.getDoubleExtra("lat", 0.0)
         lon = intent.getDoubleExtra("long", 0.0)
         getLocationUpdates()
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
@@ -58,21 +55,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
             != PackageManager.PERMISSION_GRANTED
         ) {
+            // Permission is not granted
             Toast.makeText(this, "Location permission not granted", Toast.LENGTH_SHORT)
                 .show()
-            // Permission is not granted
-        }
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED
-        ) {
-        }
-        else {
-
+        } else {
             mMap.isMyLocationEnabled = true
             mMap.uiSettings.isMyLocationButtonEnabled = true
-
-            //getLocationUpdates()
-
 
             // Add a marker in Sydney and move the camera
             //val sydney = LatLng(-34.0, 151.0)
@@ -82,18 +70,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             println(" long $lon")
 
             // mMap.addMarker(MarkerOptions().position(location).title("Current Location"))
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(location))
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 16f))
         }
 
     }
-/*    val runnableCode = object : Runnable {
-        override fun run() {
-            if (repeat <2){
-            getLocationUpdates()
-                repeat=repeat+1
-            handler.postDelayed(this, 5000)}
-        }
-    }*/
 
     private fun getLocationUpdates() {
 
@@ -118,7 +98,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     // use your location object
                     // get latitude , longitude and other info from this
                     //Lat.text = "Lat: " + location.latitude
-                     println("Map Lat: "+lat)
+                     println("Map Lat: $lat")
                     //Long.text = "Long: " + location.longitude
                     lat = location.latitude
                     lon = location.longitude
@@ -129,13 +109,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
         startLocationUpdates()
     }
+
     private fun startLocationUpdates() {
         fusedLocationClient.requestLocationUpdates(
             locationRequest,
             locationCallback,
-            null /* Looper */
+            null // looper
         )
     }
+
     override  fun onResume(){
         super.onResume()
         startLocationUpdates()
