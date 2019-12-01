@@ -1,6 +1,7 @@
 package com.example.areaadvice
 
 import android.Manifest
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -23,6 +24,7 @@ import com.google.android.gms.location.*
 import org.json.JSONObject
 import java.net.URL
 import java.net.URLEncoder
+import java.util.*
 import kotlin.concurrent.thread
 import kotlin.math.abs
 
@@ -34,7 +36,9 @@ class Home : Fragment(), SensorEventListener {
     private lateinit var editTextSearch: EditText
     private lateinit var mapBtn: Button
     private lateinit var clearBtn: Button
+    private lateinit var saveBtn: Button
     private lateinit var imageButtonSearch: ImageButton
+    private lateinit var result: JSONObject
 
 
     private lateinit var sensorManager: SensorManager
@@ -62,6 +66,7 @@ class Home : Fragment(), SensorEventListener {
 
     var lat = 0.0
     var lon = 0.0
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -109,6 +114,7 @@ class Home : Fragment(), SensorEventListener {
         imageButtonSearch = view.findViewById(R.id.imageButtonSearch)
         mapBtn = view.findViewById(R.id.map)
         clearBtn = view.findViewById(R.id.clear)
+        saveBtn=view.findViewById(R.id.save)
         /* Steps to hide your API key:
          * 1. Create google_apis.xml in values folder (Git will ignore this file)
          * 2. Add API key as string resource named google_places_key
@@ -145,6 +151,24 @@ class Home : Fragment(), SensorEventListener {
 
         clearBtn.setOnClickListener {
             textViewPlacesInfo.text = ""
+        }
+
+        saveBtn.setOnClickListener{
+            val db=Database_Places(mContext)
+            val newInfo=db.writableDatabase
+            val tempLoc = result.getJSONObject("geometry").getJSONObject("location").toString()
+            val tempLat1=tempLoc.substringAfter("'lat: '")
+            val tempLat2=tempLat1.substringBefore(",")
+            val tempLng=tempLoc.substringAfter("'lng: '")
+            val tempLng2=tempLng.substringBefore("}")
+            val addVal =ContentValues().apply{
+                put(Database_Places.Col_place_Name,result.getString("name"))
+                put(Database_Places.Col_Address,result.getString("formatted_address"))
+                put(Database_Places.Col_Rating,result.optDouble("rating"))
+                put(Database_Places.Col_Lat,tempLat2)
+                put(Database_Places.Col_Lng,tempLng2)
+            }
+            val newRowId=newInfo?.insert(Database_Places.Table_Name,null,addVal)
         }
 
         // Inflate the layout for this fragment
@@ -236,7 +260,7 @@ class Home : Fragment(), SensorEventListener {
                         "rating,review,geometry,type,opening_hours,url").readText()
                 val detailsJSON = JSONObject(detailsStr)
                 println(detailsJSON.toString(2))
-                val result = detailsJSON.getJSONObject("result")
+                 result = detailsJSON.getJSONObject("result")
 
                 val address = result.getString("formatted_address")
                 val location = result.getJSONObject("geometry")
