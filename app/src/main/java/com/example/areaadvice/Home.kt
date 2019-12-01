@@ -46,7 +46,10 @@ class Home : Fragment(), SensorEventListener {
 
     private var senEnable=true
     private var senEnableText: String = ""
+    private var openLocEnable = true
+    private var openLocText: String = ""
     private var unitChoice: Int = 1
+    private var critChoice: Int = 1
     private var radius="1"
 
     //private var lightSen=true
@@ -203,7 +206,10 @@ class Home : Fragment(), SensorEventListener {
 
         senEnable=sharedPref.getBoolean("senEnable",true)
         senEnableText = sharedPref.getString("check", "On").toString()
+        openLocEnable = sharedPref.getBoolean("openLocEnable", true)
+        openLocText = sharedPref.getString("check2", "On").toString()
         unitChoice = sharedPref.getInt("units", 1)
+        critChoice = sharedPref.getInt("crit", 1)
         radius= sharedPref.getString("radius","1").toString()
 
 
