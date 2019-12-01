@@ -16,7 +16,7 @@ class SettingsMenu : Fragment() {
     private lateinit var senEnable: Switch
     private lateinit var openLocEnable: Switch
     private lateinit var recommendSensor: Switch
-    private lateinit var RadiusSeek: SeekBar
+    private lateinit var radiusSeek: SeekBar
     private lateinit var radiusSeekBarText: TextView
     private lateinit var sharedPref: SharedPreferences
     private lateinit var radGroup: RadioGroup
@@ -46,7 +46,7 @@ class SettingsMenu : Fragment() {
         openLocEnable = view.findViewById(R.id.showOpenPlacesToggle)
         radiusSeekBarText = view.findViewById(R.id.radiusSeekBarText)
         recommendSensor = view.findViewById(R.id.enableSensorRecToggle)
-        RadiusSeek = view.findViewById(R.id.radiusSeekBar)
+        radiusSeek = view.findViewById(R.id.radiusSeekBar)
         radGroup = view.findViewById(R.id.radiogroup)
         radGroup2 = view.findViewById(R.id.radiogroup2)
         radBtn = view.findViewById(radGroup.checkedRadioButtonId)
@@ -81,6 +81,10 @@ class SettingsMenu : Fragment() {
             editor.apply()
         }
 
+        radiusSeekBarText=view.findViewById(R.id.radiusSeekBarText)
+
+        val sharedPref: SharedPreferences = activity!!.getSharedPreferences("MyPref", 0)
+
         radiusSeekBarText.text= sharedPref.getString("radius","1").toString()
         senEnable.isChecked = sharedPref.getBoolean("senEnable",true)
         sharedPref.getString("check", senEnable.text.toString())
@@ -92,20 +96,24 @@ class SettingsMenu : Fragment() {
         openLocEnable.isChecked = sharedPref.getBoolean("openLocEnable", true)
         sharedPref.getString("check2", openLocEnable.text.toString())
 
-        openLocEnable.setOnCheckedChangeListener{_,_ ->
+        openLocEnable.setOnCheckedChangeListener { _, _ ->
             editor.putBoolean("openLocEnable", openLocEnable.isChecked)
-            if(openLocEnable.isChecked) {
+            if (openLocEnable.isChecked) {
                 openLocEnable.text = "On"
                 editor.putString("check2", openLocEnable.text.toString())
-            }
-            else {
+            } else {
                 openLocEnable.text = "Off"
                 editor.putString("check2", openLocEnable.text.toString())
             }
-            editor.apply()
         }
 
-        RadiusSeek.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
+        radiusSeek = view.findViewById(R.id.radiusSeekBar)
+        radiusSeekBarText = view.findViewById(R.id.radiusSeekBarText)
+
+        radiusSeek.progress=sharedPref.getInt("bar",1)
+
+        radiusSeek.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
+
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 radiusSeekBarText.text = progress.toString()
             }
@@ -117,6 +125,7 @@ class SettingsMenu : Fragment() {
             override fun onStopTrackingTouch(seekBar: SeekBar) {
                 radiusSeekBarText.text = seekBar.progress.toString()
                 editor.putString("radius",radiusSeekBarText.text.toString())
+                editor.putInt("bar",radiusSeek.progress)
                 editor.apply()
             }
         })

@@ -359,9 +359,10 @@ class Home : Fragment(), SensorEventListener {
                                 .show()
                         }
                         else {
+                            if (senEnable ) {
                             textViewPlacesInfo.text = getString(R.string.loading)
                             lookupPlaces(recommendations)
-                        }
+                        }}
                     }
                 } else {
                     prevTemp = temp
