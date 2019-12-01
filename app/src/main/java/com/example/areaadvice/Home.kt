@@ -26,40 +26,41 @@ import java.net.URLEncoder
 import kotlin.concurrent.thread
 import kotlin.math.abs
 
-
 class Home : Fragment(), SensorEventListener {
-
+    // The MainActivity context & API key
     private lateinit var mContext: Context
-    private lateinit var textViewPlacesInfo: TextView
+    private lateinit var apiKey: String
+
+    // UI elements
     private lateinit var editTextSearch: EditText
+    private lateinit var imageButtonSearch: ImageButton
+    private lateinit var textViewPlacesInfo: TextView
     private lateinit var mapBtn: Button
     private lateinit var clearBtn: Button
-    private lateinit var imageButtonSearch: ImageButton
 
-
+    // Sensor variables
     private lateinit var sensorManager: SensorManager
-    private var currentTemp: Sensor? =null
-    private var light: Sensor?=null
+    private var currentTemp: Sensor? = null
+    private var light: Sensor? = null
     private var prevTemp: Float? = null
-    private var prevLight:Float?=null
-    private var recommendations: String=""
-    private var recPrev: String=""
+    private var prevLight:Float? = null
+    private var recommendations: String = "" // must be a type supported by the Places API
+    private var recPrev: String = ""
 
-    private var senEnable=true
-    private var tempDegree=true
-    private var disUnit=true
-    private var radius="1"
-
-    //private var lightSen=true
-
-
+    // Settings variables
+    private var senEnable = true
+    private var tempDegree = true
+    private var disUnit = true
+    private var radius = "16090" // placeholder: 16090 m = 10 mi
     private lateinit var unitTemp: String
     private lateinit var unitLight: String
-    private lateinit var apiKey: String
+    private var useRatings = true
+    private var useHours = true
+
+    // Location variables
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationRequest: LocationRequest
     private lateinit var locationCallback: LocationCallback
-
     var lat = 0.0
     var lon = 0.0
 
@@ -81,8 +82,13 @@ class Home : Fragment(), SensorEventListener {
         unitTemp = getString(R.string.temp_celsius)
         unitLight = getString(R.string.light_lux)
 
-
-
+        // Get shared preferences
+        val sharedPref: SharedPreferences = activity!!.getSharedPreferences("MyPref",
+            Context.MODE_PRIVATE)
+        senEnable=sharedPref.getBoolean("senEnable",true)
+        tempDegree=sharedPref.getBoolean("tempUnit",true)
+        disUnit=sharedPref.getBoolean("disUnit",true)
+        radius= sharedPref.getString("radius","16090").toString()
 
         if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION)
             != PackageManager.PERMISSION_GRANTED) {
@@ -118,21 +124,42 @@ class Home : Fragment(), SensorEventListener {
         getLocationUpdates() // track location in the background
 
         imageButtonSearch.setOnClickListener {
-            // Initiate search
+            // Initiate search if online
             val query = editTextSearch.text.toString()
 
             if (!isOnline()) {
-                Toast.makeText(mContext, "Can't access the internet.", Toast.LENGTH_SHORT)
+                Toast.makeText(mContext, "Can't access the internet", Toast.LENGTH_SHORT)
                     .show()
+                return@setOnClickListener
                 /*val intent = Intent(Settings.ACTION_WIFI_SETTINGS)
                 startActivity(intent)*/
-            } else if (query.isEmpty()) {
-                Toast.makeText(mContext, "Search query is empty.", Toast.LENGTH_SHORT)
+            } else if (lat == 0.0 && lon == 0.0) {
+                Toast.makeText(mContext, "Can't access your location", Toast.LENGTH_SHORT)
                     .show()
-            } else {
-                textViewPlacesInfo.text = getString(R.string.loading)
-                lookupPlaces(query)
+                return@setOnClickListener
             }
+
+            val reqParam = if (useRatings) "radius=${miToM(radius.toFloat())}" else "rankby=distance"
+            val rankByParam = when {
+                query.isNotEmpty() -> {
+                    // Need to convert user input to encoded query string
+                    val encodedQuery = URLEncoder.encode(query, "UTF-8")
+                    "&keyword=$encodedQuery"
+                }
+                senEnable -> {
+                    // Use a preset type from the sensors
+                    "&type=$recommendations"
+                }
+                else -> {
+                    Toast.makeText(mContext, "Sensors are disabled, so a query is required.",
+                        Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+            }
+            val openParam = if (useHours) "&opennow" else ""
+
+            textViewPlacesInfo.text = getString(R.string.loading)
+            recommendPlaces(reqParam, rankByParam, openParam)
         }
 
         mapBtn.setOnClickListener {
@@ -200,14 +227,6 @@ class Home : Fragment(), SensorEventListener {
         sensorManager.registerListener(this,currentTemp,SensorManager.SENSOR_DELAY_NORMAL)
         sensorManager.registerListener(this,light,SensorManager.SENSOR_DELAY_NORMAL)
 
-        val sharedPref: SharedPreferences = activity!!.getSharedPreferences("MyPref", 0)
-        //val editor = sharedPref.edit()
-
-        senEnable=sharedPref.getBoolean("senEnable",true)
-        tempDegree=sharedPref.getBoolean("tempUnit",true)
-        disUnit=sharedPref.getBoolean("disUnit",true)
-        radius= sharedPref.getString("radius","1").toString()
-
     }
 
     override fun onPause() {
@@ -216,19 +235,18 @@ class Home : Fragment(), SensorEventListener {
         sensorManager.unregisterListener(this)
     }
 
-    private fun lookupPlaces(input: String) {
-        // Use Google Places API to lookup locations (must be done on a separate thread)
+    private fun recommendPlaces(reqParam: String, rankByParam: String, openParam: String) {
+        // Use Google Places API to look up locations (must be done on a separate thread)
         thread {
-            // Need to convert user input to query string
-            val encodedInput = URLEncoder.encode(input, "UTF-8")
-            val placesStr = URL("https://maps.googleapis.com/maps/api/place/" +
-                    "findplacefromtext/json?key=$apiKey&input=$encodedInput&inputtype=textquery" +
-                    "&fields=place_id").readText()
+            println("https://maps.googleapis.com/maps/api/place/nearbysearch/json" +
+                    "?key=$apiKey&location=$lat,$lon&$reqParam$rankByParam$openParam")
+            val placesStr = URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json" +
+                    "?key=$apiKey&location=$lat,$lon&$reqParam$rankByParam$openParam").readText()
             val placesJSON = JSONObject(placesStr)
 
             if (placesJSON.getString("status") == "OK") {
                 // At least one result is available
-                val placeID = placesJSON.getJSONArray("candidates").getJSONObject(0)
+                val placeID = placesJSON.getJSONArray("results").getJSONObject(0)
                     .getString("place_id")
 
                 val detailsStr = URL("https://maps.googleapis.com/maps/api/place/details/" +
@@ -325,14 +343,6 @@ class Home : Fragment(), SensorEventListener {
                         } else {
                             "park"
                         }
-                        if (!isOnline()) {
-                            Toast.makeText(mContext, "Can't access the internet.", Toast.LENGTH_SHORT)
-                                .show()
-                        }
-                        else {
-                            textViewPlacesInfo.text = getString(R.string.loading)
-                            lookupPlaces(recommendations)
-                        }
                     }
                 } else {
                     prevTemp = temp
@@ -361,16 +371,6 @@ class Home : Fragment(), SensorEventListener {
                             "tourist"
                         } else {
                             "park"
-                        }
-                        if (!isOnline()) {
-                            Toast.makeText(mContext, "Can't access the internet.", Toast.LENGTH_SHORT)
-                                .show()
-                        }
-                        else {
-                            if (senEnable && recPrev != recommendations) {
-                                textViewPlacesInfo.text = getString(R.string.loading)
-                                lookupPlaces(recommendations)
-                            }
                         }
                     }
                 } else {
