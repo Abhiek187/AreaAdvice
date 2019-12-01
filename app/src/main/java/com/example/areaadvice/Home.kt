@@ -194,17 +194,17 @@ class Home : Fragment(), SensorEventListener {
             result?.let {
                 val db = Database_Places(mContext)
                 val newInfo = db.writableDatabase
-                val tempLoc = it.getJSONObject("geometry").getJSONObject("location").toString()
-                val tempLat1 = tempLoc.substringAfter("'lat: '")
-                val tempLat2 = tempLat1.substringBefore(",")
-                val tempLng = tempLoc.substringAfter("'lng: '")
-                val tempLng2 = tempLng.substringBefore("}")
+                val tempLoc = it.getJSONObject("geometry").getJSONObject("location").getDouble("lat")
+                //val tempLat1 = tempLoc.substringAfter(":")
+                //val tempLat2 = tempLat1.substringBefore(",")
+                val tempLng = it.getJSONObject("geometry").getJSONObject("location").getDouble("lng")
+                //val tempLng2 = tempLng.substringBefore("}")
                 val addVal = ContentValues().apply {
                     put(Database_Places.Col_place_Name, it.getString("name"))
                     put(Database_Places.Col_Address, it.getString("formatted_address"))
                     put(Database_Places.Col_Rating, it.optDouble("rating"))
-                    put(Database_Places.Col_Lat, tempLat2)
-                    put(Database_Places.Col_Lng, tempLng2)
+                    put(Database_Places.Col_Lat, tempLoc)
+                    put(Database_Places.Col_Lng, tempLng)
                 }
                 val newRowId = newInfo?.insert(Database_Places.Table_Name, null, addVal)
             }
