@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.getIntent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.hardware.SensorEvent
@@ -46,6 +47,9 @@ class Home : Fragment(), SensorEventListener {
     private var recPrev: String=""
 
     private var senEnable=true
+    private var tempDegree=true
+    private var disUnit=true
+    private var radius="1"
 
     //private var lightSen=true
 
@@ -59,6 +63,8 @@ class Home : Fragment(), SensorEventListener {
 
     var lat = 0.0
     var lon = 0.0
+
+
 
     override fun onAttach(context: Context){
         super.onAttach(context)
@@ -77,6 +83,9 @@ class Home : Fragment(), SensorEventListener {
         light=sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
         unitTemp = getString(R.string.temp_celsius)
         unitLight = getString(R.string.light_lux)
+
+
+
 
         if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION)
             != PackageManager.PERMISSION_GRANTED
@@ -197,10 +206,21 @@ class Home : Fragment(), SensorEventListener {
     override  fun onResume(){
         super.onResume()
         startLocationUpdates()
-       val intent = Intent()
-        senEnable = intent.getBooleanExtra("recSwitch",true)
+      // val intent = Intent()
+       // senEnable = intent.getBooleanExtra("recSwitch",true)
         sensorManager.registerListener(this,currentTemp,SensorManager.SENSOR_DELAY_NORMAL)
         sensorManager.registerListener(this,light,SensorManager.SENSOR_DELAY_NORMAL)
+
+        val sharedPref: SharedPreferences = activity!!.getSharedPreferences("MyPref", 0)
+
+
+        val editor = sharedPref.edit()
+
+        senEnable=sharedPref.getBoolean("senEnable",true)
+        tempDegree=sharedPref.getBoolean("tempUnit",true)
+        disUnit=sharedPref.getBoolean("disUnit",true)
+        radius= sharedPref.getString("radius","1").toString()
+
     }
 
     override fun onPause(){

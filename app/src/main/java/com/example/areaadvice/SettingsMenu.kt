@@ -5,6 +5,7 @@ package com.example.areaadvice
 import android.content.Intent
 
 import android.content.Context
+import android.content.SharedPreferences
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -21,15 +22,19 @@ import android.widget.TextView
 
 
 class SettingsMenu : Fragment() {
-    private var radius="0"
+
     //private var recSwitch=true
 
-    private lateinit var recSwitch: Switch
+    private lateinit var senEnable: Switch
+    private lateinit var tempDegree:Switch
+    private lateinit var disUnit:Switch
+
 
     private lateinit var mContext: Context
     private lateinit var recommendSensor: Switch
     private lateinit var maxRadiusSeek: SeekBar
     private lateinit var maxRadiusSeekText: TextView
+    private lateinit var radiusSeekBarText: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,9 +50,45 @@ class SettingsMenu : Fragment() {
 
         val view=inflater.inflate(R.layout.fragment_settings_menu, container, false)
 
-        recSwitch= view.findViewById(R.id.enableSensorRecToggle)
-        intent.putExtra("radius", radius )
-        intent.putExtra("recSwitch",recSwitch.isChecked)
+        senEnable= view.findViewById(R.id.enableSensorRecToggle)
+        radiusSeekBarText=view.findViewById(R.id.radiusSeekBarText)
+        tempDegree=view.findViewById(R.id.tempChoiceToggle)
+        disUnit=view.findViewById(R.id.distChoiceToggle)
+
+        //intent.putExtra("radius", radiusSeekBarText.text )
+        //intent.putExtra("senEnable",senEnable.isChecked)
+
+        val sharedPref: SharedPreferences = activity!!.getSharedPreferences("MyPref", 0)
+
+
+        val editor = sharedPref.edit()
+
+
+        senEnable.setOnCheckedChangeListener { buttonView, isChecked ->
+            editor.putBoolean("senEnable", senEnable.isChecked)
+            editor.apply()
+            editor.commit()
+        }
+
+        tempDegree.setOnCheckedChangeListener { buttonView, isChecked ->
+            editor.putBoolean("tempUnit", tempDegree.isChecked)
+            editor.apply()
+            editor.commit()
+        }
+
+        disUnit.setOnCheckedChangeListener { buttonView, isChecked ->
+            editor.putBoolean("disUnit",disUnit.isChecked)
+            editor.apply()
+            editor.commit()
+        }
+
+
+
+
+
+
+
+
 
 
 
@@ -69,6 +110,9 @@ class SettingsMenu : Fragment() {
 
             override fun onStopTrackingTouch(seekBar: SeekBar) {
                 maxRadiusSeekText.text = seekBar.progress.toString()
+                editor.putString("radius",radiusSeekBarText.text.toString())
+                editor.apply()
+                editor.commit()
             }
 
         })
