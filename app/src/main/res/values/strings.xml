@@ -11,10 +11,15 @@
     <string name="sensorrecommendations">Sensor Recommendations</string>
     <string name="maxRadius">Maximum Radius</string>
     <string name="startval">1</string>
-    <string name="tempChoiceText">Temperature Unit</string>
-    <string name="tempChoiceForC">°C</string>
-    <string name="distChoiceText">Distance Unit</string>
-    <string name="distChoicekmormi">km</string>
+    <string name="chooseUnit">Unit of Measurement</string>
+    <string name="unitChoiceUSA">mi/°F</string>
+    <string name="unitChoiceSI">km/°C</string>
+    <string name="OnChoice">On</string>
+    <string name="OffChoice">Off</string>
+    <string name="distance">Distance</string>
+    <string name="ratings">Ratings</string>
+    <string name="RecommendationCriteria">Recommendation\nCriteria</string>
+    <string name="ShowOpenLocationsOnly">Show Open Locations Only</string>
     <!-- Abhishek -->
     <string name="no_results">No results found.</string>
     <string name="place_details">

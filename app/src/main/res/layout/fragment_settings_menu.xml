@@ -18,26 +18,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/sensorrecOnorOff"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:text="@string/sensorRecOnorOff"
-        android:textSize="18sp"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="50dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/enableSensorRecToggle"
-        app:layout_constraintStart_toEndOf="@+id/sensorrec"/>
-
-
     <Switch
         android:id="@+id/enableSensorRecToggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
+        android:text=""
+        android:textAlignment="center"
+        android:textSize="15sp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/sensorrec"
         app:layout_constraintEnd_toEndOf="parent"
@@ -83,82 +72,117 @@
         app:layout_constraintTop_toBottomOf="@+id/maxRadiusText" />
 
     <TextView
-        android:id="@+id/tempChoiceText"
+        android:id="@+id/unitChoiceText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="5dp"
-        android:text="@string/tempChoiceText"
+        android:text="@string/chooseUnit"
         android:textSize="18sp"
         android:layout_marginTop="15dp"
         android:layout_marginStart="10dp"
         app:layout_constraintTop_toBottomOf="@id/radiusSeekBar"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/tempChoice"
+
+    <RadioGroup
+        android:id="@+id/radiogroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="5dp"
-        android:text="@string/tempChoiceForC"
-        android:textSize="18sp"
-        android:layout_marginTop="15dp"
-        android:layout_marginStart="120dp"
-        app:layout_constraintTop_toBottomOf="@+id/radiusSeekBar"
-        app:layout_constraintStart_toEndOf="@+id/tempChoiceText"
-        app:layout_constraintEnd_toStartOf="@+id/tempChoiceToggle" />
-
-
-    <Switch
-        android:id="@+id/tempChoiceToggle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginStart="30dp"
         android:layout_marginEnd="10dp"
-        app:layout_constraintTop_toBottomOf="@+id/radiusSeekBar"
-        app:layout_constraintLeft_toRightOf="@+id/tempChoice"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        android:padding="5dp"
-        android:checked="true"/>
+        app:layout_constraintTop_toBottomOf="@+id/radiusSeekBar"
+        app:layout_constraintStart_toEndOf="@+id/unitChoiceText">
+
+        <RadioButton
+            android:id="@+id/unitsSI"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/unitChoiceSI"
+            android:textSize="15sp"
+            android:padding="10dp" />
+
+        <RadioButton
+            android:id="@+id/unitsUSA"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/unitChoiceUSA"
+            android:textSize="15sp"
+            android:checked="true"
+            android:padding="10dp" />
+    </RadioGroup>
 
     <TextView
-        android:id="@+id/distChoiceText"
+        android:id="@+id/DistanceorRatingsText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:text="@string/distChoiceText"
-        android:textSize="18sp"
-        android:layout_marginTop="15dp"
         android:layout_marginStart="10dp"
-        app:layout_constraintTop_toBottomOf="@+id/tempChoiceText"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_marginTop="15dp"
+        android:padding="5dp"
+        android:text="@string/RecommendationCriteria"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/unitChoiceText" />
 
-    <TextView
-        android:id="@+id/distChoice"
+    <RadioGroup
+        android:id="@+id/radiogroup2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="5dp"
-        android:text="@string/distChoicekmormi"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radiogroup"
+        app:layout_constraintStart_toEndOf="@+id/DistanceorRatingsText">
+
+        <RadioButton
+            android:id="@+id/distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/distance"
+            android:textSize="15sp"
+            android:padding="10dp" />
+
+        <RadioButton
+            android:id="@+id/ratings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ratings"
+            android:textSize="15sp"
+            android:checked="true"
+            android:padding="10dp" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/showOpenPlacesText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:padding="5dp"
+        android:text="@string/ShowOpenLocationsOnly"
         android:textSize="18sp"
-        android:layout_marginTop="15dp"
-        android:layout_marginStart="170dp"
-        app:layout_constraintEnd_toStartOf="@+id/distChoiceToggle"
-        app:layout_constraintTop_toBottomOf="@+id/tempChoice"
-        app:layout_constraintStart_toEndOf="@+id/distChoiceText" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/DistanceorRatingsText" />
 
     <Switch
-        android:id="@+id/distChoiceToggle"
+        android:id="@+id/showOpenPlacesToggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="13dp"
         android:layout_marginEnd="10dp"
-        android:layout_marginStart="21dp"
-        android:padding="5dp"
+        android:text=""
+        android:textAlignment="center"
+        android:textSize="15sp"
+        app:layout_constraintTop_toBottomOf="@id/radiogroup2"
+        app:layout_constraintEnd_toEndOf="parent"
         android:checked="true"
-        app:layout_constraintTop_toBottomOf="@+id/tempChoiceToggle"
-        app:layout_constraintStart_toEndOf="@+id/distChoice"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-
+        android:padding="5dp"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -36,7 +36,6 @@ class Home : Fragment(), SensorEventListener {
     private lateinit var clearBtn: Button
     private lateinit var imageButtonSearch: ImageButton
 
-
     private lateinit var sensorManager: SensorManager
     private var currentTemp: Sensor? =null
     private var light: Sensor?=null
@@ -46,12 +45,11 @@ class Home : Fragment(), SensorEventListener {
     private var recPrev: String=""
 
     private var senEnable=true
-    private var tempDegree=true
-    private var disUnit=true
+    private var senEnableText: String = ""
+    private var unitChoice: Int = 1
     private var radius="1"
 
     //private var lightSen=true
-
 
     private lateinit var unitTemp: String
     private lateinit var unitLight: String
@@ -191,7 +189,7 @@ class Home : Fragment(), SensorEventListener {
         )
     }
 
-    override  fun onResume() {
+    override fun onResume() {
         super.onResume()
         startLocationUpdates()
         // val intent = Intent()
@@ -204,9 +202,10 @@ class Home : Fragment(), SensorEventListener {
         //val editor = sharedPref.edit()
 
         senEnable=sharedPref.getBoolean("senEnable",true)
-        tempDegree=sharedPref.getBoolean("tempUnit",true)
-        disUnit=sharedPref.getBoolean("disUnit",true)
+        senEnableText = sharedPref.getString("check", "On").toString()
+        unitChoice = sharedPref.getInt("units", 1)
         radius= sharedPref.getString("radius","1").toString()
+
 
     }
 
