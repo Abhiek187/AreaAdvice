@@ -21,6 +21,7 @@
     <string name="ratings">Ratings</string>
     <string name="RecommendationCriteria">Recommendation\nCriteria</string>
     <string name="ShowOpenLocationsOnly">Show Open Locations Only</string>
+    <string name="testStringforHours">Mon: 6:30am - 9:30pm\nTues: 6:30am - 9:30pm\nWed: 6:30am - 9:30pm\nThurs: 6:30am - 9:30pm\nFri: 6:30am - 9:30pm\nSat: 7:00am - 8:00pm\nSun: closed</string>
     <!-- Abhishek -->
     <string name="no_results">No results found.</string>
     <string name="place_details">
