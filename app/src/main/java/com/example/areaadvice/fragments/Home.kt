@@ -326,10 +326,6 @@ class Home : Fragment(), SensorEventListener {
                             latitude =location.getDouble("lat"),longitude = location.getDouble("lng"))
                     }
                     placesList.add(place)
-
-                    if (i == 10) {
-                        break // no need to show more than 10 results (for now)
-                    }
                 }
 
                 activity!!.runOnUiThread {
