@@ -66,21 +66,22 @@ class SettingsMenu : Fragment() {
         val radCheck = sharedPref.units
 
         if (radCheck == 1) {
-            radBtnUSA.isChecked = true
-            radiusSeek.max = 50
-        } else {
             radBtnSI.isChecked = true
-            radiusSeek.max = 80 // 50 mi ~= 80 km
+            radiusSeek.max = 80
+        } else {
+            radBtnUSA.isChecked = true
+            radiusSeek.max = 50 // 50 mi ~= 80 km
         }
 
         radBtn.setOnCheckedChangeListener { _, _ ->
             if (radBtnUSA.isChecked) {
-                sharedPref.units = 1
+                sharedPref.units = 2
                 radiusSeek.max = 50
             } else {
-                sharedPref.units = 2
+                sharedPref.units = 1
                 radiusSeek.max = 80
             }
+            println("USA? ${radBtnUSA.isChecked}, radiusSeek.max: ${radiusSeek.max}")
         }
 
         // Check radius seek bar
@@ -106,7 +107,7 @@ class SettingsMenu : Fragment() {
         // Check which criteria we're satisfying
         val radCheck2 = sharedPref.criteria
 
-        if (radCheck2 == 1) {
+        if (radCheck2 == 2) {
             radBtnRatings.isChecked = true
         } else {
             radBtnDistance.isChecked = true
@@ -114,10 +115,11 @@ class SettingsMenu : Fragment() {
 
         radBtn2.setOnCheckedChangeListener { _, _ ->
             if (radBtnRatings.isChecked) {
-                sharedPref.criteria = 1
-            } else {
                 sharedPref.criteria = 2
+            } else {
+                sharedPref.criteria = 1
             }
+            println("Ratings? ${radBtnRatings.isChecked}")
         }
 
         // Check sensors

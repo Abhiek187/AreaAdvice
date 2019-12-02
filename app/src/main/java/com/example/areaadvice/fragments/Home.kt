@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.areaadvice.R
+import com.example.areaadvice.activities.LocationInfoMenu
 import com.example.areaadvice.activities.MapsActivity
 import com.example.areaadvice.adapters.PlacesAdapter
 import com.example.areaadvice.models.Place
@@ -65,8 +66,8 @@ class Home : Fragment(), SensorEventListener {
     // Settings variables
     private var senEnable = true
     private var openLocEnable = true
-    private var unitChoice: Int = 1
-    private var critChoice: Int = 1
+    private var unitChoice: Int = 2
+    private var critChoice: Int = 2
     private var radius = "25" // placeholder: 25 mi
     private lateinit var unitTemp: String
     private lateinit var unitLight: String
@@ -188,6 +189,8 @@ class Home : Fragment(), SensorEventListener {
             textViewLoading.visibility = View.VISIBLE
             textViewLoading.text = getString(R.string.loading)
             recommendPlaces(reqParam, rankByParam, openParam)
+            sharedPrefs.lats=lat.toFloat()
+            sharedPrefs.lngs=lon.toFloat()
         }
 
         mapBtn.setOnClickListener {

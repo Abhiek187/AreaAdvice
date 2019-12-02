@@ -13,6 +13,8 @@ class Prefs(context: Context) {
     private val criteriaKey = "criteria"
     private val openTextKey = "openText"
     private val openEnableKey = "openEnable"
+    private val lat = "lat"
+    private val lng= "long"
     private val prefs: SharedPreferences = context.getSharedPreferences(fileName,
         Context.MODE_PRIVATE)
 
@@ -29,7 +31,7 @@ class Prefs(context: Context) {
         get() = prefs.getInt(radiusBarKey, 25)
         set(value) = prefs.edit().putInt(radiusBarKey, value).apply()
     var units: Int
-        get() = prefs.getInt(unitsKey, 1) // default: metric units
+        get() = prefs.getInt(unitsKey, 2) // default: US units
         set(value) = prefs.edit().putInt(unitsKey, value).apply()
     var criteria: Int
         get() = prefs.getInt(criteriaKey, 2) // default: search by ratings
@@ -40,4 +42,10 @@ class Prefs(context: Context) {
     var openEnable: Boolean
         get() = prefs.getBoolean(openEnableKey, true)
         set(value) = prefs.edit().putBoolean(openEnableKey, value).apply()
+    var lats: Float
+        get() = prefs.getFloat(lat, 0F)
+        set(value) = prefs.edit().putFloat(lat,value).apply()
+    var lngs: Float
+        get() = prefs.getFloat(lng,0F)
+        set(value) = prefs.edit().putFloat(lng,value).apply()
 }

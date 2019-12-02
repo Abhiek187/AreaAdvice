@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.areaadvice.R
 import com.example.areaadvice.activities.LocationInfoMenu
 import com.example.areaadvice.models.Place
+import com.example.areaadvice.storage.Prefs
 import kotlinx.android.synthetic.main.adapter_places.view.*
 
 class PlacesAdapter(private var context: Context, private var placesList: ArrayList<Place>)
@@ -45,6 +46,9 @@ class PlacesAdapter(private var context: Context, private var placesList: ArrayL
             holder.textViewOpen.text = context.getString(R.string.closed)
         }
         holder.itemView.setOnClickListener{
+            val sharedPrefs = Prefs(context)
+            val currentLat= sharedPrefs.lats
+            val currentLng=sharedPrefs.lngs
             val intent = Intent(context,
                 LocationInfoMenu::class.java)
             intent.putExtra("name",holder.textViewName.text.toString())
@@ -53,6 +57,8 @@ class PlacesAdapter(private var context: Context, private var placesList: ArrayL
             intent.putExtra("isOpen",holder.textViewOpen.text.toString())
             intent.putExtra("latitude",placesList[position].latitude)
             intent.putExtra("longitude",placesList[position].longitude)
+            intent.putExtra("lat",currentLat)
+            intent.putExtra("long",currentLng)
 
              this.context.startActivity(intent)
         }

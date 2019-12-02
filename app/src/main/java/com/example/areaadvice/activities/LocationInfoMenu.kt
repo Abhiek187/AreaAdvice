@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.areaadvice.R
 import com.example.areaadvice.storage.DatabasePlaces
+import com.example.areaadvice.storage.Prefs
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
@@ -32,7 +33,7 @@ class LocationInfoMenu : AppCompatActivity()  {
         setContentView(R.layout.fragment_location_info_menu)
         val db = DatabasePlaces(this)
         val cursor = db.getAllRows()
-
+        val sharedPrefs = Prefs(this)
         locName = findViewById(R.id.locationName)
         locAddress = findViewById(R.id.locationAddress)
         locProximity = findViewById(R.id.locationProximity)
@@ -44,6 +45,26 @@ class LocationInfoMenu : AppCompatActivity()  {
         locAddress.text=intent.getStringExtra("address")
         locRating.rating=intent.getStringExtra("rating")!!.toFloat()
         locHours.text=intent.getStringExtra("isOpen")
+        val lng=intent.getDoubleExtra("longitude",0.0)
+        val lat=intent.getDoubleExtra("latitude",0.0)
+        val currentLat=intent.getFloatExtra("lat",0F)
+        val currentLng=intent.getFloatExtra("long",0F)
+        if(sharedPrefs.units==1) {
+            locProximity.text = distanceBetweenPoints(
+                lat.toString(),
+                lng.toString(),
+                currentLat.toString(),
+                currentLng.toString()
+            ).toString()
+        }
+        else{
+            locProximity.text = (distanceBetweenPoints(
+                lat.toString(),
+                lng.toString(),
+                currentLat.toString(),
+                currentLng.toString()
+            )/1.609).toString()
+        }
 
         cursor.moveToFirst()
         while (!cursor.isAfterLast) {
@@ -113,5 +134,5 @@ fun distanceBetweenPoints(Lat1: String, Long1: String, Lat2: String, Long2: Stri
                 (cos(Math.toRadians(lat1)) * cos(Math.toRadians(lat2)) * sin(longDistance / 2) * sin(longDistance / 2))
     val c = 2* atan2(sqrt(a), sqrt(1 - a))
 
-    return (avgRadius*c*1000) //in meters
+    return (avgRadius*c) //in kilometers
 }
