@@ -49,21 +49,12 @@ class LocationInfoMenu : AppCompatActivity()  {
         val lat=intent.getDoubleExtra("latitude",0.0)
         val currentLat=intent.getFloatExtra("lat",0F)
         val currentLng=intent.getFloatExtra("long",0F)
+        val distance= distanceBetweenPoints(lat.toString(),lng.toString(),currentLat.toString(),currentLng.toString())
         if(sharedPrefs.units==1) {
-            locProximity.text = distanceBetweenPoints(
-                lat.toString(),
-                lng.toString(),
-                currentLat.toString(),
-                currentLng.toString()
-            ).toString()
+            locProximity.text = String.format("%.2f km",distance)
         }
         else{
-            locProximity.text = (distanceBetweenPoints(
-                lat.toString(),
-                lng.toString(),
-                currentLat.toString(),
-                currentLng.toString()
-            )/1.609).toString()
+            locProximity.text = String.format("%.2f mi",distance/1.609)
         }
 
         cursor.moveToFirst()
