@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.hardware.SensorEvent
@@ -28,6 +27,7 @@ import com.example.areaadvice.activities.MapsActivity
 import com.example.areaadvice.adapters.PlacesAdapter
 import com.example.areaadvice.models.Place
 import com.example.areaadvice.storage.DatabasePlaces
+import com.example.areaadvice.storage.Prefs
 import com.example.areaadvice.utils.cToF
 import com.example.areaadvice.utils.lxToFc
 import com.example.areaadvice.utils.miToM
@@ -39,11 +39,12 @@ import kotlin.concurrent.thread
 import kotlin.math.abs
 
 class Home : Fragment(), SensorEventListener {
-    // The MainActivity context & API key
+    // Important variables
     private lateinit var mContext: Context
     private lateinit var apiKey: String
     private var placesList = arrayListOf<Place>()
     private lateinit var placesAdapter: PlacesAdapter
+    private lateinit var sharedPrefs: Prefs
 
     // UI elements
     private lateinit var editTextSearch: EditText
@@ -61,23 +62,17 @@ class Home : Fragment(), SensorEventListener {
     private var light: Sensor? = null
     private var prevTemp: Float? = null
     private var prevLight:Float? = null
-    private var recommendations: String = "" // must be a type supported by the Places API
+    private var recommendations: String = "library" // must be a type supported by the Places API
     private var recPrev: String = ""
 
     // Settings variables
     private var senEnable = true
-    private var senEnableText: String = ""
     private var openLocEnable = true
-    private var openLocText: String = ""
     private var unitChoice: Int = 1
     private var critChoice: Int = 1
-    private var tempDegree = true
-    private var disUnit = true
     private var radius = "25" // placeholder: 25 mi
     private lateinit var unitTemp: String
     private lateinit var unitLight: String
-    private var useRatings = true
-    private var useHours = true
 
     // Location variables
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -86,13 +81,10 @@ class Home : Fragment(), SensorEventListener {
     var lat = 0.0
     var lon = 0.0
 
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mContext = context
     }
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -108,18 +100,13 @@ class Home : Fragment(), SensorEventListener {
         unitLight = getString(R.string.light_lux)
 
         // Get shared preferences
-        val sharedPref: SharedPreferences = activity!!.getSharedPreferences("MyPref",
-            Context.MODE_PRIVATE)
+        sharedPrefs = Prefs(mContext)
 
-        senEnable=sharedPref.getBoolean("senEnable",true)
-        senEnableText = sharedPref.getString("check", "On").toString()
-        openLocEnable = sharedPref.getBoolean("openLocEnable", true)
-        openLocText = sharedPref.getString("check2", "On").toString()
-        unitChoice = sharedPref.getInt("units", 1)
-        critChoice = sharedPref.getInt("crit", 1)
-        tempDegree=sharedPref.getBoolean("tempUnit",true)
-        disUnit=sharedPref.getBoolean("disUnit",true)
-        radius= sharedPref.getString("radius","25").toString()
+        senEnable = sharedPrefs.senEnable
+        openLocEnable = sharedPrefs.openEnable
+        unitChoice = sharedPrefs.units
+        critChoice = sharedPrefs.criteria
+        radius = sharedPrefs.radiusText
 
         if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION)
             != PackageManager.PERMISSION_GRANTED) {
@@ -127,16 +114,6 @@ class Home : Fragment(), SensorEventListener {
             ActivityCompat.requestPermissions(
                 activity!!,
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                0
-            )
-        }
-        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED
-        ) {
-            // Permission is not granted
-            ActivityCompat.requestPermissions(
-                activity!!,
-                arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
                 0
             )
         }
@@ -166,6 +143,9 @@ class Home : Fragment(), SensorEventListener {
         imageButtonSearch.setOnClickListener {
             // Initiate search if online
             val query = editTextSearch.text.toString()
+            val useRatings = critChoice == 2
+            val useHours = openLocEnable
+            val useMetrics = unitChoice == 1
 
             if (!isOnline()) {
                 Toast.makeText(mContext, "Can't access the internet", Toast.LENGTH_SHORT)
@@ -179,9 +159,16 @@ class Home : Fragment(), SensorEventListener {
                 return@setOnClickListener
             }
 
-            val reqParam = if (useRatings) "radius=${miToM(
-                radius.toFloat()
-            )}" else "rankby=distance"
+            val reqParam = if (useRatings) {
+                // Convert radius to meters
+                if (useMetrics) {
+                    "radius=${radius.toFloat() * 1000}"
+                } else {
+                    "radius=${miToM(radius.toFloat())}"
+                }
+            } else {
+                "rankby=distance"
+            }
             val rankByParam = when {
                 query.isNotEmpty() -> {
                     // Need to convert user input to encoded query string
