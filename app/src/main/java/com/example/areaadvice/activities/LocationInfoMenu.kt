@@ -49,7 +49,9 @@ class LocationInfoMenu : AppCompatActivity()  {
         while (!cursor.isAfterLast) {
             val mLocLat = cursor.getString(cursor.getColumnIndex(DatabasePlaces.Col_Lat))
             val mLocLong = cursor.getString(cursor.getColumnIndex(DatabasePlaces.Col_Lng))
+            cursor.moveToNext()
         }
+        cursor.close()
         saveBtn.setOnClickListener{
             val db = DatabasePlaces(this)
             val newInfo = db.writableDatabase
