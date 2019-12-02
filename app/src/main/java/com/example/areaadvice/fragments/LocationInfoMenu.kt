@@ -25,6 +25,7 @@ class LocationInfoMenu : Fragment() {
     private lateinit var locRating: RatingBar
 
     private val db = DatabasePlaces(mContext)
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mContext = context
