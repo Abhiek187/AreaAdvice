@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -40,23 +41,37 @@ class SavedLocations : Fragment() {
         savedLocationsView.adapter = placesAdapter
         val divider = DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL)
         savedLocationsView.addItemDecoration(divider) // add border between places
-
         val cursor = dB.getAllRows()
-        cursor.moveToFirst()
-        while(!cursor.isAfterLast){
-            val mLocationName = cursor.getString(cursor.getColumnIndex(DatabasePlaces.Col_place_Name))
-            val mLocationAddress = cursor.getString(cursor.getColumnIndex(DatabasePlaces.Col_Address))
-            val mLocationRating = cursor.getFloat(cursor.getColumnIndex(DatabasePlaces.Col_Rating))
-            val mLocationLat=cursor.getDouble(cursor.getColumnIndexOrThrow(DatabasePlaces.Col_Lat))
-            val mLocationLng=cursor.getDouble(cursor.getColumnIndexOrThrow(DatabasePlaces.Col_Lng))
+        if(cursor.count == 0) Toast.makeText(mContext, "No Locations Have Been Saved", Toast.LENGTH_SHORT)
+                .show()
+        else {
+            cursor.moveToFirst()
+            while (!cursor.isAfterLast) {
+                val mLocationName =
+                    cursor.getString(cursor.getColumnIndex(DatabasePlaces.Col_place_Name))
+                val mLocationAddress =
+                    cursor.getString(cursor.getColumnIndex(DatabasePlaces.Col_Address))
+                val mLocationRating =
+                    cursor.getFloat(cursor.getColumnIndex(DatabasePlaces.Col_Rating))
+                val mLocationLat =
+                    cursor.getDouble(cursor.getColumnIndexOrThrow(DatabasePlaces.Col_Lat))
+                val mLocationLng =
+                    cursor.getDouble(cursor.getColumnIndexOrThrow(DatabasePlaces.Col_Lng))
 
-            val place = Place(address = mLocationAddress, name = mLocationName, rating = mLocationRating, url = "",
-                latitude =mLocationLat,longitude = mLocationLng)
-            placesList.add(place)
-            cursor.moveToNext()
+                val place = Place(
+                    address = mLocationAddress,
+                    name = mLocationName,
+                    rating = mLocationRating,
+                    url = "",
+                    latitude = mLocationLat,
+                    longitude = mLocationLng
+                )
+                placesList.add(place)
+                cursor.moveToNext()
+            }
+            placesAdapter.refreshData()
+            cursor.close()
         }
-        placesAdapter.refreshData()
-        cursor.close()
         return view
     }
 

@@ -327,8 +327,8 @@ class Home : Fragment(), SensorEventListener {
                     }
                     placesList.add(place)
 
-                    if (i == 2) {
-                        break // no need to show more than 3 results (for now)
+                    if (i == 10) {
+                        break // no need to show more than 10 results (for now)
                     }
                 }
 
