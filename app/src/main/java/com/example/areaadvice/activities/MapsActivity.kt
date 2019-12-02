@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.example.areaadvice.R
+import com.example.areaadvice.storage.DatabasePlaces
 import com.google.android.gms.location.*
 
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -74,12 +75,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             // mMap.addMarker(MarkerOptions().position(location).title("Current Location"))
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 12f))
 
-            val db = Database_Places(this)
+            val db = DatabasePlaces(this)
             val checkInfo=db.readableDatabase
 
 
             val cursor2 = checkInfo.query(
-                Database_Places.Table_Name,   // The table to query
+                DatabasePlaces.Table_Name,   // The table to query
                 null,             // The array of columns to return (pass null to get all)
                 null,//selection,              // The columns for the WHERE clause
                 null,//selectionArgs,          // The values for the WHERE clause
@@ -92,9 +93,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             with(cursor2) {
                 while (moveToNext()) {
 
-                    val marklocation = LatLng(getString(getColumnIndexOrThrow(Database_Places.Col_Lat)).toDouble(),
-                        getString(getColumnIndexOrThrow(Database_Places.Col_Lng)).toDouble())
-                    mMap.addMarker(MarkerOptions().position(marklocation).title(getString(getColumnIndexOrThrow(Database_Places.Col_place_Name))))
+                    val markLocation = LatLng(getString(getColumnIndexOrThrow(DatabasePlaces.Col_Lat)).toDouble(),
+                        getString(getColumnIndexOrThrow(DatabasePlaces.Col_Lng)).toDouble())
+                    mMap.addMarker(MarkerOptions().position(markLocation).title(getString(getColumnIndexOrThrow(DatabasePlaces.Col_place_Name))))
                 }}
         }
 

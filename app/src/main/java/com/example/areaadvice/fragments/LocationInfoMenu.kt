@@ -1,4 +1,4 @@
-package com.example.areaadvice
+package com.example.areaadvice.fragments
 
 import android.content.Context
 import android.os.Bundle
@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RatingBar
 import android.widget.TextView
+import com.example.areaadvice.R
+import com.example.areaadvice.storage.DatabasePlaces
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
@@ -22,7 +24,7 @@ class LocationInfoMenu : Fragment() {
     private lateinit var locHours: TextView
     private lateinit var locRating: RatingBar
 
-    private val db = Database_Places(mContext)
+    private val db = DatabasePlaces(mContext)
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mContext = context
@@ -42,8 +44,8 @@ class LocationInfoMenu : Fragment() {
 
         cursor.moveToFirst()
         while (!cursor.isAfterLast){
-            val mLocLat = cursor.getString(cursor.getColumnIndex(Database_Places.Col_Lat))
-            val mLocLong = cursor.getString(cursor.getColumnIndex(Database_Places.Col_Lng))
+            val mLocLat = cursor.getString(cursor.getColumnIndex(DatabasePlaces.Col_Lat))
+            val mLocLong = cursor.getString(cursor.getColumnIndex(DatabasePlaces.Col_Lng))
 
         }
 
