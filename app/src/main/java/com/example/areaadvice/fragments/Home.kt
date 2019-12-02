@@ -331,10 +331,6 @@ class Home : Fragment(), SensorEventListener {
                                     schedule = schedule.toString())
                     }
                     placesList.add(place)
-
-                    if (i == 2) {
-                        break // no need to show more than 3 results (for now)
-                    }
                 }
 
                 activity!!.runOnUiThread {

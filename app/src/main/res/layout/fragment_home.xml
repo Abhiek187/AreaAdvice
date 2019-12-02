@@ -8,7 +8,7 @@
 
     <EditText
         android:id="@+id/editTextSearch"
-        android:layout_width="320dp"
+        android:layout_width="330dp"
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/search_hint"
@@ -26,8 +26,8 @@
         android:padding="5dp"
         android:src="@mipmap/outline_search_black_18dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/editTextSearch"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/imageButtonFilter"/>
 
     <ImageButton
         android:id="@+id/imageButtonFilter"
@@ -37,46 +37,51 @@
         android:padding="5dp"
         android:src="@mipmap/outline_filter_list_black_18dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageButtonSearch" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextSearch"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerViewPlaces"/>
 
     <Button
         android:id="@+id/map"
         android:layout_width="70dp"
         android:layout_height="50dp"
         android:text="@string/mapButtonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imageButtonFilter" />
+        android:padding="5dp"
+        app:layout_constraintTop_toBottomOf="@+id/editTextSearch"
+        app:layout_constraintEnd_toStartOf="@id/imageButtonFilter"
+        app:layout_constraintBottom_toTopOf="@id/recyclerViewPlaces" />
 
     <Button
         android:id="@+id/clear"
         android:layout_width="70dp"
         android:layout_height="50dp"
         android:text="@string/clrButtonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/map" />
+        android:padding="5dp"
+        app:layout_constraintTop_toBottomOf="@+id/editTextSearch"
+        app:layout_constraintEnd_toStartOf="@+id/map"
+        app:layout_constraintBottom_toTopOf="@id/recyclerViewPlaces"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewPlaces"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
+
         android:layout_marginBottom="8dp"
         android:padding="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/imageButtonFilter"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextSearch" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/clear" />
 
     <TextView
         android:id="@+id/textViewLoading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
         android:text="@string/loading"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:visibility="invisible"
-        app:layout_constraintEnd_toStartOf="@+id/imageButtonFilter"
+        app:layout_constraintEnd_toStartOf="@+id/clear"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextSearch" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextSearch"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerViewPlaces"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
