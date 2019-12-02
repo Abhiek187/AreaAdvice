@@ -20,7 +20,7 @@ class LocationInfoMenu : AppCompatActivity()  {
     private lateinit var locName: TextView
     private lateinit var locAddress: TextView
     private lateinit var locProximity: TextView
-    private lateinit var locHours: TextView
+    private lateinit var locSchedule: TextView
     private lateinit var locRating: RatingBar
 
     //private val db = DatabasePlaces(mContext)
@@ -37,14 +37,13 @@ class LocationInfoMenu : AppCompatActivity()  {
         locName = findViewById(R.id.locationName)
         locAddress = findViewById(R.id.locationAddress)
         locProximity = findViewById(R.id.locationProximity)
-        locHours = findViewById(R.id.locationHours)
+        locSchedule = findViewById(R.id.locationHours)
         locRating = findViewById(R.id.ratingBar)
         val saveBtn = findViewById<Button>(R.id.saveBtn)
 
         locName.text=intent.getStringExtra("name")
         locAddress.text=intent.getStringExtra("address")
         locRating.rating=intent.getStringExtra("rating")!!.toFloat()
-        locHours.text=intent.getStringExtra("isOpen")
         val lng=intent.getDoubleExtra("longitude",0.0)
         val lat=intent.getDoubleExtra("latitude",0.0)
         val currentLat=intent.getFloatExtra("lat",0F)
@@ -53,8 +52,17 @@ class LocationInfoMenu : AppCompatActivity()  {
         if(sharedPrefs.units==1) {
             locProximity.text = String.format("%.2f km",distance)
         }
-        else{
-            locProximity.text = String.format("%.2f mi",distance/1.609)
+        else {
+            locProximity.text = String.format("%.2f mi", distance / 1.609)
+        }
+        locSchedule.text=""//intent.getStringExtra("schedule")
+        var Schedule=intent.getStringExtra("schedule").split(",")
+
+        var ScheduleLoop=0
+        while (ScheduleLoop<Schedule.size)
+        {
+            locSchedule.text= locSchedule.text as String +Schedule[ScheduleLoop]+"\n"
+            ScheduleLoop++
         }
 
         cursor.moveToFirst()

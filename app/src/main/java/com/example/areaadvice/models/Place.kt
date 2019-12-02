@@ -10,5 +10,6 @@ data class Place(
     //val reviews: ArrayList<String> = arrayListOf(),
     val url: String,
     val latitude: Double,
-    val longitude: Double
+    val longitude: Double,
+    val schedule: String
 )

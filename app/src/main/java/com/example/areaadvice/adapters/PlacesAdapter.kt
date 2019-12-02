@@ -59,6 +59,7 @@ class PlacesAdapter(private var context: Context, private var placesList: ArrayL
             intent.putExtra("longitude",placesList[position].longitude)
             intent.putExtra("lat",currentLat)
             intent.putExtra("long",currentLng)
+            intent.putExtra("schedule",placesList[position].schedule)
 
              this.context.startActivity(intent)
         }
