@@ -20,8 +20,13 @@ import android.widget.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.areaadvice.R
 import com.example.areaadvice.activities.MapsActivity
+import com.example.areaadvice.adapters.PlacesAdapter
+import com.example.areaadvice.models.Place
 import com.example.areaadvice.storage.DatabasePlaces
 import com.example.areaadvice.utils.cToF
 import com.example.areaadvice.utils.lxToFc
@@ -37,11 +42,14 @@ class Home : Fragment(), SensorEventListener {
     // The MainActivity context & API key
     private lateinit var mContext: Context
     private lateinit var apiKey: String
+    private var placesList = arrayListOf<Place>()
+    private lateinit var placesAdapter: PlacesAdapter
 
     // UI elements
     private lateinit var editTextSearch: EditText
     private lateinit var imageButtonSearch: ImageButton
-    private lateinit var textViewPlacesInfo: TextView
+    private lateinit var textViewLoading: TextView
+    private lateinit var recyclerViewPlaces: RecyclerView
     private lateinit var mapBtn: Button
     private lateinit var clearBtn: Button
     private lateinit var saveBtn: Button
@@ -131,7 +139,8 @@ class Home : Fragment(), SensorEventListener {
             )
         }
 
-        textViewPlacesInfo = view.findViewById(R.id.textViewPlacesInfo)
+        textViewLoading = view.findViewById(R.id.textViewLoading)
+        recyclerViewPlaces = view.findViewById(R.id.recyclerViewPlaces)
         editTextSearch = view.findViewById(R.id.editTextSearch)
         imageButtonSearch = view.findViewById(R.id.imageButtonSearch)
         mapBtn = view.findViewById(R.id.map)
@@ -144,6 +153,13 @@ class Home : Fragment(), SensorEventListener {
          */
         apiKey = getString(R.string.google_places_key)
         getLocationUpdates() // track location in the background
+
+        // Set up recycler view
+        recyclerViewPlaces.layoutManager = LinearLayoutManager(mContext)
+        placesAdapter = PlacesAdapter(mContext, placesList)
+        recyclerViewPlaces.adapter = placesAdapter
+        val divider = DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL)
+        recyclerViewPlaces.addItemDecoration(divider) // add border between places
 
         imageButtonSearch.setOnClickListener {
             // Initiate search if online
@@ -182,7 +198,10 @@ class Home : Fragment(), SensorEventListener {
             }
             val openParam = if (useHours) "&opennow" else ""
 
-            textViewPlacesInfo.text = getString(R.string.loading)
+            placesList.clear()
+            placesAdapter.refreshData()
+            textViewLoading.visibility = View.VISIBLE
+            textViewLoading.text = getString(R.string.loading)
             recommendPlaces(reqParam, rankByParam, openParam)
         }
 
@@ -195,7 +214,9 @@ class Home : Fragment(), SensorEventListener {
         }
 
         clearBtn.setOnClickListener {
-            textViewPlacesInfo.text = ""
+            placesList.clear()
+            placesAdapter.refreshData()
+            textViewLoading.text = ""
         }
 
         saveBtn.setOnClickListener{
@@ -214,7 +235,7 @@ class Home : Fragment(), SensorEventListener {
                     put(DatabasePlaces.Col_Lat, tempLat2)
                     put(DatabasePlaces.Col_Lng, tempLng2)
                 }
-                val newRowId = newInfo?.insert(DatabasePlaces.Table_Name, null, addVal)
+                newInfo?.insert(DatabasePlaces.Table_Name, null, addVal)
             }
         }
 
@@ -289,42 +310,69 @@ class Home : Fragment(), SensorEventListener {
 
             if (placesJSON.getString("status") == "OK") {
                 // At least one result is available
-                val placeID = placesJSON.getJSONArray("results").getJSONObject(0)
-                    .getString("place_id")
+                val places = placesJSON.getJSONArray("results")
 
-                val detailsStr = URL("https://maps.googleapis.com/maps/api/place/details/" +
-                        "json?key=$apiKey&place_id=$placeID&fields=photo,name,formatted_address," +
-                        "rating,review,geometry,type,opening_hours,url").readText()
-                val detailsJSON = JSONObject(detailsStr)
-                println(detailsJSON.toString(2))
-                result = detailsJSON.getJSONObject("result")
+                for (i in 0 until places.length()) {
+                    val placeID = places.getJSONObject(i).getString("place_id")
 
-                val address = result!!.getString("formatted_address")
-                val location = result!!.getJSONObject("geometry")
-                    .getJSONObject("location")
-                val name = result!!.getString("name")
-                val hours = result!!.optJSONObject("opening_hours")
-                val isOpen = hours?.getBoolean("open_now")
-                val schedule = hours?.getJSONArray("weekday_text")
-                val photos = result!!.optJSONArray("photos")
-                val rating = result!!.optDouble("rating", 0.0)
-                val reviews = result!!.optJSONArray("reviews")
-                val placeType=result!!.optJSONArray("types")
-                val url = result!!.getString("url")
+                    val detailsStr = URL("https://maps.googleapis.com/maps/api/place/" +
+                            "details/json?key=$apiKey&place_id=$placeID&fields=photo,name," +
+                            "formatted_address,rating,review,geometry,type,opening_hours,url"
+                    ).readText()
+                    val detailsJSON = JSONObject(detailsStr)
+                    println(detailsJSON.toString(2))
+                    result = detailsJSON.getJSONObject("result")
+
+                    val address = result!!.getString("formatted_address")
+                    val location = result!!.getJSONObject("geometry")
+                        .getJSONObject("location")
+                    val name = result!!.getString("name")
+                    val hours = result!!.optJSONObject("opening_hours")
+                    val isOpen = hours?.getBoolean("open_now")
+                    val schedule = hours?.getJSONArray("weekday_text")
+                    val photos = result!!.optJSONArray("photos")
+                    val rating = result!!.optDouble("rating", 0.0)
+                    val reviews = result!!.optJSONArray("reviews")
+                    val placeType = result!!.optJSONArray("types")
+                    val url = result!!.getString("url")
+                    println(
+                        getString(
+                            R.string.place_details,
+                            photos?.length(),
+                            name,
+                            address,
+                            "%.1f".format(rating),
+                            reviews?.length(),
+                            placeType?.toString(),
+                            location.toString(2),
+                            isOpen,
+                            schedule?.toString(2),
+                            url
+                        )
+                    )
+
+                    val place = if (isOpen != null) {
+                        Place(address = address, name = name, isOpen = isOpen,
+                            rating = rating.toFloat(), url = url)
+                    } else {
+                        Place(address = address, name = name, rating = rating.toFloat(), url = url)
+                    }
+                    placesList.add(place)
+
+                    if (i == 2) {
+                        break // no need to show more than 3 results (for now)
+                    }
+                }
 
                 activity!!.runOnUiThread {
                     // Remember that you can only change UI elements in the main thread
-                    textViewPlacesInfo.text = getString(
-                        R.string.place_details, photos?.length(),
-                        name, address, "%.1f".format(rating), reviews?.length(),placeType?.toString(),
-                        location.toString(2), isOpen, schedule?.toString(2),
-                        url)
+                    placesAdapter.refreshData()
+                    textViewLoading.visibility = View.GONE
                 }
             } else {
                 // Try to output an error message, else show a generic "no results" message
                 activity!!.runOnUiThread {
-                    textViewPlacesInfo.text = placesJSON.optString("error_message",
-                        getString(R.string.no_results))
+                    textViewLoading.text = getString(R.string.no_results)
                 }
             }
         }

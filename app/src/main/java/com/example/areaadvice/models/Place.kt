@@ -2,11 +2,11 @@ package com.example.areaadvice.models
 
 data class Place(
     val address: String,
-    val lat: Double,
-    val lon: Double,
+    /*val lat: Double,
+    val lon: Double,*/
     val name: String,
     val isOpen: Boolean = false,
-    val rating: Double = 0.0,
-    val reviews: ArrayList<String> = arrayListOf(),
+    val rating: Float = 0f,
+    //val reviews: ArrayList<String> = arrayListOf(),
     val url: String
 )

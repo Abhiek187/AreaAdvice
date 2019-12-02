@@ -27,6 +27,8 @@
         Images: %1$d\nName: %2$s\nAddress: %3$s\nRating: %4$s\nReviews: %5$d\nType: %6$s\nLocation: %7$s\n
         Open?: %8$b\nSchedule: %9$s\nURL: %10$s
     </string>
+    <string name="open">Open</string>
+    <string name="closed">Closed</string>
     <!-- Unit conversions -->
     <string name="dist_meters">m</string>
     <string name="dist_miles">mi</string>

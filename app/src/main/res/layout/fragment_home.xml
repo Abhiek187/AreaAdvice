@@ -11,9 +11,9 @@
         android:layout_width="320dp"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:textSize="18sp"
         android:hint="@string/search_hint"
         android:inputType="text"
+        android:textSize="18sp"
         app:layout_constraintRight_toLeftOf="@+id/imageButtonSearch"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -25,48 +25,19 @@
         android:contentDescription="@string/search"
         android:padding="5dp"
         android:src="@mipmap/outline_search_black_18dp"
-        app:layout_constraintBottom_toTopOf="@id/imageButtonFilter"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/editTextSearch" />
+        app:layout_constraintLeft_toRightOf="@id/editTextSearch"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/imageButtonFilter"
         android:layout_width="70dp"
         android:layout_height="50dp"
-        android:padding="5dp"
         android:contentDescription="@string/filter"
-        android:src="@mipmap/outline_filter_list_black_18dp"
-        app:layout_constraintBottom_toTopOf="@id/recycle"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <ScrollView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintEnd_toStartOf="@+id/imageButtonFilter"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextSearch"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <TextView
-            android:id="@+id/textViewPlacesInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hello World!"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-    </ScrollView>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
         android:padding="5dp"
-        app:layout_constraintEnd_toStartOf="@+id/imageButtonFilter"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imageButtonFilter" />
+        android:src="@mipmap/outline_filter_list_black_18dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageButtonSearch" />
 
     <Button
         android:id="@+id/map"
@@ -74,8 +45,7 @@
         android:layout_height="50dp"
         android:text="@string/mapButtonName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imageButtonFilter"
-        />
+        app:layout_constraintTop_toBottomOf="@id/imageButtonFilter" />
 
     <Button
         android:id="@+id/clear"
@@ -83,15 +53,38 @@
         android:layout_height="50dp"
         android:text="@string/clrButtonName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/map"
-        />
+        app:layout_constraintTop_toBottomOf="@id/map" />
+
     <Button
         android:id="@+id/save"
         android:layout_width="70dp"
         android:layout_height="50dp"
         android:text="@string/save"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/clear"
-        />
+        app:layout_constraintTop_toBottomOf="@id/clear" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewPlaces"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:padding="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/imageButtonFilter"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextSearch" />
+
+    <TextView
+        android:id="@+id/textViewLoading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/loading"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toStartOf="@+id/imageButtonFilter"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextSearch" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
