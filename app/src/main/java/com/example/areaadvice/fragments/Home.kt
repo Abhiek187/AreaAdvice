@@ -320,10 +320,12 @@ class Home : Fragment(), SensorEventListener {
                     val place = if (isOpen != null) {
                         Place(address = address, name = name, isOpen = isOpen,
                             rating = rating.toFloat(), url = url,
-                            latitude =location.getDouble("lat"),longitude = location.getDouble("lng"))
+                            latitude =location.getDouble("lat"),longitude = location.getDouble("lng"),
+                            schedule = schedule.toString())
                     } else {
                         Place(address = address, name = name, rating = rating.toFloat(), url = url,
-                            latitude =location.getDouble("lat"),longitude = location.getDouble("lng"))
+                            latitude =location.getDouble("lat"),longitude = location.getDouble("lng"),
+                                    schedule = schedule.toString())
                     }
                     placesList.add(place)
 
