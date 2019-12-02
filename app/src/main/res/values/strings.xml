@@ -10,7 +10,7 @@
     <string name="menu_Settings">Settings</string>
     <string name="sensorRecOnorOff">On</string>
     <string name="sensorrecommendations">Sensor Recommendations</string>
-    <string name="maxRadius">Maximum Radius</string>
+    <string name="maxRadius">Radius</string>
     <string name="startval">25</string>
     <string name="chooseUnit">Unit of Measurement</string>
     <string name="unitChoiceUSA">mi/°F</string>

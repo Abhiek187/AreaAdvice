@@ -57,14 +57,20 @@ class SettingsMenu : Fragment() {
         radBtn2 = view.findViewById(radGroup2.checkedRadioButtonId)
 
         val radCheck = sharedPref.getInt("units", 1)
-        if(radCheck == 1) radBtnUSA.isChecked = true
-        else radBtnSI.isChecked = true
+        if(radCheck == 1) {radBtnUSA.isChecked = true
+            radiusSeek.max=50}
+        else {
+            radBtnSI.isChecked = true
+            radiusSeek.max=80
+        }
 
         radBtn.setOnCheckedChangeListener{_,_ ->
             if(radBtnUSA.isChecked){
                 editor.putInt("units", 1)
+                radiusSeek.max=50
             } else {
                 editor.putInt("units", 2)
+                radiusSeek.max=80
             }
             editor.apply()
         }
@@ -87,14 +93,14 @@ class SettingsMenu : Fragment() {
 
         radiusSeekBarText.text= sharedPref.getString("radius","25").toString()
         senEnable.isChecked = sharedPref.getBoolean("senEnable",true)
-        sharedPref.getString("check", senEnable.text.toString())
+        senEnable.text=sharedPref.getString("check", "On")
 
         senEnable.setOnCheckedChangeListener { _, _ ->
             changeSwitchText()
         }
 
         openLocEnable.isChecked = sharedPref.getBoolean("openLocEnable", true)
-        sharedPref.getString("check2", openLocEnable.text.toString())
+        openLocEnable.text=sharedPref.getString("check2", "On")
 
         openLocEnable.setOnCheckedChangeListener { _, _ ->
             editor.putBoolean("openLocEnable", openLocEnable.isChecked)
@@ -105,6 +111,7 @@ class SettingsMenu : Fragment() {
                 openLocEnable.text = "Off"
                 editor.putString("check2", openLocEnable.text.toString())
             }
+            editor.apply()
         }
 
        // radiusSeek = view.findViewById(R.id.radiusSeekBar)
