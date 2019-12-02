@@ -1,7 +1,6 @@
 package com.example.areaadvice.fragments
 
 import android.Manifest
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -26,7 +25,6 @@ import com.example.areaadvice.R
 import com.example.areaadvice.activities.MapsActivity
 import com.example.areaadvice.adapters.PlacesAdapter
 import com.example.areaadvice.models.Place
-import com.example.areaadvice.storage.DatabasePlaces
 import com.example.areaadvice.storage.Prefs
 import com.example.areaadvice.utils.cToF
 import com.example.areaadvice.utils.lxToFc
