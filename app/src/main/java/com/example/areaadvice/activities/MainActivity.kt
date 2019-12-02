@@ -6,6 +6,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.areaadvice.fragments.Home
 import com.example.areaadvice.R
+import com.example.areaadvice.fragments.SavedLocations
 import com.example.areaadvice.fragments.SettingsMenu
 
 class MainActivity : AppCompatActivity() {
@@ -26,12 +27,21 @@ class MainActivity : AppCompatActivity() {
                 R.id.Home -> {
                     val fragment = Home()
                     fm.hide(SettingsMenu())
+                    fm.hide(SavedLocations())
                     changeFragment(fragment)
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.Settings -> {
                     val fragment = SettingsMenu()
                     fm.hide(Home())
+                    fm.hide(SavedLocations())
+                    changeFragment(fragment)
+                    return@setOnNavigationItemSelectedListener true
+                }
+                R.id.savedLocations -> {
+                    val fragment = SavedLocations()
+                    fm.hide(Home())
+                    fm.hide(SettingsMenu())
                     changeFragment(fragment)
                     return@setOnNavigationItemSelectedListener true
                 }
