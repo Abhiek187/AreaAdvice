@@ -81,6 +81,7 @@ class SettingsMenu : Fragment() {
                 sharedPref.units = 1
                 radiusSeek.max = 80
             }
+            sharedPref.radiusText = radiusSeekBarText.text.toString()
             println("USA? ${radBtnUSA.isChecked}, radiusSeek.max: ${radiusSeek.max}")
         }
 
