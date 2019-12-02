@@ -47,8 +47,11 @@ class PlacesAdapter(private var context: Context, private var placesList: ArrayL
         holder.itemView.setOnClickListener{
             val intent = Intent(context,
                 LocationInfoMenu::class.java)
+            intent.putExtra("name",holder.textViewName.text.toString())
+            intent.putExtra("address",holder.textViewAddress.text.toString())
+            intent.putExtra("rating",holder.ratingBar.rating.toString())
+            intent.putExtra("isOpen",holder.textViewOpen.text.toString())
              this.context.startActivity(intent)
-            //val fm = supportFragmentManager.beginTransaction()
         }
     }
 

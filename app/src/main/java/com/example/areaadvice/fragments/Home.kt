@@ -52,7 +52,6 @@ class Home : Fragment(), SensorEventListener {
     private lateinit var recyclerViewPlaces: RecyclerView
     private lateinit var mapBtn: Button
     private lateinit var clearBtn: Button
-    private lateinit var saveBtn: Button
     private var result: JSONObject? = null
 
     // Sensor variables
@@ -147,7 +146,6 @@ class Home : Fragment(), SensorEventListener {
         imageButtonSearch = view.findViewById(R.id.imageButtonSearch)
         mapBtn = view.findViewById(R.id.map)
         clearBtn = view.findViewById(R.id.clear)
-        saveBtn=view.findViewById(R.id.save)
         /* Steps to hide your API key:
          * 1. Create google_apis.xml in values folder (Git will ignore this file)
          * 2. Add API key as string resource named google_places_key
@@ -221,50 +219,6 @@ class Home : Fragment(), SensorEventListener {
             textViewLoading.text = ""
         }
 
-        saveBtn.setOnClickListener{
-            result?.let {
-                val db = DatabasePlaces(mContext)
-                val newInfo = db.writableDatabase
-                val checkInfo=db.readableDatabase
-                var repeat=false
-
-                val cursor2 = checkInfo.query(
-                    DatabasePlaces.Table_Name,   // The table to query
-                    null,             // The array of columns to return (pass null to get all)
-                    null,//selection,              // The columns for the WHERE clause
-                    null,//selectionArgs,          // The values for the WHERE clause
-                    null,                   // don't group the rows
-                    null,                   // don't filter by row groups
-                    null             // The sort order
-                )
-
-                //var len = (cursor2.count > 0)
-                with(cursor2) {
-                    while (moveToNext()) {
-                        //println("database "+getString(getColumnIndexOrThrow(Database_Places.Col_place_Name)))
-                        //println("current "+it.getString("name"))
-                        if (this!!.getString(getColumnIndexOrThrow(DatabasePlaces.Col_Address))!!.contentEquals(it.getString("formatted_address")))
-                        {repeat=true
-
-                        }
-                    }
-                    }
-                if (!repeat) {
-                val tempLoc = it.getJSONObject("geometry").getJSONObject("location").getDouble("lat")
-                //val tempLat1 = tempLoc.substringAfter(":")
-                //val tempLat2 = tempLat1.substringBefore(",")
-                val tempLng = it.getJSONObject("geometry").getJSONObject("location").getDouble("lng")
-                //val tempLng2 = tempLng.substringBefore("}")
-                val addVal = ContentValues().apply {
-                    put(DatabasePlaces.Col_place_Name, it.getString("name"))
-                    put(DatabasePlaces.Col_Address, it.getString("formatted_address"))
-                    put(DatabasePlaces.Col_Rating, it.optDouble("rating"))
-                    put(DatabasePlaces.Col_Lat, tempLoc)
-                    put(DatabasePlaces.Col_Lng, tempLng)
-                }
-                newInfo?.insert(DatabasePlaces.Table_Name, null, addVal)
-            }
-        }}
 
         // Inflate the layout for this fragment
         return view

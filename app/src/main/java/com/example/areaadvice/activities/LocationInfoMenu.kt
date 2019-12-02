@@ -1,11 +1,13 @@
 package com.example.areaadvice.activities
 
+import android.content.ContentValues
 import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -41,11 +43,60 @@ class LocationInfoMenu : AppCompatActivity()  {
         locProximity = findViewById(R.id.locationProximity)
         locHours = findViewById(R.id.locationHours)
         locRating = findViewById(R.id.ratingBar)
+        val saveBtn = findViewById<Button>(R.id.saveBtn)
+
+        locName.text=intent.getStringExtra("name")
+        locAddress.text=intent.getStringExtra("address")
+        locRating.rating=intent.getStringExtra("rating")!!.toFloat()
+        locHours.text=intent.getStringExtra("isOpen")
 
         cursor.moveToFirst()
         while (!cursor.isAfterLast) {
             val mLocLat = cursor.getString(cursor.getColumnIndex(DatabasePlaces.Col_Lat))
             val mLocLong = cursor.getString(cursor.getColumnIndex(DatabasePlaces.Col_Lng))
+        }
+        saveBtn.setOnClickListener{
+            val db = DatabasePlaces(this)
+            val newInfo = db.writableDatabase
+            val checkInfo=db.readableDatabase
+            var repeat=false
+
+            val cursor2 = checkInfo.query(
+                DatabasePlaces.Table_Name,   // The table to query
+                null,             // The array of columns to return (pass null to get all)
+                null,//selection,              // The columns for the WHERE clause
+                null,//selectionArgs,          // The values for the WHERE clause
+                null,                   // don't group the rows
+                null,                   // don't filter by row groups
+                null             // The sort order
+            )
+
+            //var len = (cursor2.count > 0)
+            with(cursor2) {
+                while (moveToNext()) {
+                    //println("database "+getString(getColumnIndexOrThrow(Database_Places.Col_place_Name)))
+                    //println("current "+it.getString("name"))
+                    if (this!!.getString(getColumnIndexOrThrow(DatabasePlaces.Col_Address))!!.contentEquals(locAddress.text.toString()))
+                    {repeat=true
+
+                    }
+                }
+            }
+            if (!repeat) {
+                //val tempLoc = it.getJSONObject("geometry").getJSONObject("location").getDouble("lat")
+                //val tempLat1 = tempLoc.substringAfter(":")
+                //val tempLat2 = tempLat1.substringBefore(",")
+                //val tempLng = it.getJSONObject("geometry").getJSONObject("location").getDouble("lng")
+                //val tempLng2 = tempLng.substringBefore("}")
+                val addVal = ContentValues().apply {
+                    put(DatabasePlaces.Col_place_Name, locName.text.toString())
+                    put(DatabasePlaces.Col_Address, locAddress.text.toString())
+                    put(DatabasePlaces.Col_Rating, locRating.rating.toString())
+                    //put(DatabasePlaces.Col_Lat, tempLoc)
+                    //put(DatabasePlaces.Col_Lng, tempLng)
+                }
+                newInfo?.insert(DatabasePlaces.Table_Name, null, addVal)
+            }
         }
     }
 }
