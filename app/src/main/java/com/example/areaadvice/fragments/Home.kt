@@ -393,7 +393,7 @@ class Home : Fragment(), SensorEventListener {
 
                         // Sample recommendations based on temperature
                         recommendations = if (temp <= 0) {
-                            "Restaurant"
+                            "restaurant"
                         } else if (temp > 0 && temp <= 5) {
                             "university"
                         } else if (temp > 5 && temp <= 15) {
@@ -430,7 +430,7 @@ class Home : Fragment(), SensorEventListener {
                         } else if(bright > 2000 && bright <= 10000) {
                             "gym"
                         } else if(bright > 10000 && bright <= 20000) {
-                            "tourist"
+                            "tourist_attraction"
                         } else {
                             "park"
                         }
