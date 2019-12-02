@@ -82,7 +82,6 @@ class SettingsMenu : Fragment() {
                 radiusSeek.max = 80
             }
             sharedPref.radiusText = radiusSeekBarText.text.toString()
-            println("USA? ${radBtnUSA.isChecked}, radiusSeek.max: ${radiusSeek.max}")
         }
 
         // Check radius seek bar
@@ -120,7 +119,6 @@ class SettingsMenu : Fragment() {
             } else {
                 sharedPref.criteria = 1
             }
-            println("Ratings? ${radBtnRatings.isChecked}")
         }
 
         // Check sensors

@@ -48,7 +48,7 @@ class LocationInfoMenu : AppCompatActivity()  {
         val lat=intent.getDoubleExtra("latitude",0.0)
         val currentLat=intent.getFloatExtra("lat",0F)
         val currentLng=intent.getFloatExtra("long",0F)
-        val distance= distanceBetweenPoints(lat.toString(),lng.toString(),currentLat.toString(),currentLng.toString())
+        val distance= distanceBetweenPoints(lat,lng,currentLat.toDouble(),currentLng.toDouble())
         if(sharedPrefs.units==1) {
             locProximity.text = String.format("%.2f km",distance)
         }
@@ -56,13 +56,13 @@ class LocationInfoMenu : AppCompatActivity()  {
             locProximity.text = String.format("%.2f mi", distance / 1.609)
         }
         locSchedule.text=""//intent.getStringExtra("schedule")
-        var Schedule=intent.getStringExtra("schedule").split(",")
+        val schedule=intent.getStringExtra("schedule").split(",")
 
-        var ScheduleLoop=0
-        while (ScheduleLoop<Schedule.size)
+        var scheduleLoop=0
+        while (scheduleLoop<schedule.size)
         {
-            locSchedule.text= locSchedule.text as String +Schedule[ScheduleLoop]+"\n"
-            ScheduleLoop++
+            locSchedule.text= locSchedule.text as String +schedule[scheduleLoop]+"\n"
+            scheduleLoop++
         }
 
         cursor.moveToFirst()
@@ -119,18 +119,14 @@ class LocationInfoMenu : AppCompatActivity()  {
 }
 
 
-fun distanceBetweenPoints(Lat1: String, Long1: String, Lat2: String, Long2: String): Double {
+fun distanceBetweenPoints(lat1: Double, long1: Double, lat2: Double, long2: Double): Double {
     val avgRadius = 6371.0
-    val lat1 = Lat1.toDouble()
-    val long1 = Long1.toDouble()
-    val lat2 = Lat2.toDouble()
-    val long2 = Long2.toDouble()
     val latDistance = Math.toRadians(lat1 - lat2)
     val longDistance = Math.toRadians(long1 - long2)
 
     val a =
-        (sin(latDistance / 2) * sin(latDistance / 2)) +
-                (cos(Math.toRadians(lat1)) * cos(Math.toRadians(lat2)) * sin(longDistance / 2) * sin(longDistance / 2))
+        (sin(latDistance / 2) * sin(latDistance / 2)) + (cos(Math.toRadians(lat1))
+                * cos(Math.toRadians(lat2)) * sin(longDistance / 2) * sin(longDistance / 2))
     val c = 2* atan2(sqrt(a), sqrt(1 - a))
 
     return (avgRadius*c) //in kilometers
