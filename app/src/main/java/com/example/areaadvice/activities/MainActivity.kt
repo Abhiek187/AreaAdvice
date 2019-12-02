@@ -1,9 +1,12 @@
-package com.example.areaadvice
+package com.example.areaadvice.activities
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import com.example.areaadvice.fragments.Home
+import com.example.areaadvice.R
+import com.example.areaadvice.fragments.SettingsMenu
 
 class MainActivity : AppCompatActivity() {
 

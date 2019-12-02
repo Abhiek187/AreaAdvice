@@ -1,4 +1,4 @@
-package com.example.areaadvice
+package com.example.areaadvice.fragments
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
+import com.example.areaadvice.R
 
 
 class SettingsMenu : Fragment() {

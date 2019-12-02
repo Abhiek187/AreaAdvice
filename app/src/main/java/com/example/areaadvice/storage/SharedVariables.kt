@@ -1,4 +1,4 @@
-package com.example.areaadvice
+package com.example.areaadvice.storage
 
 import android.content.Context
 import android.content.SharedPreferences

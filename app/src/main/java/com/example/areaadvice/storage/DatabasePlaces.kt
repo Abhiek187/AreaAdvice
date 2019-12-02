@@ -1,11 +1,14 @@
-package com.example.areaadvice
+package com.example.areaadvice.storage
 
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-class Database_Places(context: Context): SQLiteOpenHelper(context,name,null,version){
+class DatabasePlaces(context: Context): SQLiteOpenHelper(context,
+    name,null,
+    version
+){
 
     private val entries ="Create Table $Table_Name "+
             "($Id INTEGER PRIMARY KEY, $Col_place_Name Text, $Col_Address Text, $Col_Rating Text, $Col_Lat Text, $Col_Lng Text)"

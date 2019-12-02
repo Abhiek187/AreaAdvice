@@ -1,4 +1,4 @@
-package com.example.areaadvice
+package com.example.areaadvice.fragments
 
 import android.Manifest
 import android.content.ContentValues
@@ -20,6 +20,17 @@ import android.widget.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.areaadvice.R
+import com.example.areaadvice.activities.MapsActivity
+import com.example.areaadvice.adapters.PlacesAdapter
+import com.example.areaadvice.models.Place
+import com.example.areaadvice.storage.DatabasePlaces
+import com.example.areaadvice.utils.cToF
+import com.example.areaadvice.utils.lxToFc
+import com.example.areaadvice.utils.miToM
 import com.google.android.gms.location.*
 import org.json.JSONObject
 import java.net.URL
@@ -31,11 +42,14 @@ class Home : Fragment(), SensorEventListener {
     // The MainActivity context & API key
     private lateinit var mContext: Context
     private lateinit var apiKey: String
+    private var placesList = arrayListOf<Place>()
+    private lateinit var placesAdapter: PlacesAdapter
 
     // UI elements
     private lateinit var editTextSearch: EditText
     private lateinit var imageButtonSearch: ImageButton
-    private lateinit var textViewPlacesInfo: TextView
+    private lateinit var textViewLoading: TextView
+    private lateinit var recyclerViewPlaces: RecyclerView
     private lateinit var mapBtn: Button
     private lateinit var clearBtn: Button
     private lateinit var saveBtn: Button
@@ -59,7 +73,7 @@ class Home : Fragment(), SensorEventListener {
     private var critChoice: Int = 1
     private var tempDegree = true
     private var disUnit = true
-    private var radius = "25" // placeholder: 16090 m = 10 mi
+    private var radius = "25" // placeholder: 25 mi
     private lateinit var unitTemp: String
     private lateinit var unitLight: String
     private var useRatings = true
@@ -127,7 +141,8 @@ class Home : Fragment(), SensorEventListener {
             )
         }
 
-        textViewPlacesInfo = view.findViewById(R.id.textViewPlacesInfo)
+        textViewLoading = view.findViewById(R.id.textViewLoading)
+        recyclerViewPlaces = view.findViewById(R.id.recyclerViewPlaces)
         editTextSearch = view.findViewById(R.id.editTextSearch)
         imageButtonSearch = view.findViewById(R.id.imageButtonSearch)
         mapBtn = view.findViewById(R.id.map)
@@ -140,6 +155,13 @@ class Home : Fragment(), SensorEventListener {
          */
         apiKey = getString(R.string.google_places_key)
         getLocationUpdates() // track location in the background
+
+        // Set up recycler view
+        recyclerViewPlaces.layoutManager = LinearLayoutManager(mContext)
+        placesAdapter = PlacesAdapter(mContext, placesList)
+        recyclerViewPlaces.adapter = placesAdapter
+        val divider = DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL)
+        recyclerViewPlaces.addItemDecoration(divider) // add border between places
 
         imageButtonSearch.setOnClickListener {
             // Initiate search if online
@@ -157,7 +179,9 @@ class Home : Fragment(), SensorEventListener {
                 return@setOnClickListener
             }
 
-            val reqParam = if (useRatings) "radius=${miToM(radius.toFloat())}" else "rankby=distance"
+            val reqParam = if (useRatings) "radius=${miToM(
+                radius.toFloat()
+            )}" else "rankby=distance"
             val rankByParam = when {
                 query.isNotEmpty() -> {
                     // Need to convert user input to encoded query string
@@ -176,7 +200,10 @@ class Home : Fragment(), SensorEventListener {
             }
             val openParam = if (useHours) "&opennow" else ""
 
-            textViewPlacesInfo.text = getString(R.string.loading)
+            placesList.clear()
+            placesAdapter.refreshData()
+            textViewLoading.visibility = View.VISIBLE
+            textViewLoading.text = getString(R.string.loading)
             recommendPlaces(reqParam, rankByParam, openParam)
         }
 
@@ -189,18 +216,20 @@ class Home : Fragment(), SensorEventListener {
         }
 
         clearBtn.setOnClickListener {
-            textViewPlacesInfo.text = ""
+            placesList.clear()
+            placesAdapter.refreshData()
+            textViewLoading.text = ""
         }
 
         saveBtn.setOnClickListener{
             result?.let {
-                val db = Database_Places(mContext)
+                val db = DatabasePlaces(mContext)
                 val newInfo = db.writableDatabase
                 val checkInfo=db.readableDatabase
                 var repeat=false
 
                 val cursor2 = checkInfo.query(
-                    Database_Places.Table_Name,   // The table to query
+                    DatabasePlaces.Table_Name,   // The table to query
                     null,             // The array of columns to return (pass null to get all)
                     null,//selection,              // The columns for the WHERE clause
                     null,//selectionArgs,          // The values for the WHERE clause
@@ -209,32 +238,31 @@ class Home : Fragment(), SensorEventListener {
                     null             // The sort order
                 )
 
-                var len = (cursor2.count > 0)
+                //var len = (cursor2.count > 0)
                 with(cursor2) {
                     while (moveToNext()) {
                         //println("database "+getString(getColumnIndexOrThrow(Database_Places.Col_place_Name)))
                         //println("current "+it.getString("name"))
-                        if (getString(getColumnIndexOrThrow(Database_Places.Col_Address)).contentEquals(it.getString("formatted_address")))
+                        if (this!!.getString(getColumnIndexOrThrow(DatabasePlaces.Col_Address))!!.contentEquals(it.getString("formatted_address")))
                         {repeat=true
 
                         }
                     }
                     }
-                if (repeat){}
-                else{
+                if (!repeat) {
                 val tempLoc = it.getJSONObject("geometry").getJSONObject("location").getDouble("lat")
                 //val tempLat1 = tempLoc.substringAfter(":")
                 //val tempLat2 = tempLat1.substringBefore(",")
                 val tempLng = it.getJSONObject("geometry").getJSONObject("location").getDouble("lng")
                 //val tempLng2 = tempLng.substringBefore("}")
                 val addVal = ContentValues().apply {
-                    put(Database_Places.Col_place_Name, it.getString("name"))
-                    put(Database_Places.Col_Address, it.getString("formatted_address"))
-                    put(Database_Places.Col_Rating, it.optDouble("rating"))
-                    put(Database_Places.Col_Lat, tempLoc)
-                    put(Database_Places.Col_Lng, tempLng)
+                    put(DatabasePlaces.Col_place_Name, it.getString("name"))
+                    put(DatabasePlaces.Col_Address, it.getString("formatted_address"))
+                    put(DatabasePlaces.Col_Rating, it.optDouble("rating"))
+                    put(DatabasePlaces.Col_Lat, tempLoc)
+                    put(DatabasePlaces.Col_Lng, tempLng)
                 }
-                val newRowId = newInfo?.insert(Database_Places.Table_Name, null, addVal)
+                newInfo?.insert(DatabasePlaces.Table_Name, null, addVal)
             }
         }}
 
@@ -309,41 +337,69 @@ class Home : Fragment(), SensorEventListener {
 
             if (placesJSON.getString("status") == "OK") {
                 // At least one result is available
-                val placeID = placesJSON.getJSONArray("results").getJSONObject(0)
-                    .getString("place_id")
+                val places = placesJSON.getJSONArray("results")
 
-                val detailsStr = URL("https://maps.googleapis.com/maps/api/place/details/" +
-                        "json?key=$apiKey&place_id=$placeID&fields=photo,name,formatted_address," +
-                        "rating,review,geometry,type,opening_hours,url").readText()
-                val detailsJSON = JSONObject(detailsStr)
-                println(detailsJSON.toString(2))
-                result = detailsJSON.getJSONObject("result")
+                for (i in 0 until places.length()) {
+                    val placeID = places.getJSONObject(i).getString("place_id")
 
-                val address = result!!.getString("formatted_address")
-                val location = result!!.getJSONObject("geometry")
-                    .getJSONObject("location")
-                val name = result!!.getString("name")
-                val hours = result!!.optJSONObject("opening_hours")
-                val isOpen = hours?.getBoolean("open_now")
-                val schedule = hours?.getJSONArray("weekday_text")
-                val photos = result!!.optJSONArray("photos")
-                val rating = result!!.optDouble("rating", 0.0)
-                val reviews = result!!.optJSONArray("reviews")
-                val placeType=result!!.optJSONArray("types")
-                val url = result!!.getString("url")
+                    val detailsStr = URL("https://maps.googleapis.com/maps/api/place/" +
+                            "details/json?key=$apiKey&place_id=$placeID&fields=photo,name," +
+                            "formatted_address,rating,review,geometry,type,opening_hours,url"
+                    ).readText()
+                    val detailsJSON = JSONObject(detailsStr)
+                    println(detailsJSON.toString(2))
+                    result = detailsJSON.getJSONObject("result")
+
+                    val address = result!!.getString("formatted_address")
+                    val location = result!!.getJSONObject("geometry")
+                        .getJSONObject("location")
+                    val name = result!!.getString("name")
+                    val hours = result!!.optJSONObject("opening_hours")
+                    val isOpen = hours?.getBoolean("open_now")
+                    val schedule = hours?.getJSONArray("weekday_text")
+                    val photos = result!!.optJSONArray("photos")
+                    val rating = result!!.optDouble("rating", 0.0)
+                    val reviews = result!!.optJSONArray("reviews")
+                    val placeType = result!!.optJSONArray("types")
+                    val url = result!!.getString("url")
+                    println(
+                        getString(
+                            R.string.place_details,
+                            photos?.length(),
+                            name,
+                            address,
+                            "%.1f".format(rating),
+                            reviews?.length(),
+                            placeType?.toString(),
+                            location.toString(2),
+                            isOpen,
+                            schedule?.toString(2),
+                            url
+                        )
+                    )
+
+                    val place = if (isOpen != null) {
+                        Place(address = address, name = name, isOpen = isOpen,
+                            rating = rating.toFloat(), url = url)
+                    } else {
+                        Place(address = address, name = name, rating = rating.toFloat(), url = url)
+                    }
+                    placesList.add(place)
+
+                    if (i == 2) {
+                        break // no need to show more than 3 results (for now)
+                    }
+                }
 
                 activity!!.runOnUiThread {
                     // Remember that you can only change UI elements in the main thread
-                    textViewPlacesInfo.text = getString(R.string.place_details, photos?.length(),
-                        name, address, "%.1f".format(rating), reviews?.length(),placeType?.toString(),
-                        location.toString(2), isOpen, schedule?.toString(2),
-                        url)
+                    placesAdapter.refreshData()
+                    textViewLoading.visibility = View.GONE
                 }
             } else {
                 // Try to output an error message, else show a generic "no results" message
                 activity!!.runOnUiThread {
-                    textViewPlacesInfo.text = placesJSON.optString("error_message",
-                        getString(R.string.no_results))
+                    textViewLoading.text = getString(R.string.no_results)
                 }
             }
         }
@@ -392,7 +448,9 @@ class Home : Fragment(), SensorEventListener {
                     if (diff?.let { abs(it) }!! >= 2) {
                         prevTemp = temp
                         println("temp is $temp $unitTemp " +
-                                "(${cToF(temp)} ${getString(R.string.temp_fahrenheit)})")
+                                "(${cToF(temp)} ${getString(
+                                    R.string.temp_fahrenheit
+                                )})")
 
                         // Sample recommendations based on temperature
                         recommendations = if (temp <= 0) {
@@ -420,7 +478,9 @@ class Home : Fragment(), SensorEventListener {
                     if (abs(diff2) >= 2) {
                         prevLight = bright
                         println("Light levels are $bright $unitLight " +
-                                "(${lxToFc(bright)} ${getString(R.string.light_foot_candle)})")
+                                "(${lxToFc(bright)} ${getString(
+                                    R.string.light_foot_candle
+                                )})")
                         recPrev = recommendations
 
                         // Sample recommendations based on light level

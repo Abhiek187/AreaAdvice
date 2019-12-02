@@ -1,4 +1,4 @@
-package com.example.areaadvice
+package com.example.areaadvice.activities
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import com.example.areaadvice.R
 import com.google.android.gms.location.*
 
 import com.google.android.gms.maps.CameraUpdateFactory
