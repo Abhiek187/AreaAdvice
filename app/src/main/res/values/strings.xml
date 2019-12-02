@@ -5,6 +5,7 @@
     <!-- Vishal -->
     <string name="search">Search</string>
     <string name="save">Save</string>
+    <string name="saveBtn">Save</string>
     <string name="filter">Filter</string>
     <string name="menu_Home">Home</string>
     <string name="menu_Settings">Settings</string>

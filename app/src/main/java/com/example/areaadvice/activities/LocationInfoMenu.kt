@@ -1,4 +1,4 @@
-package com.example.areaadvice.fragments
+package com.example.areaadvice.activities
 
 import android.content.Context
 import android.os.Bundle
@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RatingBar
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.example.areaadvice.R
 import com.example.areaadvice.storage.DatabasePlaces
 import kotlin.math.atan2
@@ -15,43 +16,40 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
 
-class LocationInfoMenu : Fragment() {
+class LocationInfoMenu : AppCompatActivity()  {
 
-    private lateinit var mContext: Context
+    //private lateinit var mContext: Context
     private lateinit var locName: TextView
     private lateinit var locAddress: TextView
     private lateinit var locProximity: TextView
     private lateinit var locHours: TextView
     private lateinit var locRating: RatingBar
 
-    private val db = DatabasePlaces(mContext)
-    override fun onAttach(context: Context) {
+    //private val db = DatabasePlaces(mContext)
+    /*override fun onAttach(context: Context) {
         super.onAttach(context)
         mContext = context
-    }
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_location_info_menu, container, false)
+    }*/
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.fragment_location_info_menu)
+        val db = DatabasePlaces(this)
         val cursor = db.getAllRows()
 
-        locName = view.findViewById(R.id.locationName)
-        locAddress = view.findViewById(R.id.locationAddress)
-        locProximity = view.findViewById(R.id.locationProximity)
-        locHours = view.findViewById(R.id.locationHours)
-        locRating = view.findViewById(R.id.ratingBar)
+        locName = findViewById(R.id.locationName)
+        locAddress = findViewById(R.id.locationAddress)
+        locProximity = findViewById(R.id.locationProximity)
+        locHours = findViewById(R.id.locationHours)
+        locRating = findViewById(R.id.ratingBar)
 
         cursor.moveToFirst()
-        while (!cursor.isAfterLast){
+        while (!cursor.isAfterLast) {
             val mLocLat = cursor.getString(cursor.getColumnIndex(DatabasePlaces.Col_Lat))
             val mLocLong = cursor.getString(cursor.getColumnIndex(DatabasePlaces.Col_Lng))
-
         }
-
-        return view
     }
 }
+
 
 fun distanceBetweenPoints(Lat1: String, Long1: String, Lat2: String, Long2: String): Double {
     val avgRadius = 6371.0

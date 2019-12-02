@@ -1,6 +1,7 @@
 package com.example.areaadvice.adapters
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.example.areaadvice.R
+import com.example.areaadvice.activities.LocationInfoMenu
 import com.example.areaadvice.models.Place
 import kotlinx.android.synthetic.main.adapter_places.view.*
 
@@ -41,6 +43,12 @@ class PlacesAdapter(private var context: Context, private var placesList: ArrayL
         } else {
             holder.textViewOpen.setTextColor(Color.RED)
             holder.textViewOpen.text = context.getString(R.string.closed)
+        }
+        holder.itemView.setOnClickListener{
+            val intent = Intent(context,
+                LocationInfoMenu::class.java)
+             this.context.startActivity(intent)
+            //val fm = supportFragmentManager.beginTransaction()
         }
     }
 
