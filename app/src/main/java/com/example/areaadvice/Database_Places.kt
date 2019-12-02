@@ -1,6 +1,7 @@
 package com.example.areaadvice
 
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
@@ -19,6 +20,11 @@ class Database_Places(context: Context): SQLiteOpenHelper(context,name,null,vers
 
     override fun onDowngrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         onUpgrade(db,oldVersion,newVersion)
+    }
+
+    fun getAllRows(): Cursor {
+        val db = this.readableDatabase
+        return db.rawQuery("SELECT * FROM $Table_Name", null)
     }
 
     companion object{
