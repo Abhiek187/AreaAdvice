@@ -8,5 +8,7 @@ data class Place(
     val isOpen: Boolean = false,
     val rating: Float = 0f,
     //val reviews: ArrayList<String> = arrayListOf(),
-    val url: String
+    val url: String,
+    val latitude: Double,
+    val longitude: Double
 )

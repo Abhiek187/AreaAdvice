@@ -51,6 +51,9 @@ class PlacesAdapter(private var context: Context, private var placesList: ArrayL
             intent.putExtra("address",holder.textViewAddress.text.toString())
             intent.putExtra("rating",holder.ratingBar.rating.toString())
             intent.putExtra("isOpen",holder.textViewOpen.text.toString())
+            intent.putExtra("latitude",placesList[position].latitude)
+            intent.putExtra("longitude",placesList[position].longitude)
+
              this.context.startActivity(intent)
         }
     }

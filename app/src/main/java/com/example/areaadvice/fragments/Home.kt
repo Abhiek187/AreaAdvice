@@ -319,9 +319,11 @@ class Home : Fragment(), SensorEventListener {
 
                     val place = if (isOpen != null) {
                         Place(address = address, name = name, isOpen = isOpen,
-                            rating = rating.toFloat(), url = url)
+                            rating = rating.toFloat(), url = url,
+                            latitude =location.getDouble("lat"),longitude = location.getDouble("lng"))
                     } else {
-                        Place(address = address, name = name, rating = rating.toFloat(), url = url)
+                        Place(address = address, name = name, rating = rating.toFloat(), url = url,
+                            latitude =location.getDouble("lat"),longitude = location.getDouble("lng"))
                     }
                     placesList.add(place)
 

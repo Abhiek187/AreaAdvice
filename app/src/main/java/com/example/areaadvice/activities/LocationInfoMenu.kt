@@ -87,8 +87,8 @@ class LocationInfoMenu : AppCompatActivity()  {
                     put(DatabasePlaces.Col_place_Name, locName.text.toString())
                     put(DatabasePlaces.Col_Address, locAddress.text.toString())
                     put(DatabasePlaces.Col_Rating, locRating.rating.toString())
-                    //put(DatabasePlaces.Col_Lat, tempLoc)
-                    //put(DatabasePlaces.Col_Lng, tempLng)
+                    put(DatabasePlaces.Col_Lat, intent.getDoubleExtra("latitude",0.0))
+                    put(DatabasePlaces.Col_Lng, intent.getDoubleExtra("longitude",0.0))
                 }
                 newInfo?.insert(DatabasePlaces.Table_Name, null, addVal)
             }

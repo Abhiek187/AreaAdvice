@@ -47,8 +47,11 @@ class SavedLocations : Fragment() {
             val mLocationName = cursor.getString(cursor.getColumnIndex(DatabasePlaces.Col_place_Name))
             val mLocationAddress = cursor.getString(cursor.getColumnIndex(DatabasePlaces.Col_Address))
             val mLocationRating = cursor.getFloat(cursor.getColumnIndex(DatabasePlaces.Col_Rating))
+            val mLocationLat=cursor.getDouble(cursor.getColumnIndexOrThrow(DatabasePlaces.Col_Lat))
+            val mLocationLng=cursor.getDouble(cursor.getColumnIndexOrThrow(DatabasePlaces.Col_Lng))
 
-            val place = Place(address = mLocationAddress, name = mLocationName, rating = mLocationRating, url = "")
+            val place = Place(address = mLocationAddress, name = mLocationName, rating = mLocationRating, url = "",
+                latitude =mLocationLat,longitude = mLocationLng)
             placesList.add(place)
             cursor.moveToNext()
         }
