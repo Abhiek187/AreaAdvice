@@ -61,8 +61,10 @@ class LocationInfoMenu : AppCompatActivity()  {
         var scheduleLoop=0
         while (scheduleLoop<schedule.size)
         {val str=schedule[scheduleLoop].replace("[","").replace("]","")
+            if (str.length>0)
+            {
             locSchedule.text= locSchedule.text as String +
-                    str.substring(1,str.length-1)+"\n"
+                    str.substring(1,str.length-1)+"\n"}
             scheduleLoop++
         }
 
