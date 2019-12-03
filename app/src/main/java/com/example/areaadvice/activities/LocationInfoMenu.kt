@@ -61,12 +61,13 @@ class LocationInfoMenu : AppCompatActivity()  {
            val schedule= schedule2.split(",")
 
         var scheduleLoop=0
-        while (scheduleLoop<schedule.size)
-        {val str=schedule[scheduleLoop].replace("[","").replace("]","")
-            if (str.length>0)
-            {
-            locSchedule.text= locSchedule.text as String +
-                    str.substring(1,str.length-1)+"\n"}
+        while (scheduleLoop<schedule.size) {
+            val str=schedule[scheduleLoop].replace("[","").replace("]","")
+            if (str == "null") {
+                locSchedule.text = "Schedule not available."
+            } else if (str.isNotEmpty()) {
+                locSchedule.text= locSchedule.text.toString() + str.substring(1,str.length-1)+"\n"
+            }
             scheduleLoop++
         }
 
