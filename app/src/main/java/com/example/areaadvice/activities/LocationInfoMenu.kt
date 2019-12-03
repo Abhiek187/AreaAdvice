@@ -2,9 +2,7 @@ package com.example.areaadvice.activities
 
 import android.content.ContentValues
 import android.os.Bundle
-import android.widget.Button
-import android.widget.RatingBar
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.areaadvice.R
 import com.example.areaadvice.storage.DatabasePlaces
@@ -39,7 +37,7 @@ class LocationInfoMenu : AppCompatActivity()  {
         locProximity = findViewById(R.id.locationProximity)
         locSchedule = findViewById(R.id.locationHours)
         locRating = findViewById(R.id.ratingBar)
-        val saveBtn = findViewById<Button>(R.id.saveBtn)
+        val saveBtn = findViewById<ImageButton>(R.id.saveBtn)
 
         locName.text=intent.getStringExtra("name")
         locAddress.text=intent.getStringExtra("address")
@@ -114,6 +112,10 @@ class LocationInfoMenu : AppCompatActivity()  {
                 }
                 newInfo?.insert(DatabasePlaces.Table_Name, null, addVal)
             }
+            else{Toast.makeText(this, "This location is already saved.", Toast.LENGTH_SHORT)
+                .show()}
+            Toast.makeText(this, "Your location has been saved!", Toast.LENGTH_SHORT)
+                .show()
         }
     }
 }
