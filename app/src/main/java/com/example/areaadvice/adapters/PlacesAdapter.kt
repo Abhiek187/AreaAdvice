@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RatingBar
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.example.areaadvice.R
 import com.example.areaadvice.activities.LocationInfoMenu
@@ -23,7 +22,6 @@ class PlacesAdapter(private var context: Context, private var placesList: ArrayL
         // Populate RecyclerView with layout from adapter_places
         val inflater = LayoutInflater.from(context).inflate(R.layout.adapter_places, parent,
             false)
-        val layoutPlace = inflater.findViewById<ConstraintLayout>(R.id.layoutPlace)
 
         return ViewHolder(inflater)
     }
@@ -41,7 +39,7 @@ class PlacesAdapter(private var context: Context, private var placesList: ArrayL
             holder.textViewOpen.setTextColor(Color.RED)
             holder.textViewOpen.text = context.getString(R.string.closed)
         }
-        
+
         holder.itemView.setOnClickListener{
             val sharedPrefs = Prefs(context)
             val currentLat= sharedPrefs.lats
