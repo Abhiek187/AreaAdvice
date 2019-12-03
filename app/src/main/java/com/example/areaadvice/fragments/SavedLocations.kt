@@ -56,9 +56,14 @@ class SavedLocations : Fragment() {
                     cursor.getDouble(cursor.getColumnIndexOrThrow(DatabasePlaces.Col_Lat))
                 val mLocationLng =
                     cursor.getDouble(cursor.getColumnIndexOrThrow(DatabasePlaces.Col_Lng))
+                val MSchedule=cursor.getString(cursor.getColumnIndexOrThrow((DatabasePlaces.Col_Schedule)))
+                val Mopen=cursor.getString(cursor.getColumnIndexOrThrow(DatabasePlaces.Col_Open))
+                val OpenBool=(Mopen.contentEquals("Open"))
+                println("Mopen "+Mopen)
+                println("MOpenBool"+OpenBool)
 
             val place = Place(address = mLocationAddress, name = mLocationName, rating = mLocationRating, url = "",
-                latitude =mLocationLat,longitude = mLocationLng, schedule="")
+                latitude =mLocationLat,longitude = mLocationLng, schedule=MSchedule, isOpen = OpenBool)
             placesList.add(place)
             cursor.moveToNext()
             }

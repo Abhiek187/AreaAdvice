@@ -46,6 +46,9 @@ class LocationInfoMenu : AppCompatActivity()  {
         val lat=intent.getDoubleExtra("latitude",0.0)
         val currentLat=intent.getFloatExtra("lat",0F)
         val currentLng=intent.getFloatExtra("long",0F)
+        val open=intent.getStringExtra("isOpen")
+
+
         val distance= distanceBetweenPoints(lat,lng,currentLat.toDouble(),currentLng.toDouble())
         if(sharedPrefs.units==1) {
             locProximity.text = String.format("%.2f km",distance)
@@ -54,12 +57,16 @@ class LocationInfoMenu : AppCompatActivity()  {
             locProximity.text = String.format("%.2f mi", distance / 1.609)
         }
         locSchedule.text=""//intent.getStringExtra("schedule")
-        val schedule=intent.getStringExtra("schedule").split(",")
+        val schedule2=intent.getStringExtra("schedule")
+           val schedule= schedule2.split(",")
 
         var scheduleLoop=0
         while (scheduleLoop<schedule.size)
-        {
-            locSchedule.text= locSchedule.text as String +schedule[scheduleLoop]+"\n"
+        {val str=schedule[scheduleLoop].replace("[","").replace("]","")
+            if (str.length>0)
+            {
+            locSchedule.text= locSchedule.text as String +
+                    str.substring(1,str.length-1)+"\n"}
             scheduleLoop++
         }
 
@@ -109,6 +116,8 @@ class LocationInfoMenu : AppCompatActivity()  {
                     put(DatabasePlaces.Col_Rating, locRating.rating.toString())
                     put(DatabasePlaces.Col_Lat, intent.getDoubleExtra("latitude",0.0))
                     put(DatabasePlaces.Col_Lng, intent.getDoubleExtra("longitude",0.0))
+                    put(DatabasePlaces.Col_Schedule,schedule2.toString())
+                    put(DatabasePlaces.Col_Open,open.toString())
                 }
                 newInfo?.insert(DatabasePlaces.Table_Name, null, addVal)
             }
