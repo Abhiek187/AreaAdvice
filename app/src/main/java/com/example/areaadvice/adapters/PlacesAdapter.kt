@@ -25,10 +25,6 @@ class PlacesAdapter(private var context: Context, private var placesList: ArrayL
             false)
         val layoutPlace = inflater.findViewById<ConstraintLayout>(R.id.layoutPlace)
 
-        layoutPlace.setOnClickListener {
-            println("Clicked on ${placesList[viewType].name}")
-        }
-
         return ViewHolder(inflater)
     }
 
@@ -45,12 +41,13 @@ class PlacesAdapter(private var context: Context, private var placesList: ArrayL
             holder.textViewOpen.setTextColor(Color.RED)
             holder.textViewOpen.text = context.getString(R.string.closed)
         }
+        
         holder.itemView.setOnClickListener{
             val sharedPrefs = Prefs(context)
             val currentLat= sharedPrefs.lats
             val currentLng=sharedPrefs.lngs
-            val intent = Intent(context,
-                LocationInfoMenu::class.java)
+            val intent = Intent(context, LocationInfoMenu::class.java)
+
             intent.putExtra("name",holder.textViewName.text.toString())
             intent.putExtra("address",holder.textViewAddress.text.toString())
             intent.putExtra("rating",holder.ratingBar.rating.toString())
@@ -61,7 +58,7 @@ class PlacesAdapter(private var context: Context, private var placesList: ArrayL
             intent.putExtra("long",currentLng)
             intent.putExtra("schedule",placesList[position].schedule)
 
-             this.context.startActivity(intent)
+            this.context.startActivity(intent)
         }
     }
 
