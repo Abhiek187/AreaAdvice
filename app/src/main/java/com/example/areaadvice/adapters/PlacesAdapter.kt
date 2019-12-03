@@ -40,7 +40,7 @@ class PlacesAdapter(private var context: Context, private var placesList: ArrayL
             holder.textViewOpen.text = context.getString(R.string.closed)
         }
 
-        holder.itemView.setOnClickListener{
+        holder.itemView.setOnClickListener {
             val sharedPrefs = Prefs(context)
             val currentLat= sharedPrefs.lats
             val currentLng=sharedPrefs.lngs
