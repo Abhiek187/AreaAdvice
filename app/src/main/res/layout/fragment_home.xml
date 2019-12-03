@@ -27,44 +27,34 @@
         android:src="@mipmap/outline_search_black_18dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/imageButtonFilter"/>
+        app:layout_constraintBottom_toTopOf="@+id/map"/>
 
     <ImageButton
-        android:id="@+id/imageButtonFilter"
+        android:id="@+id/map"
         android:layout_width="70dp"
         android:layout_height="50dp"
-        android:contentDescription="@string/filter"
+        android:contentDescription="@string/mapButtonName"
+        android:src="@mipmap/baseline_map_black_18dp"
         android:padding="5dp"
-        android:src="@mipmap/outline_filter_list_black_18dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextSearch"
         app:layout_constraintBottom_toTopOf="@+id/recyclerViewPlaces"/>
 
-    <Button
-        android:id="@+id/map"
-        android:layout_width="70dp"
-        android:layout_height="50dp"
-        android:text="@string/mapButtonName"
-        android:padding="5dp"
-        app:layout_constraintTop_toBottomOf="@+id/editTextSearch"
-        app:layout_constraintEnd_toStartOf="@id/imageButtonFilter"
-        app:layout_constraintBottom_toTopOf="@id/recyclerViewPlaces" />
-
-    <Button
+    <ImageButton
         android:id="@+id/clear"
         android:layout_width="70dp"
         android:layout_height="50dp"
-        android:text="@string/clrButtonName"
+        android:src="@mipmap/outline_clear_black_18dp"
+        android:contentDescription="@string/clrButtonName"
         android:padding="5dp"
         app:layout_constraintTop_toBottomOf="@+id/editTextSearch"
-        app:layout_constraintEnd_toStartOf="@+id/map"
-        app:layout_constraintBottom_toTopOf="@id/recyclerViewPlaces"/>
+        app:layout_constraintEnd_toStartOf="@id/map"
+        app:layout_constraintBottom_toTopOf="@id/recyclerViewPlaces" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewPlaces"
         android:layout_width="0dp"
         android:layout_height="0dp"
-
         android:layout_marginBottom="8dp"
         android:padding="5dp"
         app:layout_constraintBottom_toBottomOf="parent"

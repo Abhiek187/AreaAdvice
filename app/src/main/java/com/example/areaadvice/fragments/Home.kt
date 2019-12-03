@@ -50,8 +50,8 @@ class Home : Fragment(), SensorEventListener {
     private lateinit var imageButtonSearch: ImageButton
     private lateinit var textViewLoading: TextView
     private lateinit var recyclerViewPlaces: RecyclerView
-    private lateinit var mapBtn: Button
-    private lateinit var clearBtn: Button
+    private lateinit var mapBtn: ImageButton
+    private lateinit var clearBtn: ImageButton
     private var result: JSONObject? = null
 
     // Sensor variables
