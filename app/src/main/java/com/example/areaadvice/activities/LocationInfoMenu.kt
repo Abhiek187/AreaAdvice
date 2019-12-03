@@ -48,6 +48,9 @@ class LocationInfoMenu : AppCompatActivity()  {
         val lat=intent.getDoubleExtra("latitude",0.0)
         val currentLat=intent.getFloatExtra("lat",0F)
         val currentLng=intent.getFloatExtra("long",0F)
+        val open=intent.getStringExtra("isOpen")
+
+
         val distance= distanceBetweenPoints(lat,lng,currentLat.toDouble(),currentLng.toDouble())
         if(sharedPrefs.units==1) {
             locProximity.text = String.format("%.2f km",distance)
@@ -116,6 +119,7 @@ class LocationInfoMenu : AppCompatActivity()  {
                     put(DatabasePlaces.Col_Lat, intent.getDoubleExtra("latitude",0.0))
                     put(DatabasePlaces.Col_Lng, intent.getDoubleExtra("longitude",0.0))
                     put(DatabasePlaces.Col_Schedule,schedule2.toString())
+                    put(DatabasePlaces.Col_Open,open.toString())
                 }
                 newInfo?.insert(DatabasePlaces.Table_Name, null, addVal)
             }

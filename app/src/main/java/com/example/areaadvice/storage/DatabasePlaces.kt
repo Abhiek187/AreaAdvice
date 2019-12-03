@@ -11,7 +11,7 @@ class DatabasePlaces(context: Context): SQLiteOpenHelper(context,
 ){
 
     private val entries ="Create Table $Table_Name "+
-            "($Id INTEGER PRIMARY KEY, $Col_place_Name Text, $Col_Address Text, $Col_Rating Text, $Col_Lat Text, $Col_Lng Text,$Col_Schedule Text)"
+            "($Id INTEGER PRIMARY KEY, $Col_place_Name Text, $Col_Address Text, $Col_Rating Text, $Col_Lat Text, $Col_Lng Text,$Col_Schedule Text, $Col_Open Text)"
     private val del="Drop Table If Exists $Table_Name"
     override fun onCreate(db: SQLiteDatabase){
         db.execSQL(entries)
@@ -40,6 +40,7 @@ class DatabasePlaces(context: Context): SQLiteOpenHelper(context,
         const val Col_Rating="Rating"
         const val Col_Address="Address"
         const val Col_Schedule="Schedule"
+        const val Col_Open="Open"
         const val Id="Id"
     }
 }
