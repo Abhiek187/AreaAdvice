@@ -49,6 +49,7 @@ class SettingsMenu : Fragment() {
 
         radiusSeekBarText = view.findViewById(R.id.radiusSeekBarText)
         radiusSeek = view.findViewById(R.id.radiusSeekBar)
+        val radiusSeekMin = 1 // the alternative to radiusSeek.min
 
         radGroup = view.findViewById(R.id.radiogroup)
         radBtn = view.findViewById(radGroup.checkedRadioButtonId)
@@ -67,40 +68,41 @@ class SettingsMenu : Fragment() {
 
         if (radCheck == 1) {
             radBtnSI.isChecked = true
-            radiusSeek.max = 80
+            radiusSeek.max = 80 - radiusSeekMin
         } else {
             radBtnUSA.isChecked = true
-            radiusSeek.max = 50 // 50 mi ~= 80 km
+            radiusSeek.max = 50 - radiusSeekMin // 50 mi ~= 80 km
         }
 
         radBtn.setOnCheckedChangeListener { _, _ ->
             if (radBtnUSA.isChecked) {
                 sharedPref.units = 2
-                radiusSeek.max = 50
+                radiusSeek.max = 50 - radiusSeekMin
             } else {
                 sharedPref.units = 1
-                radiusSeek.max = 80
+                radiusSeek.max = 80 - radiusSeekMin
             }
+
             sharedPref.radiusText = radiusSeekBarText.text.toString()
         }
 
         // Check radius seek bar
         radiusSeekBarText.text = sharedPref.radiusText
-        radiusSeek.progress = sharedPref.radiusBar
+        radiusSeek.progress = sharedPref.radiusBar - radiusSeekMin
 
         radiusSeek.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                radiusSeekBarText.text = progress.toString()
+                radiusSeekBarText.text = (progress + radiusSeekMin).toString()
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {
-                radiusSeekBarText.text = seekBar.progress.toString()
+                radiusSeekBarText.text = (seekBar.progress + radiusSeekMin).toString()
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar) {
-                radiusSeekBarText.text = seekBar.progress.toString()
+                radiusSeekBarText.text = (seekBar.progress + radiusSeekMin).toString()
                 sharedPref.radiusText = radiusSeekBarText.text.toString()
-                sharedPref.radiusBar = radiusSeek.progress
+                sharedPref.radiusBar = radiusSeek.progress + radiusSeekMin
             }
         })
 

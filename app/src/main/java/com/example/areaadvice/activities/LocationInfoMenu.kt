@@ -71,8 +71,8 @@ class LocationInfoMenu : AppCompatActivity()  {
         saveBtn.setOnClickListener{
             val db2 = DatabasePlaces(this)
             val newInfo = db2.writableDatabase
-            val checkInfo=db2.readableDatabase
-            var repeat=false
+            val checkInfo = db2.readableDatabase
+            var repeat = false
 
             val cursor2 = checkInfo.query(
                 DatabasePlaces.Table_Name,   // The table to query
@@ -95,11 +95,6 @@ class LocationInfoMenu : AppCompatActivity()  {
                 }
             }
             if (!repeat) {
-                //val tempLoc = it.getJSONObject("geometry").getJSONObject("location").getDouble("lat")
-                //val tempLat1 = tempLoc.substringAfter(":")
-                //val tempLat2 = tempLat1.substringBefore(",")
-                //val tempLng = it.getJSONObject("geometry").getJSONObject("location").getDouble("lng")
-                //val tempLng2 = tempLng.substringBefore("}")
                 val addVal = ContentValues().apply {
                     put(DatabasePlaces.Col_place_Name, locName.text.toString())
                     put(DatabasePlaces.Col_Address, locAddress.text.toString())
@@ -109,6 +104,7 @@ class LocationInfoMenu : AppCompatActivity()  {
                     put(DatabasePlaces.Col_Schedule,schedule2.toString())
                     put(DatabasePlaces.Col_Open,open!!.toString())
                 }
+
                 newInfo?.insert(DatabasePlaces.Table_Name, null, addVal)
                 Toast.makeText(this, "Your location has been saved!", Toast.LENGTH_SHORT)
                     .show()

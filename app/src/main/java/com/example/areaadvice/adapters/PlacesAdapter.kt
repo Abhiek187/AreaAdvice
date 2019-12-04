@@ -42,19 +42,19 @@ class PlacesAdapter(private var context: Context, private var placesList: ArrayL
 
         holder.itemView.setOnClickListener {
             val sharedPrefs = Prefs(context)
-            val currentLat= sharedPrefs.lat
-            val currentLng=sharedPrefs.lng
+            val currentLat = sharedPrefs.lat
+            val currentLng = sharedPrefs.lng
             val intent = Intent(context, LocationInfoMenu::class.java)
 
-            intent.putExtra("name",holder.textViewName.text.toString())
-            intent.putExtra("address",holder.textViewAddress.text.toString())
-            intent.putExtra("rating",holder.ratingBar.rating.toString())
-            intent.putExtra("isOpen",holder.textViewOpen.text.toString())
-            intent.putExtra("latitude",placesList[position].latitude)
-            intent.putExtra("longitude",placesList[position].longitude)
-            intent.putExtra("lat",currentLat)
-            intent.putExtra("long",currentLng)
-            intent.putExtra("schedule",placesList[position].schedule)
+            intent.putExtra("name", holder.textViewName.text.toString())
+            intent.putExtra("address", holder.textViewAddress.text.toString())
+            intent.putExtra("rating", holder.ratingBar.rating.toString())
+            intent.putExtra("isOpen", holder.textViewOpen.text.toString())
+            intent.putExtra("latitude", placesList[position].latitude)
+            intent.putExtra("longitude", placesList[position].longitude)
+            intent.putExtra("lat", currentLat)
+            intent.putExtra("long", currentLng)
+            intent.putExtra("schedule", placesList[position].schedule)
 
             this.context.startActivity(intent)
         }

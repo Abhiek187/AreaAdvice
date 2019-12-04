@@ -58,7 +58,7 @@ class Home : Fragment(), SensorEventListener {
     private var currentTemp: Sensor? = null
     private var light: Sensor? = null
     private var prevTemp: Float? = null
-    private var prevLight:Float? = null
+    private var prevLight: Float? = null
     private var recommendations: String = "library" // must be a type supported by the Places API
     private var recPrev: String = ""
 
@@ -91,8 +91,8 @@ class Home : Fragment(), SensorEventListener {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
         this.sensorManager = activity!!.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        currentTemp=sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)
-        light=sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
+        currentTemp = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)
+        light = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
         unitTemp = getString(R.string.temp_celsius)
         unitLight = getString(R.string.light_lux)
 
@@ -218,7 +218,6 @@ class Home : Fragment(), SensorEventListener {
         locationRequest.fastestInterval = 5000
         locationRequest.smallestDisplacement = 10f
         locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        //println("get Location")
 
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult?) {
@@ -226,18 +225,10 @@ class Home : Fragment(), SensorEventListener {
 
                 if (locationResult.locations.isNotEmpty()) {
                     // get latest location
-                    val location =
-                        locationResult.lastLocation
-                    // use your location object
-                    // get latitude , longitude and other info from this
-                    //Lat.text = "Lat: " + location.latitude
-                    // println("Lat: "+location.latitude)
-                    //Long.text = "Long: " + location.longitude
+                    val location = locationResult.lastLocation
 
                     lat = location.latitude
                     lon = location.longitude
-                    println("Main Lat: $lat")
-                    println("Main Lon: $lon")
                 }
             }
         }
@@ -254,8 +245,6 @@ class Home : Fragment(), SensorEventListener {
     override fun onResume() {
         super.onResume()
         startLocationUpdates()
-        // val intent = Intent()
-        // senEnable = intent.getBooleanExtra("recSwitch",true)
         // Enable sensors on resume
         sensorManager.registerListener(this,currentTemp,SensorManager.SENSOR_DELAY_NORMAL)
         sensorManager.registerListener(this,light,SensorManager.SENSOR_DELAY_NORMAL)
@@ -322,12 +311,14 @@ class Home : Fragment(), SensorEventListener {
                     val place = if (isOpen != null) {
                         Place(address = address, name = name, isOpen = isOpen,
                             rating = rating.toFloat(), url = url,
-                            latitude =location.getDouble("lat"),longitude = location.getDouble("lng"),
+                            latitude =location.getDouble("lat"),
+                            longitude = location.getDouble("lng"),
                             schedule = schedule.toString())
                     } else {
                         Place(address = address, name = name, rating = rating.toFloat(), url = url,
-                            latitude =location.getDouble("lat"),longitude = location.getDouble("lng"),
-                                    schedule = schedule.toString())
+                            latitude =location.getDouble("lat"),
+                            longitude = location.getDouble("lng"),
+                            schedule = schedule.toString())
                     }
                     placesList.add(place)
                 }

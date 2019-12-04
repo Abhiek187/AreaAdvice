@@ -1,31 +1,16 @@
 <resources>
+    <!-- App Name -->
     <string name="app_name">Area Advice</string>
-    <string name="search_hint">Enter search query…</string>
-    <string name="loading">Loading results…</string>
-    <!-- Vishal -->
-    <string name="search">Search</string>
-    <string name="save">Save</string>
-    <string name="saveBtn">Save</string>
-    <string name="filter">Filter</string>
+    <!-- Nav Bar -->
     <string name="menu_Home">Home</string>
     <string name="menu_Settings">Settings</string>
-    <string name="sensorRecOnorOff">On</string>
-    <string name="sensorrecommendations">Sensor Recommendations</string>
-    <string name="maxRadius">Radius</string>
-    <string name="startval">25</string>
-    <string name="chooseUnit">Unit of Measurement</string>
-    <string name="unitChoiceUSA">mi/°F</string>
-    <string name="unitChoiceSI">km/°C</string>
-    <string name="OnChoice">On</string>
-    <string name="OffChoice">Off</string>
-    <string name="distance">Distance</string>
-    <string name="ratings">Ratings</string>
-    <string name="RecommendationCriteria">Recommendation\nCriteria</string>
-    <string name="ShowOpenLocationsOnly">Show Open Locations Only</string>
-    <string name="testStringforHours">Mon: 6:30am - 9:30pm\nTues: 6:30am - 9:30pm\nWed: 6:30am - 9:30pm\nThurs: 6:30am - 9:30pm\nFri: 6:30am - 9:30pm\nSat: 7:00am - 8:00pm\nSun: closed</string>
-    <string name="no_schedule">Schedule not available</string>
-    <string name="savedLocations">Saved Locations</string>
-    <!-- Abhishek -->
+    <string name="menu_SavedLocations">Saved Locations</string>
+    <!-- Home -->
+    <string name="search_hint">Enter search query…</string>
+    <string name="search">Search</string>
+    <string name="mapButtonName">Maps</string>
+    <string name="clrButtonName">Clear</string>
+    <string name="loading">Loading results…</string>
     <string name="no_results">No results found.</string>
     <string name="place_details">
         Images: %1$d\nName: %2$s\nAddress: %3$s\nRating: %4$s\nReviews: %5$d\nType: %6$s\nLocation: %7$s\n
@@ -33,15 +18,32 @@
     </string>
     <string name="open">Open</string>
     <string name="closed">Closed</string>
-    <!-- Unit conversions -->
+    <!-- Location Info -->
+    <string name="save">Save</string>
+    <string name="testStringHours">
+        Mon: 6:30am - 9:30pm\nTues: 6:30am - 9:30pm\nWed: 6:30am - 9:30pm\nThurs: 6:30am - 9:30pm\nFri: 6:30am - 9:30pm\nSat: 7:00am - 8:00pm\nSun: closed
+    </string>
+    <string name="no_schedule">Schedule not available</string>
+    <!-- Settings -->
+    <string name="sensor_recommendations">Sensor Recommendations</string>
+    <string name="OnChoice">On</string>
+    <string name="OffChoice">Off</string>
+    <string name="maxRadius">Radius</string>
+    <string name="startVal">25</string>
+    <string name="chooseUnit">Unit of Measurement</string>
+    <string name="unitChoiceSI">km/°C</string>
+    <string name="unitChoiceUSA">mi/°F</string>
+    <string name="RecommendationCriteria">Recommendation\nCriteria</string>
+    <string name="distance">Distance</string>
+    <string name="ratings">Ratings</string>
+    <string name="ShowOpenLocationsOnly">Show Open Locations Only</string>
+    <!-- Maps -->
+    <string name="title_activity_maps">Map</string>
+    <!-- Unit Conversion -->
     <string name="dist_meters">m</string>
     <string name="dist_miles">mi</string>
     <string name="temp_celsius">\u00B0C</string>
     <string name="temp_fahrenheit">\u00B0F</string>
     <string name="light_lux">lx</string> <!-- aka the abundance of RU buses -->
     <string name="light_foot_candle">fc</string> <!-- legit never heard of this -->
-    <!-- Mahadas -->
-    <string name="title_activity_maps">Map</string>
-    <string name="mapButtonName">Maps</string>
-    <string name="clrButtonName">Clear</string>
 </resources>

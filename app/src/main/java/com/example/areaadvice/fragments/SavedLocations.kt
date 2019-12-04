@@ -32,17 +32,19 @@ class SavedLocations : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_saved_locations, container, false)
-        val dB = DatabasePlaces(mContext)
+
         savedLocationsView = view.findViewById(R.id.savedLocationsRecycler)
         savedLocationsView.layoutManager = LinearLayoutManager(mContext)
         placesAdapter = PlacesAdapter(mContext, placesList)
         savedLocationsView.adapter = placesAdapter
         val divider = DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL)
         savedLocationsView.addItemDecoration(divider) // add border between places
+
+        val dB = DatabasePlaces(mContext)
         val cursor = dB.getAllRows()
-        if(cursor.count == 0) Toast.makeText(mContext, "No Locations Have Been Saved", Toast.LENGTH_SHORT)
-                .show()
-        else {
+        if(cursor.count == 0) {
+            Toast.makeText(mContext, "No Locations Have Been Saved", Toast.LENGTH_SHORT).show()
+        } else {
             cursor.moveToFirst()
             while (!cursor.isAfterLast) {
                 val mLocationName =
@@ -55,14 +57,15 @@ class SavedLocations : Fragment() {
                     cursor.getDouble(cursor.getColumnIndexOrThrow(DatabasePlaces.Col_Lat))
                 val mLocationLng =
                     cursor.getDouble(cursor.getColumnIndexOrThrow(DatabasePlaces.Col_Lng))
-                val mSchedule=cursor.getString(cursor.getColumnIndexOrThrow((DatabasePlaces.Col_Schedule)))
-                val mOpen=cursor.getString(cursor.getColumnIndexOrThrow(DatabasePlaces.Col_Open))
-                val openBool=(mOpen!!.contentEquals("Open"))
-                println("mOpen: $mOpen")
-                println("mOpenBool: $openBool")
+                val mSchedule =
+                    cursor.getString(cursor.getColumnIndexOrThrow((DatabasePlaces.Col_Schedule)))
+                val mOpen =
+                    cursor.getString(cursor.getColumnIndexOrThrow(DatabasePlaces.Col_Open))
+                val openBool = mOpen!!.contentEquals("Open")
 
-                val place = Place(address = mLocationAddress, name = mLocationName, rating = mLocationRating, url = "",
-                    latitude =mLocationLat,longitude = mLocationLng, schedule=mSchedule, isOpen = openBool)
+                val place = Place(address = mLocationAddress, name = mLocationName,
+                    rating = mLocationRating, url = "", latitude = mLocationLat,
+                    longitude = mLocationLng, schedule=mSchedule, isOpen = openBool)
                 placesList.add(place)
                 cursor.moveToNext()
             }
@@ -73,6 +76,4 @@ class SavedLocations : Fragment() {
 
         return view
     }
-
-
 }

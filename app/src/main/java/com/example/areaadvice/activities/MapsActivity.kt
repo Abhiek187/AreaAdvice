@@ -27,7 +27,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     var lat = 0.0
     var lon = 0.0
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
@@ -55,6 +54,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap = googleMap
         mMap.uiSettings.isCompassEnabled = true
         mMap.uiSettings.isZoomControlsEnabled = true
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
             != PackageManager.PERMISSION_GRANTED
         ) {
@@ -65,19 +65,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             mMap.isMyLocationEnabled = true
             mMap.uiSettings.isMyLocationButtonEnabled = true
 
-            // Add a marker in Sydney and move the camera
-            //val sydney = LatLng(-34.0, 151.0)
-            //handler.post(runnableCode)
+            // Zoom to current location
             val location = LatLng(lat, lon)
-            println(" lat $lat")
-            println(" long $lon")
-
-            // mMap.addMarker(MarkerOptions().position(location).title("Current Location"))
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 12f))
 
+            // Place markers on all saved locations
             val db = DatabasePlaces(this)
-            val checkInfo=db.readableDatabase
-
+            val checkInfo = db.readableDatabase
 
             val cursor2 = checkInfo.query(
                 DatabasePlaces.Table_Name,   // The table to query
@@ -89,43 +83,35 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 null             // The sort order
             )
 
-            //var len = (cursor2.count > 0)
-            with(cursor2) {
+            with (cursor2) {
                 while (moveToNext()) {
-
-                    val markLocation = LatLng(getString(getColumnIndexOrThrow(DatabasePlaces.Col_Lat)).toDouble(),
-                        getString(getColumnIndexOrThrow(DatabasePlaces.Col_Lng)).toDouble())
-                    mMap.addMarker(MarkerOptions().position(markLocation).title(getString(getColumnIndexOrThrow(DatabasePlaces.Col_place_Name))))
-                }}
+                    val markLocation = LatLng(
+                        getString(getColumnIndexOrThrow(DatabasePlaces.Col_Lat)).toDouble(),
+                        getString(getColumnIndexOrThrow(DatabasePlaces.Col_Lng)).toDouble()
+                    )
+                    mMap.addMarker(MarkerOptions().position(markLocation)
+                        .title(getString(getColumnIndexOrThrow(DatabasePlaces.Col_place_Name))))
+                }
+            }
         }
 
     }
 
     private fun getLocationUpdates() {
-
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         locationRequest = LocationRequest()
         locationRequest.interval = 5000
         locationRequest.fastestInterval = 5000
-        locationRequest.smallestDisplacement = 10f // 170 m = 0.1 mile
-        locationRequest.priority =
-            LocationRequest.PRIORITY_HIGH_ACCURACY //set according to your app function
+        locationRequest.smallestDisplacement = 10f
+        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
 
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult?) {
                 locationResult ?: return
 
-
                 if (locationResult.locations.isNotEmpty()) {
-
                     // get latest location
-                    val location =
-                        locationResult.lastLocation
-                    // use your location object
-                    // get latitude , longitude and other info from this
-                    //Lat.text = "Lat: " + location.latitude
-                     println("Map Lat: $lat")
-                    //Long.text = "Long: " + location.longitude
+                    val location = locationResult.lastLocation
                     lat = location.latitude
                     lon = location.longitude
 
@@ -133,6 +119,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
             }
         }
+
         startLocationUpdates()
     }
 
