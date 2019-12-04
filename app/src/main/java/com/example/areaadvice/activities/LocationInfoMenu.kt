@@ -14,7 +14,6 @@ import kotlin.math.sqrt
 
 class LocationInfoMenu : AppCompatActivity()  {
 
-    //private lateinit var mContext: Context
     private lateinit var locName: TextView
     private lateinit var locAddress: TextView
     private lateinit var locProximity: TextView
@@ -22,15 +21,12 @@ class LocationInfoMenu : AppCompatActivity()  {
     private lateinit var locRating: RatingBar
 
     //private val db = DatabasePlaces(mContext)
-    /*override fun onAttach(context: Context) {
-        super.onAttach(context)
-        mContext = context
-    }*/
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fragment_location_info_menu)
-        val db = DatabasePlaces(this)
-        val cursor = db.getAllRows()
+        //val db = DatabasePlaces(this)
+        //val cursor = db.getAllRows()
         val sharedPrefs = Prefs(this)
         locName = findViewById(R.id.locationName)
         locAddress = findViewById(R.id.locationAddress)
@@ -39,49 +35,43 @@ class LocationInfoMenu : AppCompatActivity()  {
         locRating = findViewById(R.id.ratingBar)
         val saveBtn = findViewById<ImageButton>(R.id.saveBtn)
 
-        locName.text=intent.getStringExtra("name")
-        locAddress.text=intent.getStringExtra("address")
-        locRating.rating=intent.getStringExtra("rating")!!.toFloat()
-        val lng=intent.getDoubleExtra("longitude",0.0)
-        val lat=intent.getDoubleExtra("latitude",0.0)
-        val currentLat=intent.getFloatExtra("lat",0F)
-        val currentLng=intent.getFloatExtra("long",0F)
-        val open=intent.getStringExtra("isOpen")
+        locName.text = intent.getStringExtra("name")
+        locAddress.text = intent.getStringExtra("address")
+        locRating.rating = intent.getStringExtra("rating")!!.toFloat()
+        val lng = intent.getDoubleExtra("longitude",0.0)
+        val lat = intent.getDoubleExtra("latitude",0.0)
+        val currentLat = intent.getFloatExtra("lat",0F)
+        val currentLng = intent.getFloatExtra("long",0F)
+        val open = intent.getStringExtra("isOpen")
 
 
-        val distance= distanceBetweenPoints(lat,lng,currentLat.toDouble(),currentLng.toDouble())
-        if(sharedPrefs.units==1) {
+        val distance = distanceBetweenPoints(lat,lng,currentLat.toDouble(),currentLng.toDouble())
+        if(sharedPrefs.units == 1) {
             locProximity.text = String.format("%.2f km",distance)
         }
         else {
             locProximity.text = String.format("%.2f mi", distance / 1.609)
         }
-        locSchedule.text=""//intent.getStringExtra("schedule")
-        val schedule2=intent.getStringExtra("schedule")
-           val schedule= schedule2.split(",")
 
-        var scheduleLoop=0
-        while (scheduleLoop<schedule.size) {
-            val str=schedule[scheduleLoop].replace("[","").replace("]","")
+        val schedule2 = intent.getStringExtra("schedule")
+        val schedule = schedule2!!.split(",")
+
+        locSchedule.text = ""
+        for (day in schedule) {
+            val str = day.replace("[","")
+                .replace("]","")
             if (str == "null") {
-                locSchedule.text = "Schedule not available."
+                locSchedule.text = getString(R.string.no_schedule) // no schedule is available
             } else if (str.isNotEmpty()) {
-                locSchedule.text= locSchedule.text.toString() + str.substring(1,str.length-1)+"\n"
+                locSchedule.text = String.format("%s%s\n", locSchedule.text.toString(),
+                    str.substring(1, str.length - 1))
             }
-            scheduleLoop++
         }
 
-        cursor.moveToFirst()
-        while (!cursor.isAfterLast) {
-            val mLocLat = cursor.getString(cursor.getColumnIndex(DatabasePlaces.Col_Lat))
-            val mLocLong = cursor.getString(cursor.getColumnIndex(DatabasePlaces.Col_Lng))
-            cursor.moveToNext()
-        }
-        cursor.close()
         saveBtn.setOnClickListener{
-            val db = DatabasePlaces(this)
-            val newInfo = db.writableDatabase
-            val checkInfo=db.readableDatabase
+            val db2 = DatabasePlaces(this)
+            val newInfo = db2.writableDatabase
+            val checkInfo=db2.readableDatabase
             var repeat=false
 
             val cursor2 = checkInfo.query(
@@ -99,9 +89,8 @@ class LocationInfoMenu : AppCompatActivity()  {
                 while (moveToNext()) {
                     //println("database "+getString(getColumnIndexOrThrow(Database_Places.Col_place_Name)))
                     //println("current "+it.getString("name"))
-                    if (this!!.getString(getColumnIndexOrThrow(DatabasePlaces.Col_Address))!!.contentEquals(locAddress.text.toString()))
-                    {repeat=true
-
+                    if (this!!.getString(getColumnIndexOrThrow(DatabasePlaces.Col_Address))!!.contentEquals(locAddress.text.toString())) {
+                        repeat=true
                     }
                 }
             }
@@ -118,21 +107,22 @@ class LocationInfoMenu : AppCompatActivity()  {
                     put(DatabasePlaces.Col_Lat, intent.getDoubleExtra("latitude",0.0))
                     put(DatabasePlaces.Col_Lng, intent.getDoubleExtra("longitude",0.0))
                     put(DatabasePlaces.Col_Schedule,schedule2.toString())
-                    put(DatabasePlaces.Col_Open,open.toString())
+                    put(DatabasePlaces.Col_Open,open!!.toString())
                 }
                 newInfo?.insert(DatabasePlaces.Table_Name, null, addVal)
+                Toast.makeText(this, "Your location has been saved!", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                Toast.makeText(this, "This location is already saved.", Toast.LENGTH_SHORT)
+                    .show()
             }
-            else{Toast.makeText(this, "This location is already saved.", Toast.LENGTH_SHORT)
-                .show()}
-            Toast.makeText(this, "Your location has been saved!", Toast.LENGTH_SHORT)
-                .show()
         }
     }
 }
 
 
 fun distanceBetweenPoints(lat1: Double, long1: Double, lat2: Double, long2: Double): Double {
-    val avgRadius = 6371.0
+    val avgRadius = 6371.0 // radius of Earth in km
     val latDistance = Math.toRadians(lat1 - lat2)
     val longDistance = Math.toRadians(long1 - long2)
 
@@ -141,5 +131,5 @@ fun distanceBetweenPoints(lat1: Double, long1: Double, lat2: Double, long2: Doub
                 * cos(Math.toRadians(lat2)) * sin(longDistance / 2) * sin(longDistance / 2))
     val c = 2* atan2(sqrt(a), sqrt(1 - a))
 
-    return (avgRadius*c) //in kilometers
+    return avgRadius * c // in kilometers
 }

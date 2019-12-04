@@ -13,8 +13,8 @@ class Prefs(context: Context) {
     private val criteriaKey = "criteria"
     private val openTextKey = "openText"
     private val openEnableKey = "openEnable"
-    private val lat = "lat"
-    private val lng= "long"
+    private val latKey = "lat"
+    private val lngKey = "long"
     private val prefs: SharedPreferences = context.getSharedPreferences(fileName,
         Context.MODE_PRIVATE)
 
@@ -42,10 +42,10 @@ class Prefs(context: Context) {
     var openEnable: Boolean
         get() = prefs.getBoolean(openEnableKey, true)
         set(value) = prefs.edit().putBoolean(openEnableKey, value).apply()
-    var lats: Float
-        get() = prefs.getFloat(lat, 0F)
-        set(value) = prefs.edit().putFloat(lat,value).apply()
-    var lngs: Float
-        get() = prefs.getFloat(lng,0F)
-        set(value) = prefs.edit().putFloat(lng,value).apply()
+    var lat: Float
+        get() = prefs.getFloat(latKey, 0F)
+        set(value) = prefs.edit().putFloat(latKey,value).apply()
+    var lng: Float
+        get() = prefs.getFloat(lngKey,0F)
+        set(value) = prefs.edit().putFloat(lngKey,value).apply()
 }

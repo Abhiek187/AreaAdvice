@@ -89,7 +89,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 null             // The sort order
             )
 
-            var len = (cursor2.count > 0)
+            //var len = (cursor2.count > 0)
             with(cursor2) {
                 while (moveToNext()) {
 

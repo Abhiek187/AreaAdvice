@@ -42,8 +42,8 @@ class PlacesAdapter(private var context: Context, private var placesList: ArrayL
 
         holder.itemView.setOnClickListener {
             val sharedPrefs = Prefs(context)
-            val currentLat= sharedPrefs.lats
-            val currentLng=sharedPrefs.lngs
+            val currentLat= sharedPrefs.lat
+            val currentLng=sharedPrefs.lng
             val intent = Intent(context, LocationInfoMenu::class.java)
 
             intent.putExtra("name",holder.textViewName.text.toString())

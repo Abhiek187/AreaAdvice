@@ -22,7 +22,6 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.areaadvice.R
-import com.example.areaadvice.activities.LocationInfoMenu
 import com.example.areaadvice.activities.MapsActivity
 import com.example.areaadvice.adapters.PlacesAdapter
 import com.example.areaadvice.models.Place
@@ -189,8 +188,8 @@ class Home : Fragment(), SensorEventListener {
             textViewLoading.visibility = View.VISIBLE
             textViewLoading.text = getString(R.string.loading)
             recommendPlaces(reqParam, rankByParam, openParam)
-            sharedPrefs.lats=lat.toFloat()
-            sharedPrefs.lngs=lon.toFloat()
+            sharedPrefs.lat=lat.toFloat()
+            sharedPrefs.lng=lon.toFloat()
         }
 
         mapBtn.setOnClickListener {
@@ -299,12 +298,12 @@ class Home : Fragment(), SensorEventListener {
                     val hours = result!!.optJSONObject("opening_hours")
                     val isOpen = hours?.getBoolean("open_now")
                     val schedule = hours?.getJSONArray("weekday_text")
-                    val photos = result!!.optJSONArray("photos")
+                    //val photos = result!!.optJSONArray("photos")
                     val rating = result!!.optDouble("rating", 0.0)
-                    val reviews = result!!.optJSONArray("reviews")
-                    val placeType = result!!.optJSONArray("types")
+                    //val reviews = result!!.optJSONArray("reviews")
+                    //val placeType = result!!.optJSONArray("types")
                     val url = result!!.getString("url")
-                    println(
+                    /*println(
                         getString(
                             R.string.place_details,
                             photos?.length(),
@@ -318,7 +317,7 @@ class Home : Fragment(), SensorEventListener {
                             schedule?.toString(2),
                             url
                         )
-                    )
+                    ) // note: long println */
 
                     val place = if (isOpen != null) {
                         Place(address = address, name = name, isOpen = isOpen,

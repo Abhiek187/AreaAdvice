@@ -1,6 +1,5 @@
 package com.example.areaadvice.fragments
 
-
 import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -56,20 +55,22 @@ class SavedLocations : Fragment() {
                     cursor.getDouble(cursor.getColumnIndexOrThrow(DatabasePlaces.Col_Lat))
                 val mLocationLng =
                     cursor.getDouble(cursor.getColumnIndexOrThrow(DatabasePlaces.Col_Lng))
-                val MSchedule=cursor.getString(cursor.getColumnIndexOrThrow((DatabasePlaces.Col_Schedule)))
-                val Mopen=cursor.getString(cursor.getColumnIndexOrThrow(DatabasePlaces.Col_Open))
-                val OpenBool=(Mopen.contentEquals("Open"))
-                println("Mopen "+Mopen)
-                println("MOpenBool"+OpenBool)
+                val mSchedule=cursor.getString(cursor.getColumnIndexOrThrow((DatabasePlaces.Col_Schedule)))
+                val mOpen=cursor.getString(cursor.getColumnIndexOrThrow(DatabasePlaces.Col_Open))
+                val openBool=(mOpen!!.contentEquals("Open"))
+                println("mOpen: $mOpen")
+                println("mOpenBool: $openBool")
 
-            val place = Place(address = mLocationAddress, name = mLocationName, rating = mLocationRating, url = "",
-                latitude =mLocationLat,longitude = mLocationLng, schedule=MSchedule, isOpen = OpenBool)
-            placesList.add(place)
-            cursor.moveToNext()
+                val place = Place(address = mLocationAddress, name = mLocationName, rating = mLocationRating, url = "",
+                    latitude =mLocationLat,longitude = mLocationLng, schedule=mSchedule, isOpen = openBool)
+                placesList.add(place)
+                cursor.moveToNext()
             }
+
             placesAdapter.refreshData()
             cursor.close()
         }
+
         return view
     }
 
