@@ -37,13 +37,12 @@
     <string name="distance">Distance</string>
     <string name="ratings">Ratings</string>
     <string name="ShowOpenLocationsOnly">Show Open Locations Only</string>
-    <!-- Maps -->
-    <string name="title_activity_maps">Map</string>
-    <!-- Unit Conversion -->
-    <string name="dist_meters">m</string>
-    <string name="dist_miles">mi</string>
+    <string name="sensor_temp">Temperature: %1$d %2$s</string>
+    <string name="sensor_light">Light: %1$d %2$s</string>
     <string name="temp_celsius">\u00B0C</string>
     <string name="temp_fahrenheit">\u00B0F</string>
     <string name="light_lux">lx</string> <!-- aka the abundance of RU buses -->
     <string name="light_foot_candle">fc</string> <!-- legit never heard of this -->
+    <!-- Maps -->
+    <string name="title_activity_maps">Map</string>
 </resources>

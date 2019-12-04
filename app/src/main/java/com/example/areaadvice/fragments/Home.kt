@@ -26,8 +26,6 @@ import com.example.areaadvice.activities.MapsActivity
 import com.example.areaadvice.adapters.PlacesAdapter
 import com.example.areaadvice.models.Place
 import com.example.areaadvice.storage.Prefs
-import com.example.areaadvice.utils.cToF
-import com.example.areaadvice.utils.lxToFc
 import com.example.areaadvice.utils.miToM
 import com.google.android.gms.location.*
 import org.json.JSONObject
@@ -60,7 +58,6 @@ class Home : Fragment(), SensorEventListener {
     private var prevTemp: Float? = null
     private var prevLight: Float? = null
     private var recommendations: String = "library" // must be a type supported by the Places API
-    private var recPrev: String = ""
 
     // Settings variables
     private var senEnable = true
@@ -277,7 +274,7 @@ class Home : Fragment(), SensorEventListener {
                             "formatted_address,rating,review,geometry,type,opening_hours,url"
                     ).readText()
                     val detailsJSON = JSONObject(detailsStr)
-                    println(detailsJSON.toString(2))
+                    //println(detailsJSON.toString(2)) note: long println
                     result = detailsJSON.getJSONObject("result")
 
                     val address = result!!.getString("formatted_address")
@@ -306,7 +303,7 @@ class Home : Fragment(), SensorEventListener {
                             schedule?.toString(2),
                             url
                         )
-                    ) // note: long println */
+                    ) // also long println */
 
                     val place = if (isOpen != null) {
                         Place(address = address, name = name, isOpen = isOpen,
@@ -379,10 +376,6 @@ class Home : Fragment(), SensorEventListener {
                     // Check for temperature change when there's at least 2 degrees of change
                     if (diff?.let { abs(it) }!! >= 2) {
                         prevTemp = temp
-                        println("temp is $temp $unitTemp " +
-                                "(${cToF(temp)} ${getString(
-                                    R.string.temp_fahrenheit
-                                )})")
 
                         // Sample recommendations based on temperature
                         recommendations = if (temp <= 0) {
@@ -404,16 +397,11 @@ class Home : Fragment(), SensorEventListener {
             Sensor.TYPE_LIGHT -> {
                 val bright= event.values[0]
 
-                if (prevLight!=null) {
+                if (prevLight != null) {
                     val diff2 = bright.minus(prevLight!!)
                     // Check for light if there's at least a 2 lx change
                     if (abs(diff2) >= 2) {
                         prevLight = bright
-                        println("Light levels are $bright $unitLight " +
-                                "(${lxToFc(bright)} ${getString(
-                                    R.string.light_foot_candle
-                                )})")
-                        recPrev = recommendations
 
                         // Sample recommendations based on light level
                         recommendations = if (bright <= 500) {
