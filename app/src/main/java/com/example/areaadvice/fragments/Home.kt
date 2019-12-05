@@ -72,8 +72,8 @@ class Home : Fragment(), SensorEventListener {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationRequest: LocationRequest
     private lateinit var locationCallback: LocationCallback
-    var lat = 0.0
-    var lon = 0.0
+    var lat = 91.0
+    var lon = 181.0
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -146,7 +146,7 @@ class Home : Fragment(), SensorEventListener {
                 return@setOnClickListener
                 /*val intent = Intent(Settings.ACTION_WIFI_SETTINGS)
                 startActivity(intent)*/
-            } else if (lat == 0.0 && lon == 0.0) {
+            } else if (abs(lat) > 90 || abs(lon) > 180) {
                 Toast.makeText(mContext, "Can't access your location", Toast.LENGTH_SHORT)
                     .show()
                 return@setOnClickListener
@@ -185,15 +185,13 @@ class Home : Fragment(), SensorEventListener {
             textViewLoading.visibility = View.VISIBLE
             textViewLoading.text = getString(R.string.loading)
             recommendPlaces(reqParam, rankByParam, openParam)
-            sharedPrefs.lat=lat.toFloat()
-            sharedPrefs.lng=lon.toFloat()
+            sharedPrefs.lat = lat.toFloat()
+            sharedPrefs.lng = lon.toFloat()
         }
 
         mapBtn.setOnClickListener {
             // Go to MapsActivity
             val intent = Intent(mContext, MapsActivity::class.java)
-            intent.putExtra("lat",lat)
-            intent.putExtra("long",lon)
             startActivity(intent)
         }
 

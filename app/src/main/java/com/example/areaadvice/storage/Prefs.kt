@@ -43,9 +43,9 @@ class Prefs(context: Context) {
         get() = prefs.getBoolean(openEnableKey, true)
         set(value) = prefs.edit().putBoolean(openEnableKey, value).apply()
     var lat: Float
-        get() = prefs.getFloat(latKey, 0F)
+        get() = prefs.getFloat(latKey, 91f) // default: invalid lat and lon
         set(value) = prefs.edit().putFloat(latKey,value).apply()
     var lng: Float
-        get() = prefs.getFloat(lngKey,0F)
+        get() = prefs.getFloat(lngKey, 181f)
         set(value) = prefs.edit().putFloat(lngKey,value).apply()
 }

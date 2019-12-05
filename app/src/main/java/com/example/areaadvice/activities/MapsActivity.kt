@@ -1,14 +1,12 @@
 package com.example.areaadvice.activities
 
-import android.Manifest
-import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import com.example.areaadvice.R
 import com.example.areaadvice.storage.DatabasePlaces
-import com.google.android.gms.location.*
+import com.example.areaadvice.storage.Prefs
+import kotlin.math.abs
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -20,20 +18,17 @@ import com.google.android.gms.maps.model.MarkerOptions
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var locationRequest: LocationRequest
-    private lateinit var locationCallback: LocationCallback
-
-    var lat = 0.0
-    var lon = 0.0
+    private lateinit var sharedPref: Prefs
+    private var lat = 91.0
+    private var lon = 181.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
 
-        lat = intent.getDoubleExtra("lat", 0.0)
-        lon = intent.getDoubleExtra("long", 0.0)
-        getLocationUpdates()
+        sharedPref = Prefs(this)
+        lat = sharedPref.lat.toDouble()
+        lon = sharedPref.lng.toDouble()
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
@@ -55,9 +50,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.uiSettings.isCompassEnabled = true
         mMap.uiSettings.isZoomControlsEnabled = true
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED
-        ) {
+        if (abs(lat) > 90 || abs(lon) > 180) {
             // Permission is not granted
             Toast.makeText(this, "Location permission not granted", Toast.LENGTH_SHORT)
                 .show()
@@ -84,42 +77,5 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     .title(getString(getColumnIndexOrThrow(DatabasePlaces.Col_place_Name))))
             }
         }
-    }
-
-    private fun getLocationUpdates() {
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        locationRequest = LocationRequest()
-        locationRequest.interval = 5000
-        locationRequest.fastestInterval = 5000
-        locationRequest.smallestDisplacement = 10f
-        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-
-        locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult?) {
-                locationResult ?: return
-
-                if (locationResult.locations.isNotEmpty()) {
-                    // get latest location
-                    val location = locationResult.lastLocation
-                    lat = location.latitude
-                    lon = location.longitude
-                }
-            }
-        }
-
-        startLocationUpdates()
-    }
-
-    private fun startLocationUpdates() {
-        fusedLocationClient.requestLocationUpdates(
-            locationRequest,
-            locationCallback,
-            null // looper
-        )
-    }
-
-    override  fun onResume(){
-        super.onResume()
-        startLocationUpdates()
     }
 }
