@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.areaadvice.R
 import com.example.areaadvice.storage.DatabasePlaces
 import com.example.areaadvice.storage.Prefs
+import com.example.areaadvice.utils.kmToMi
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
@@ -20,13 +21,10 @@ class LocationInfoMenu : AppCompatActivity()  {
     private lateinit var locSchedule: TextView
     private lateinit var locRating: RatingBar
 
-    //private val db = DatabasePlaces(mContext)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fragment_location_info_menu)
-        //val db = DatabasePlaces(this)
-        //val cursor = db.getAllRows()
+
         val sharedPrefs = Prefs(this)
         locName = findViewById(R.id.locationName)
         locAddress = findViewById(R.id.locationAddress)
@@ -38,21 +36,21 @@ class LocationInfoMenu : AppCompatActivity()  {
         locName.text = intent.getStringExtra("name")
         locAddress.text = intent.getStringExtra("address")
         locRating.rating = intent.getStringExtra("rating")!!.toFloat()
-        val lng = intent.getDoubleExtra("longitude",0.0)
         val lat = intent.getDoubleExtra("latitude",0.0)
+        val lng = intent.getDoubleExtra("longitude",0.0)
         val currentLat = intent.getFloatExtra("lat",0F)
         val currentLng = intent.getFloatExtra("long",0F)
         val open = intent.getStringExtra("isOpen")
 
-
-        val distance = distanceBetweenPoints(lat,lng,currentLat.toDouble(),currentLng.toDouble())
+        // Calculate distance to location
+        val distance = distanceBetweenPoints(lat, lng, currentLat.toDouble(), currentLng.toDouble())
         if(sharedPrefs.units == 1) {
-            locProximity.text = String.format("%.2f km",distance)
-        }
-        else {
-            locProximity.text = String.format("%.2f mi", distance / 1.609)
+            locProximity.text = String.format("%.2f km", distance)
+        } else {
+            locProximity.text = String.format("%.2f mi", kmToMi(distance.toFloat()))
         }
 
+        // Format schedule
         val schedule2 = intent.getStringExtra("schedule")
         val schedule = schedule2!!.split(",")
 
@@ -69,28 +67,18 @@ class LocationInfoMenu : AppCompatActivity()  {
         }
 
         saveBtn.setOnClickListener{
-            val db2 = DatabasePlaces(this)
-            val newInfo = db2.writableDatabase
-            val checkInfo = db2.readableDatabase
+            val db = DatabasePlaces(this)
             var repeat = false
 
-            val cursor2 = checkInfo.query(
-                DatabasePlaces.Table_Name,   // The table to query
-                null,             // The array of columns to return (pass null to get all)
-                null,//selection,              // The columns for the WHERE clause
-                null,//selectionArgs,          // The values for the WHERE clause
-                null,                   // don't group the rows
-                null,                   // don't filter by row groups
-                null             // The sort order
-            )
+            val cursor = db.getAllRows()
 
-            //var len = (cursor2.count > 0)
-            with(cursor2) {
+            // Check if location is a repeat
+            with(cursor) {
                 while (moveToNext()) {
-                    //println("database "+getString(getColumnIndexOrThrow(Database_Places.Col_place_Name)))
-                    //println("current "+it.getString("name"))
-                    if (this!!.getString(getColumnIndexOrThrow(DatabasePlaces.Col_Address))!!.contentEquals(locAddress.text.toString())) {
-                        repeat=true
+                    if (this.getString(getColumnIndexOrThrow(DatabasePlaces.Col_Address))
+                        == locAddress.text.toString()) {
+                        repeat = true
+                        break
                     }
                 }
             }
@@ -101,17 +89,20 @@ class LocationInfoMenu : AppCompatActivity()  {
                     put(DatabasePlaces.Col_Rating, locRating.rating.toString())
                     put(DatabasePlaces.Col_Lat, intent.getDoubleExtra("latitude",0.0))
                     put(DatabasePlaces.Col_Lng, intent.getDoubleExtra("longitude",0.0))
-                    put(DatabasePlaces.Col_Schedule,schedule2.toString())
-                    put(DatabasePlaces.Col_Open,open!!.toString())
+                    put(DatabasePlaces.Col_Schedule, schedule2.toString())
+                    put(DatabasePlaces.Col_Open, open)
                 }
 
-                newInfo?.insert(DatabasePlaces.Table_Name, null, addVal)
+                val newInfo = db.writableDatabase
+                newInfo.insert(DatabasePlaces.Table_Name, null, addVal)
                 Toast.makeText(this, "Your location has been saved!", Toast.LENGTH_SHORT)
                     .show()
             } else {
                 Toast.makeText(this, "This location is already saved.", Toast.LENGTH_SHORT)
                     .show()
             }
+
+            cursor.close()
         }
     }
 }

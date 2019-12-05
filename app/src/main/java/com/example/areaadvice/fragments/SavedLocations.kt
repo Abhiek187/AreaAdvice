@@ -42,7 +42,7 @@ class SavedLocations : Fragment() {
 
         val dB = DatabasePlaces(mContext)
         val cursor = dB.getAllRows()
-        if(cursor.count == 0) {
+        if (cursor.count == 0) {
             Toast.makeText(mContext, "No Locations Have Been Saved", Toast.LENGTH_SHORT).show()
         } else {
             cursor.moveToFirst()
@@ -54,18 +54,18 @@ class SavedLocations : Fragment() {
                 val mLocationRating =
                     cursor.getFloat(cursor.getColumnIndex(DatabasePlaces.Col_Rating))
                 val mLocationLat =
-                    cursor.getDouble(cursor.getColumnIndexOrThrow(DatabasePlaces.Col_Lat))
+                    cursor.getDouble(cursor.getColumnIndex(DatabasePlaces.Col_Lat))
                 val mLocationLng =
-                    cursor.getDouble(cursor.getColumnIndexOrThrow(DatabasePlaces.Col_Lng))
+                    cursor.getDouble(cursor.getColumnIndex(DatabasePlaces.Col_Lng))
                 val mSchedule =
-                    cursor.getString(cursor.getColumnIndexOrThrow((DatabasePlaces.Col_Schedule)))
+                    cursor.getString(cursor.getColumnIndex(DatabasePlaces.Col_Schedule))
                 val mOpen =
-                    cursor.getString(cursor.getColumnIndexOrThrow(DatabasePlaces.Col_Open))
-                val openBool = mOpen!!.contentEquals("Open")
+                    cursor.getString(cursor.getColumnIndex(DatabasePlaces.Col_Open))
+                val openBool = mOpen == "Open"
 
                 val place = Place(address = mLocationAddress, name = mLocationName,
                     rating = mLocationRating, url = "", latitude = mLocationLat,
-                    longitude = mLocationLng, schedule=mSchedule, isOpen = openBool)
+                    longitude = mLocationLng, schedule = mSchedule, isOpen = openBool)
                 placesList.add(place)
                 cursor.moveToNext()
             }

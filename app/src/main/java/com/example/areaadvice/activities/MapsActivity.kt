@@ -68,33 +68,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             // Zoom to current location
             val location = LatLng(lat, lon)
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 12f))
-
-            // Place markers on all saved locations
-            val db = DatabasePlaces(this)
-            val checkInfo = db.readableDatabase
-
-            val cursor2 = checkInfo.query(
-                DatabasePlaces.Table_Name,   // The table to query
-                null,             // The array of columns to return (pass null to get all)
-                null,//selection,              // The columns for the WHERE clause
-                null,//selectionArgs,          // The values for the WHERE clause
-                null,                   // don't group the rows
-                null,                   // don't filter by row groups
-                null             // The sort order
-            )
-
-            with (cursor2) {
-                while (moveToNext()) {
-                    val markLocation = LatLng(
-                        getString(getColumnIndexOrThrow(DatabasePlaces.Col_Lat)).toDouble(),
-                        getString(getColumnIndexOrThrow(DatabasePlaces.Col_Lng)).toDouble()
-                    )
-                    mMap.addMarker(MarkerOptions().position(markLocation)
-                        .title(getString(getColumnIndexOrThrow(DatabasePlaces.Col_place_Name))))
-                }
-            }
         }
 
+        // Place markers on all saved locations
+        val db = DatabasePlaces(this)
+        val cursor2 = db.getAllRows()
+
+        with (cursor2) {
+            while (moveToNext()) {
+                val markLocation = LatLng(
+                    getString(getColumnIndexOrThrow(DatabasePlaces.Col_Lat)).toDouble(),
+                    getString(getColumnIndexOrThrow(DatabasePlaces.Col_Lng)).toDouble()
+                )
+                mMap.addMarker(MarkerOptions().position(markLocation)
+                    .title(getString(getColumnIndexOrThrow(DatabasePlaces.Col_place_Name))))
+            }
+        }
     }
 
     private fun getLocationUpdates() {
@@ -114,8 +103,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     val location = locationResult.lastLocation
                     lat = location.latitude
                     lon = location.longitude
-
-
                 }
             }
         }

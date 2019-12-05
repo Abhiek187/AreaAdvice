@@ -6,10 +6,10 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
 class DatabasePlaces(context: Context): SQLiteOpenHelper(context, name,null, version) {
-    private val entries ="Create Table $Table_Name ($Id INTEGER PRIMARY KEY, " +
-            "$Col_place_Name Text, $Col_Address Text, $Col_Rating Text, $Col_Lat Text, " +
-            "$Col_Lng Text,$Col_Schedule Text, $Col_Open Text)"
-    private val del="Drop Table If Exists $Table_Name"
+    private val entries = "CREATE TABLE IF NOT EXISTS $Table_Name (" +
+            "$Col_Id INTEGER PRIMARY KEY AUTOINCREMENT, $Col_place_Name TEXT, $Col_Address TEXT, " +
+            "$Col_Rating TEXT, $Col_Lat TEXT, $Col_Lng TEXT, $Col_Schedule TEXT, $Col_Open TEXT)"
+    private val del = "Drop Table If Exists $Table_Name"
 
     override fun onCreate(db: SQLiteDatabase){
         db.execSQL(entries)
@@ -28,7 +28,7 @@ class DatabasePlaces(context: Context): SQLiteOpenHelper(context, name,null, ver
         return db.rawQuery("SELECT * FROM $Table_Name", null)
     }
 
-    companion object{
+    companion object {
         const val name = "Saved_Places.db"
         const val version = 1
         const val Table_Name = "Saved_Places"
@@ -39,6 +39,6 @@ class DatabasePlaces(context: Context): SQLiteOpenHelper(context, name,null, ver
         const val Col_Address = "Address"
         const val Col_Schedule = "Schedule"
         const val Col_Open = "Open"
-        const val Id = "Id"
+        const val Col_Id = "Id"
     }
 }
