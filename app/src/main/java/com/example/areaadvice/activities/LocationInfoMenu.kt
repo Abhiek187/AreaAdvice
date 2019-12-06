@@ -129,6 +129,7 @@ class LocationInfoMenu : AppCompatActivity()  {
             else{
                 Toast.makeText(this,"This location is not saved in the database",Toast.LENGTH_LONG).show()
             }
+            cursor.close()
         }
     }
 }
