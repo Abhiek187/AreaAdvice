@@ -32,6 +32,7 @@ class LocationInfoMenu : AppCompatActivity()  {
         locSchedule = findViewById(R.id.locationHours)
         locRating = findViewById(R.id.ratingBar)
         val saveBtn = findViewById<ImageButton>(R.id.saveBtn)
+        val delBtn = findViewById<Button>(R.id.delBtn)
 
         locName.text = intent.getStringExtra("name")
         locAddress.text = intent.getStringExtra("address")
@@ -103,6 +104,31 @@ class LocationInfoMenu : AppCompatActivity()  {
             }
 
             cursor.close()
+        }
+
+        delBtn.setOnClickListener{
+            val db = DatabasePlaces(this)
+            var repeat = false
+            var id=0
+            val cursor = db.getAllRows()
+            with(cursor) {
+                while (moveToNext()) {
+                    if (this.getString(getColumnIndexOrThrow(DatabasePlaces.Col_Address))
+                        == locAddress.text.toString()) {
+                        repeat = true
+                        id=this.getString(getColumnIndexOrThrow(DatabasePlaces.Col_Id)).toInt()
+                        break
+                    }
+                }
+
+            }
+            if(repeat){
+                db.deleteRow(id)
+                Toast.makeText(this,"This location has been deleted",Toast.LENGTH_SHORT).show()
+            }
+            else{
+                Toast.makeText(this,"This location is not saved in the database",Toast.LENGTH_LONG).show()
+            }
         }
     }
 }
