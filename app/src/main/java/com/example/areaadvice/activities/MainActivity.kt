@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentTransaction
 import com.example.areaadvice.fragments.Home
 import com.example.areaadvice.R
 import com.example.areaadvice.fragments.SavedLocations
@@ -26,22 +27,18 @@ class MainActivity : AppCompatActivity() {
             when(item.itemId) {
                 R.id.Home -> {
                     val fragment = Home()
-                    fm.hide(SettingsMenu())
-                    fm.hide(SavedLocations())
                     changeFragment(fragment)
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.savedLocations -> {
                     val fragment = SavedLocations()
-                    fm.hide(Home())
-                    fm.hide(SettingsMenu())
                     changeFragment(fragment)
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.Settings -> {
                     val fragment = SettingsMenu()
-                    fm.hide(Home())
-                    fm.hide(SavedLocations())
+                    /*fm.hide(Home())
+                    fm.hide(SavedLocations())*/
                     changeFragment(fragment)
                     return@setOnNavigationItemSelectedListener true
                 }
@@ -51,8 +48,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun changeFragment(fragment: Fragment): Boolean {
-        supportFragmentManager.beginTransaction().replace(R.id.fragmentcontainer, fragment).commit()
-        return true
+    private fun changeFragment(fragment: Fragment){
+        val fm = supportFragmentManager.beginTransaction()
+        fm.replace(R.id.fragmentcontainer,
+            fragment).setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out).commit()
     }
 }
