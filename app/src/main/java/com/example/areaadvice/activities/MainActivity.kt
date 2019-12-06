@@ -31,17 +31,17 @@ class MainActivity : AppCompatActivity() {
                     changeFragment(fragment)
                     return@setOnNavigationItemSelectedListener true
                 }
-                R.id.Settings -> {
-                    val fragment = SettingsMenu()
-                    fm.hide(Home())
-                    fm.hide(SavedLocations())
-                    changeFragment(fragment)
-                    return@setOnNavigationItemSelectedListener true
-                }
                 R.id.savedLocations -> {
                     val fragment = SavedLocations()
                     fm.hide(Home())
                     fm.hide(SettingsMenu())
+                    changeFragment(fragment)
+                    return@setOnNavigationItemSelectedListener true
+                }
+                R.id.Settings -> {
+                    val fragment = SettingsMenu()
+                    fm.hide(Home())
+                    fm.hide(SavedLocations())
                     changeFragment(fragment)
                     return@setOnNavigationItemSelectedListener true
                 }
