@@ -11,6 +11,7 @@ import android.hardware.SensorManager
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -189,6 +190,14 @@ class Home : Fragment(), SensorEventListener {
             recommendPlaces(reqParam, rankByParam, openParam)
             sharedPrefs.lat = lat.toFloat()
             sharedPrefs.lng = lon.toFloat()
+        }
+
+        editTextSearch.setOnKeyListener{_,keyCode,keyEvent ->
+            if (keyEvent.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER){
+                imageButtonSearch.performClick()
+                return@setOnKeyListener true
+            }
+            return@setOnKeyListener false
         }
 
         mapBtn.setOnClickListener {
