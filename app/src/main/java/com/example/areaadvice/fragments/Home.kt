@@ -53,7 +53,7 @@ class Home : Fragment(), SensorEventListener {
 
     // Sensor variables
     private lateinit var sensorManager: SensorManager
-    private var currentTemp: Sensor? = null
+    private var temp: Sensor? = null
     private var light: Sensor? = null
     private var prevTemp: Float? = null
     private var prevLight: Float? = null
@@ -88,7 +88,7 @@ class Home : Fragment(), SensorEventListener {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
         this.sensorManager = activity!!.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        currentTemp = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)
+        temp = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)
         light = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
         unitTemp = getString(R.string.temp_celsius)
         unitLight = getString(R.string.light_lux)
@@ -240,9 +240,13 @@ class Home : Fragment(), SensorEventListener {
     override fun onResume() {
         super.onResume()
         startLocationUpdates()
-        // Enable sensors on resume
-        sensorManager.registerListener(this,currentTemp,SensorManager.SENSOR_DELAY_NORMAL)
-        sensorManager.registerListener(this,light,SensorManager.SENSOR_DELAY_NORMAL)
+        // Enable sensors on resume, if available
+        temp?.let {
+            sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL)
+        }
+        light?.let {
+            sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL)
+        }
     }
 
     override fun onPause() {
@@ -346,7 +350,7 @@ class Home : Fragment(), SensorEventListener {
 
     override fun onAccuracyChanged(event: Sensor?, accuracy: Int) {
         // Should be called once when sensors are enabled
-        if (event == currentTemp || event == light) {
+        if (event == temp || event == light) {
             when (accuracy) {
                 0 -> {
                     println("Unreliable")

@@ -46,7 +46,7 @@ class SettingsMenu : Fragment(), SensorEventListener {
 
     // Sensors
     private lateinit var sensorManager: SensorManager
-    private var currentTemp: Sensor? = null
+    private var temp: Sensor? = null
     private var light: Sensor? = null
     private var prevTemp: Float? = null
     private var prevLight: Float? = null
@@ -84,7 +84,7 @@ class SettingsMenu : Fragment(), SensorEventListener {
         openLocEnable = view.findViewById(R.id.showOpenPlacesToggle)
 
         this.sensorManager = activity!!.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        currentTemp = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)
+        temp = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)
         light = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
 
         textViewSensorTemp = view.findViewById(R.id.textViewSensorTemp)
@@ -219,9 +219,17 @@ class SettingsMenu : Fragment(), SensorEventListener {
 
     override fun onResume() {
         super.onResume()
-        // Enable sensors on resume
-        sensorManager.registerListener(this,currentTemp,SensorManager.SENSOR_DELAY_NORMAL)
-        sensorManager.registerListener(this,light,SensorManager.SENSOR_DELAY_NORMAL)
+        // Enable sensors on resume, if available
+        if (temp == null) {
+            textViewSensorTemp.text = getString(R.string.no_sensor_temp)
+        } else {
+            sensorManager.registerListener(this, temp, SensorManager.SENSOR_DELAY_NORMAL)
+        }
+        if (light == null) {
+            textViewSensorLight.text = getString(R.string.no_sensor_light)
+        } else {
+            sensorManager.registerListener(this, light, SensorManager.SENSOR_DELAY_NORMAL)
+        }
     }
 
     override fun onPause() {
@@ -232,7 +240,7 @@ class SettingsMenu : Fragment(), SensorEventListener {
 
     override fun onAccuracyChanged(event: Sensor?, accuracy: Int) {
         // Should be called once when sensors are enabled
-        if (event == currentTemp || event == light) {
+        if (event == temp || event == light) {
             when (accuracy) {
                 0 -> {
                     println("Unreliable")

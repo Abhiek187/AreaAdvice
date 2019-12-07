@@ -44,6 +44,8 @@
     <string name="temp_fahrenheit">\u00B0F</string>
     <string name="light_lux">lx</string> <!-- aka the abundance of RU buses -->
     <string name="light_foot_candle">fc</string> <!-- legit never heard of this -->
+    <string name="no_sensor_temp">Temperature sensor unavailable</string>
+    <string name="no_sensor_light">Light sensor unavailable</string>
     <!-- Maps -->
     <string name="title_activity_maps">Map</string>
 </resources>
