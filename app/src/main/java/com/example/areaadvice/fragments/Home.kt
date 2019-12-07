@@ -387,6 +387,8 @@ class Home : Fragment(), SensorEventListener {
                             schedule = schedule.toString())
                     }
                     placesList.add(place)
+
+                    if (i == 9) break // limit to 10 results to speed up results
                 }
 
                 activity!!.runOnUiThread {
