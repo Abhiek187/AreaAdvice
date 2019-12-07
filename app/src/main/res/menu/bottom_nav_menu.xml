@@ -3,10 +3,10 @@
     <item android:id="@+id/Home"
         android:title="@string/menu_Home"
         android:icon="@mipmap/outline_home_black_18dp"/>
-    <item android:id="@+id/Settings"
-        android:title="@string/menu_Settings"
-        android:icon="@mipmap/outline_settings_applications_black_18dp" />
     <item android:id="@+id/savedLocations"
         android:title="@string/menu_SavedLocations"
         android:icon="@mipmap/outline_location_searching_black_18dp"/>
+    <item android:id="@+id/Settings"
+        android:title="@string/menu_Settings"
+        android:icon="@mipmap/outline_settings_applications_black_18dp" />
 </menu>
