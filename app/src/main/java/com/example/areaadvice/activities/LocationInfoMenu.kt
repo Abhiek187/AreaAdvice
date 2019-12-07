@@ -1,12 +1,10 @@
 package com.example.areaadvice.activities
 
 import android.content.ContentValues
-import android.content.Intent
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.areaadvice.R
-import com.example.areaadvice.fragments.SavedLocations
 import com.example.areaadvice.storage.DatabasePlaces
 import com.example.areaadvice.storage.Prefs
 import com.example.areaadvice.utils.kmToMi
@@ -111,26 +109,25 @@ class LocationInfoMenu : AppCompatActivity()  {
         delBtn.setOnClickListener{
             val db = DatabasePlaces(this)
             var repeat = false
-            var id=0
+            var id = 0
             val cursor = db.getAllRows()
             with(cursor) {
                 while (moveToNext()) {
-                    if (this.getString(getColumnIndexOrThrow(DatabasePlaces.Col_Address))
+                    if (this.getString(getColumnIndex(DatabasePlaces.Col_Address))
                         == locAddress.text.toString()) {
                         repeat = true
-                        id=this.getString(getColumnIndexOrThrow(DatabasePlaces.Col_Id)).toInt()
+                        id = this.getInt(getColumnIndex(DatabasePlaces.Col_Id))
                         break
                     }
                 }
-
             }
-            if(repeat){
+            if (repeat) {
                 db.deleteRow(id)
-                Toast.makeText(this,"This location has been deleted",Toast.LENGTH_SHORT).show()
-                val intent = Intent(this,SavedLocations::class.java)
-            }
-            else{
-                Toast.makeText(this,"This location is not saved in the database",Toast.LENGTH_LONG).show()
+                Toast.makeText(this,
+                    "This location has been deleted", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this,
+                    "This location is not saved in the database", Toast.LENGTH_SHORT).show()
             }
             cursor.close()
         }

@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentTransaction
 import com.example.areaadvice.fragments.Home
 import com.example.areaadvice.R
 import com.example.areaadvice.fragments.SavedLocations
@@ -22,8 +21,6 @@ class MainActivity : AppCompatActivity() {
         navBar = findViewById(R.id.nav_bar)
 
         navBar.setOnNavigationItemSelectedListener { item ->
-            val fm = supportFragmentManager.beginTransaction()
-
             when(item.itemId) {
                 R.id.Home -> {
                     val fragment = Home()
@@ -43,14 +40,14 @@ class MainActivity : AppCompatActivity() {
                     return@setOnNavigationItemSelectedListener true
                 }
             }
-            false
 
+            false
         }
     }
 
     private fun changeFragment(fragment: Fragment){
         val fm = supportFragmentManager.beginTransaction()
-        fm.replace(R.id.fragmentcontainer,
-            fragment).setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out).commit()
+        fm.replace(R.id.fragmentcontainer, fragment)
+            .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out).commit()
     }
 }
