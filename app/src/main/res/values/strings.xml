@@ -11,6 +11,7 @@
     <string name="mapButtonName">Maps</string>
     <string name="clrButtonName">Clear</string>
     <string name="loading">Loading results…</string>
+    <string name="recBtn">Recommend</string>
     <string name="no_results">No results found.</string>
     <string name="place_details">
         Images: %1$d\nName: %2$s\nAddress: %3$s\nRating: %4$s\nReviews: %5$d\nType: %6$s\nLocation: %7$s\n
