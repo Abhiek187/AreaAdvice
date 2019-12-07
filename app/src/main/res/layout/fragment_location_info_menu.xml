@@ -80,5 +80,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ratingBar" />
 
+    <Button
+        android:id="@+id/delBtn"
+        android:layout_width="70dp"
+        android:layout_height="50dp"
+        android:text="@string/delBtn"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/saveBtn"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

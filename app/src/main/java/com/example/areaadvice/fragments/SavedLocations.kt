@@ -40,6 +40,44 @@ class SavedLocations : Fragment() {
         val divider = DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL)
         savedLocationsView.addItemDecoration(divider) // add border between places
 
+        /*val dB = DatabasePlaces(mContext)
+        val cursor = dB.getAllRows()
+        if (cursor.count == 0) {
+            Toast.makeText(mContext, "No Locations Have Been Saved", Toast.LENGTH_SHORT).show()
+        } else {
+            cursor.moveToFirst()
+            while (!cursor.isAfterLast) {
+                val mLocationName =
+                    cursor.getString(cursor.getColumnIndex(DatabasePlaces.Col_place_Name))
+                val mLocationAddress =
+                    cursor.getString(cursor.getColumnIndex(DatabasePlaces.Col_Address))
+                val mLocationRating =
+                    cursor.getFloat(cursor.getColumnIndex(DatabasePlaces.Col_Rating))
+                val mLocationLat =
+                    cursor.getDouble(cursor.getColumnIndex(DatabasePlaces.Col_Lat))
+                val mLocationLng =
+                    cursor.getDouble(cursor.getColumnIndex(DatabasePlaces.Col_Lng))
+                val mSchedule =
+                    cursor.getString(cursor.getColumnIndex(DatabasePlaces.Col_Schedule))
+                val mOpen =
+                    cursor.getString(cursor.getColumnIndex(DatabasePlaces.Col_Open))
+                val openBool = mOpen == "Open"
+
+                val place = Place(address = mLocationAddress, name = mLocationName,
+                    rating = mLocationRating, url = "", latitude = mLocationLat,
+                    longitude = mLocationLng, schedule = mSchedule, isOpen = openBool)
+                placesList.add(place)
+                cursor.moveToNext()
+            }
+
+            placesAdapter.refreshData()
+            cursor.close()
+        }*/
+        createList()
+
+        return view
+    }
+    fun createList(){
         val dB = DatabasePlaces(mContext)
         val cursor = dB.getAllRows()
         if (cursor.count == 0) {
@@ -73,7 +111,12 @@ class SavedLocations : Fragment() {
             placesAdapter.refreshData()
             cursor.close()
         }
+    }
+    override fun onResume() {
+        super.onResume()
+        placesList.clear()
+        createList()
+        //placesAdapter.refreshData()
 
-        return view
     }
 }

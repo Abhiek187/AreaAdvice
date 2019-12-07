@@ -4,6 +4,7 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import java.sql.RowId
 
 class DatabasePlaces(context: Context): SQLiteOpenHelper(context, name,null, version) {
     private val entries = "CREATE TABLE IF NOT EXISTS $Table_Name (" +
@@ -26,6 +27,10 @@ class DatabasePlaces(context: Context): SQLiteOpenHelper(context, name,null, ver
     fun getAllRows(): Cursor {
         val db = this.readableDatabase
         return db.rawQuery("SELECT * FROM $Table_Name", null)
+    }
+
+    fun deleteRow( id: Int){
+        writableDatabase.delete(Table_Name, "$Col_Id=$id",null)>0
     }
 
     companion object {
