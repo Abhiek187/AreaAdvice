@@ -57,7 +57,7 @@ class Home : Fragment(), SensorEventListener {
     private var light: Sensor? = null
     private var prevTemp: Float? = null
     private var prevLight: Float? = null
-    private var recommendations: String = "library" // must be a type supported by the Places API
+    private var recommendations: String = "restaurant" // must be a type supported by the Places API
 
     // Settings variables
     private var senEnable = true
@@ -401,17 +401,39 @@ class Home : Fragment(), SensorEventListener {
                     if (abs(diff2) >= 2) {
                         prevLight = bright
 
-                        // Sample recommendations based on light level
-                        recommendations = if (bright <= 500) {
+                        /* Sample recommendations based on light level
+                         * (total = 15, delta = 2500, y = e^.757x)
+                         */
+                        recommendations = if (bright <= 1) {
+                            "lodging"
+                        } else if (bright > 1 && bright <= 2) {
                             "restaurant"
-                        } else if (bright > 500 && bright <= 2000) {
-                            "university"
-                        } else if(bright > 2000 && bright <= 10000) {
+                        } else if (bright > 2 && bright <= 5) {
+                            "movie_theater"
+                        } else if (bright > 5 && bright <= 10) {
+                            "museum"
+                        } else if (bright > 10 && bright <= 21) {
+                            "library"
+                        } else if (bright > 21 && bright <= 44) {
+                            "aquarium"
+                        } else if (bright > 44 && bright <= 94) {
+                            "bowling_alley"
+                        } else if (bright > 94 && bright <= 200) {
+                            "shopping_mall"
+                        } else if (bright > 200 && bright <= 427) {
                             "gym"
-                        } else if(bright > 10000 && bright <= 20000) {
+                        } else if (bright > 427 && bright <= 910) {
+                            "spa"
+                        } else if (bright > 910 && bright <= 1939) {
+                            "cafe"
+                        } else if (bright > 1939 && bright <= 4134) {
                             "tourist_attraction"
-                        } else {
+                        } else if (bright > 4134 && bright <= 8813) {
                             "park"
+                        } else if (bright > 8813 && bright <= 18788) {
+                            "zoo"
+                        } else {
+                            "amusement_park"
                         }
                     }
                 } else {
