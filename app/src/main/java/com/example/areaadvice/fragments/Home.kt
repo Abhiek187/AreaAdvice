@@ -49,6 +49,7 @@ class Home : Fragment(), SensorEventListener {
     private lateinit var recyclerViewPlaces: RecyclerView
     private lateinit var mapBtn: ImageButton
     private lateinit var clearBtn: ImageButton
+    private lateinit var recBtn: Button
     private var result: JSONObject? = null
 
     // Sensor variables
@@ -118,6 +119,7 @@ class Home : Fragment(), SensorEventListener {
         imageButtonSearch = view.findViewById(R.id.imageButtonSearch)
         mapBtn = view.findViewById(R.id.map)
         clearBtn = view.findViewById(R.id.clear)
+        recBtn = view.findViewById(R.id.recBtn)
         /* Steps to hide your API key:
          * 1. Create google_apis.xml in values folder (Git will ignore this file)
          * 2. Add API key as string resource named google_places_key
@@ -168,12 +170,12 @@ class Home : Fragment(), SensorEventListener {
                     val encodedQuery = URLEncoder.encode(query, "UTF-8")
                     "&keyword=$encodedQuery"
                 }
-                senEnable -> {
+                /*senEnable -> {
                     // Use a preset type from the sensors
                     "&type=$recommendations"
-                }
+                }*/
                 else -> {
-                    Toast.makeText(mContext, "Sensors are disabled, so a query is required.",
+                    Toast.makeText(mContext, "A query is required.",
                         Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
@@ -199,6 +201,61 @@ class Home : Fragment(), SensorEventListener {
             placesList.clear()
             placesAdapter.refreshData()
             textViewLoading.text = ""
+        }
+
+        recBtn.setOnClickListener{
+            //val query = editTextSearch.text.toString()
+            val useRatings = critChoice == 2
+            val useHours = openLocEnable
+            val useMetrics = unitChoice == 1
+
+            if (!isOnline()) {
+                Toast.makeText(mContext, "Can't access the internet", Toast.LENGTH_SHORT)
+                    .show()
+                return@setOnClickListener
+                /*val intent = Intent(Settings.ACTION_WIFI_SETTINGS)
+                startActivity(intent)*/
+            } else if (abs(lat) > 90 || abs(lon) > 180) {
+                Toast.makeText(mContext, "Can't access your location", Toast.LENGTH_SHORT)
+                    .show()
+                return@setOnClickListener
+            }
+
+            val reqParam = if (useRatings) {
+                // Convert radius to meters
+                if (useMetrics) {
+                    "radius=${radius.toFloat() * 1000}"
+                } else {
+                    "radius=${miToM(radius.toFloat())}"
+                }
+            } else {
+                "rankby=distance"
+            }
+            val rankByParam = when {
+                /*query.isNotEmpty() -> {
+                    // Need to convert user input to encoded query string
+                    val encodedQuery = URLEncoder.encode(query, "UTF-8")
+                    "&keyword=$encodedQuery"
+                }*/
+                senEnable -> {
+                    // Use a preset type from the sensors
+                    "&type=$recommendations"
+                }
+                else -> {
+                    Toast.makeText(mContext, "Sensors are disabled, so a query is required.",
+                        Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+            }
+            val openParam = if (useHours) "&opennow" else ""
+
+            placesList.clear()
+            placesAdapter.refreshData()
+            textViewLoading.visibility = View.VISIBLE
+            textViewLoading.text = getString(R.string.loading)
+            recommendPlaces(reqParam, rankByParam, openParam)
+            sharedPrefs.lat = lat.toFloat()
+            sharedPrefs.lng = lon.toFloat()
         }
 
 
