@@ -32,7 +32,7 @@ class LocationInfoMenu : AppCompatActivity()  {
         locSchedule = findViewById(R.id.locationHours)
         locRating = findViewById(R.id.ratingBar)
         val saveBtn = findViewById<ImageButton>(R.id.saveBtn)
-        val delBtn = findViewById<Button>(R.id.delBtn)
+        val delBtn = findViewById<ImageButton>(R.id.delBtn)
 
         locName.text = intent.getStringExtra("name")
         locAddress.text = intent.getStringExtra("address")

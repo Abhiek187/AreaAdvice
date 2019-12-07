@@ -136,6 +136,15 @@ class Home : Fragment(), SensorEventListener {
         val divider = DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL)
         recyclerViewPlaces.addItemDecoration(divider) // add border between places
 
+        editTextSearch.setOnKeyListener{_, keyCode, keyEvent ->
+            // Search if user presses enter on keyboard
+            if (keyEvent.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                imageButtonSearch.performClick()
+                return@setOnKeyListener true
+            }
+            return@setOnKeyListener false
+        }
+
         imageButtonSearch.setOnClickListener {
             // Initiate search if online
             val query = editTextSearch.text.toString()
@@ -171,10 +180,6 @@ class Home : Fragment(), SensorEventListener {
                     val encodedQuery = URLEncoder.encode(query, "UTF-8")
                     "&keyword=$encodedQuery"
                 }
-                /*senEnable -> {
-                    // Use a preset type from the sensors
-                    "&type=$recommendations"
-                }*/
                 else -> {
                     Toast.makeText(mContext, "A query is required.",
                         Toast.LENGTH_SHORT).show()
@@ -188,17 +193,6 @@ class Home : Fragment(), SensorEventListener {
             textViewLoading.visibility = View.VISIBLE
             textViewLoading.text = getString(R.string.loading)
             recommendPlaces(reqParam, rankByParam, openParam)
-            sharedPrefs.lat = lat.toFloat()
-            sharedPrefs.lng = lon.toFloat()
-        }
-
-        editTextSearch.setOnKeyListener{_, keyCode, keyEvent ->
-            // Search if user presses enter on keyboard
-            if (keyEvent.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                imageButtonSearch.performClick()
-                return@setOnKeyListener true
-            }
-            return@setOnKeyListener false
         }
 
         mapBtn.setOnClickListener {
@@ -215,7 +209,7 @@ class Home : Fragment(), SensorEventListener {
         }
 
         recBtn.setOnClickListener{
-            //val query = editTextSearch.text.toString()
+            // Search without a query
             val useRatings = critChoice == 2
             val useHours = openLocEnable
             val useMetrics = unitChoice == 1
@@ -243,11 +237,6 @@ class Home : Fragment(), SensorEventListener {
                 "rankby=distance"
             }
             val rankByParam = when {
-                /*query.isNotEmpty() -> {
-                    // Need to convert user input to encoded query string
-                    val encodedQuery = URLEncoder.encode(query, "UTF-8")
-                    "&keyword=$encodedQuery"
-                }*/
                 senEnable -> {
                     // Use a preset type from the sensors
                     "&type=$recommendations"
@@ -265,10 +254,7 @@ class Home : Fragment(), SensorEventListener {
             textViewLoading.visibility = View.VISIBLE
             textViewLoading.text = getString(R.string.loading)
             recommendPlaces(reqParam, rankByParam, openParam)
-            sharedPrefs.lat = lat.toFloat()
-            sharedPrefs.lng = lon.toFloat()
         }
-
 
         // Inflate the layout for this fragment
         return view
@@ -292,6 +278,8 @@ class Home : Fragment(), SensorEventListener {
 
                     lat = location.latitude
                     lon = location.longitude
+                    sharedPrefs.lat = lat.toFloat()
+                    sharedPrefs.lng = lon.toFloat()
                 }
             }
         }
@@ -395,7 +383,7 @@ class Home : Fragment(), SensorEventListener {
                 activity!!.runOnUiThread {
                     // Remember that you can only change UI elements in the main thread
                     placesAdapter.refreshData()
-                    textViewLoading.visibility = View.GONE
+                    textViewLoading.visibility = View.INVISIBLE
                 }
             } else {
                 // Try to output an error message, else show a generic "no results" message
