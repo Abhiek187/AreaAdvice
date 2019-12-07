@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState != null) {
             // An orientation change occurred (most likely)
             currentFragment = savedInstanceState.getString(fragKey)!!
-            
+
             when (currentFragment) {
                 strHome -> changeFragment(Home())
                 strSaved -> changeFragment(SavedLocations())

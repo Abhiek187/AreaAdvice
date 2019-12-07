@@ -29,18 +29,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/map"/>
 
-    <TextView
-        android:id="@+id/textViewLoading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/loading"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerViewPlaces"
-        app:layout_constraintEnd_toStartOf="@+id/recBtn"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextSearch" />
-
     <Button
         android:id="@+id/recBtn"
         android:layout_width="110dp"
@@ -73,6 +61,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextSearch"
         app:layout_constraintBottom_toTopOf="@+id/recyclerViewPlaces"/>
+
+    <TextView
+        android:id="@+id/textViewLoading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/loading"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/clear" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewPlaces"
