@@ -261,45 +261,35 @@ class SettingsMenu : Fragment(), SensorEventListener {
     override fun onSensorChanged(event: SensorEvent?) {
         when (event?.sensor?.type) {
             Sensor.TYPE_AMBIENT_TEMPERATURE -> {
-                val temp = event.values?.get(0)
+                val temp = event.values[0]
 
-                if (prevTemp != null) {
-                    val diff = temp?.minus(prevTemp!!)
-                    // Check for temperature change when there's at least 2 degrees of change
-                    if (diff?.let { abs(it) }!! >= 2) {
-                        prevTemp = temp
-
-                        if (radBtnUSA.isChecked) {
-                            textViewSensorTemp.text = getString(R.string.sensor_temp,
-                                cToF(temp).roundToInt(), tempUnits)
-                        } else {
-                            textViewSensorTemp.text = getString(R.string.sensor_temp,
-                                temp.roundToInt(), tempUnits)
-                        }
-                    }
-                } else {
+                // Check subsequent temperature when there's at least 2 degrees of change
+                if (prevTemp == null || abs(temp - prevTemp!!) >= 2) {
                     prevTemp = temp
+
+                    if (radBtnUSA.isChecked) {
+                        textViewSensorTemp.text = getString(R.string.sensor_temp,
+                            cToF(temp).roundToInt(), tempUnits)
+                    } else {
+                        textViewSensorTemp.text = getString(R.string.sensor_temp,
+                            temp.roundToInt(), tempUnits)
+                    }
                 }
             }
             Sensor.TYPE_LIGHT -> {
-                val bright= event.values[0]
+                val bright = event.values[0]
 
-                if (prevLight!=null) {
-                    val diff2 = bright.minus(prevLight!!)
-                    // Check for light if there's at least a 2 lx change
-                    if (abs(diff2) >= 2) {
-                        prevLight = bright
-
-                        if (radBtnUSA.isChecked) {
-                            textViewSensorLight.text = getString(R.string.sensor_light,
-                                lxToFc(bright).roundToInt(), lightUnits)
-                        } else {
-                            textViewSensorLight.text = getString(R.string.sensor_light,
-                                bright.roundToInt(), lightUnits)
-                        }
-                    }
-                } else {
+                // Check subsequent light when there's at least a 2 lx change
+                if (prevLight == null || abs(bright - prevLight!!) >= 2) {
                     prevLight = bright
+
+                    if (radBtnUSA.isChecked) {
+                        textViewSensorLight.text = getString(R.string.sensor_light,
+                            lxToFc(bright).roundToInt(), lightUnits)
+                    } else {
+                        textViewSensorLight.text = getString(R.string.sensor_light,
+                            bright.roundToInt(), lightUnits)
+                    }
                 }
             }
         }

@@ -16,7 +16,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:padding="5dp"
             android:text="@string/sensor_recommendations"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -27,16 +26,13 @@
             android:id="@+id/enableSensorRecToggle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:checked="true"
-            android:padding="5dp"
             android:text=""
             android:textAlignment="center"
             android:textSize="15sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintLeft_toRightOf="@+id/sensorrec"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintBaseline_toBaselineOf="@+id/sensorrec"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
             android:id="@+id/maxRadiusText"
@@ -44,7 +40,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:padding="5dp"
             android:text="@string/maxRadius"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -55,26 +50,22 @@
             android:id="@+id/radiusSeekBarText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
-            android:padding="5dp"
+            android:layout_marginEnd="15dp"
             android:text="@string/startVal"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/enableSensorRecToggle" />
+            app:layout_constraintBaseline_toBaselineOf="@+id/maxRadiusText"
+            app:layout_constraintEnd_toEndOf="parent" />
 
 
         <SeekBar
             android:id="@+id/radiusSeekBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
             android:layout_marginTop="20dp"
             android:max="50"
-            android:padding="5dp"
             android:progress="25"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/maxRadiusText" />
 
@@ -84,7 +75,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="15dp"
-            android:padding="5dp"
             android:text="@string/chooseUnit"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -96,20 +86,17 @@
             android:id="@+id/radiogroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:orientation="horizontal"
             android:padding="5dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/unitChoiceText"
             app:layout_constraintTop_toBottomOf="@+id/radiusSeekBar">
 
             <RadioButton
                 android:id="@+id/unitsSI"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
                 android:text="@string/unitChoiceSI"
                 android:textSize="15sp" />
 
@@ -118,7 +105,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:padding="10dp"
                 android:text="@string/unitChoiceUSA"
                 android:textSize="15sp" />
         </RadioGroup>
@@ -128,8 +114,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="15dp"
-            android:padding="5dp"
+            android:layout_marginTop="30dp"
             android:text="@string/RecommendationCriteria"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -140,20 +125,17 @@
             android:id="@+id/radiogroup2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="25dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:orientation="horizontal"
             android:padding="5dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/DistanceorRatingsText"
             app:layout_constraintTop_toBottomOf="@+id/radiogroup">
 
             <RadioButton
                 android:id="@+id/distance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
                 android:text="@string/distance"
                 android:textSize="15sp" />
 
@@ -162,7 +144,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:padding="10dp"
                 android:text="@string/ratings"
                 android:textSize="15sp" />
         </RadioGroup>
@@ -172,8 +153,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:padding="5dp"
+            android:layout_marginTop="20dp"
             android:text="@string/ShowOpenLocationsOnly"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -184,15 +164,13 @@
             android:id="@+id/showOpenPlacesToggle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="13dp"
             android:layout_marginEnd="10dp"
             android:checked="true"
-            android:padding="5dp"
             android:text=""
             android:textAlignment="center"
             android:textSize="15sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/radiogroup2" />
+            app:layout_constraintBaseline_toBaselineOf="@+id/showOpenPlacesText"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
             android:id="@+id/textViewSensorTemp"

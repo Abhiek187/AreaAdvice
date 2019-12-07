@@ -57,13 +57,13 @@ class LocationInfoMenu : AppCompatActivity()  {
 
         locSchedule.text = ""
         for (day in schedule) {
-            val str = day.replace("[","")
-                .replace("]","")
+            val str = day.replace("[","").replace("]","")
+                .replace("\"", "")
+
             if (str == "null") {
                 locSchedule.text = getString(R.string.no_schedule) // no schedule is available
             } else if (str.isNotEmpty()) {
-                locSchedule.text = String.format("%s%s\n", locSchedule.text.toString(),
-                    str.substring(1, str.length - 1))
+                locSchedule.text = String.format("%s%s\n", locSchedule.text.toString(), str)
             }
         }
 

@@ -192,8 +192,9 @@ class Home : Fragment(), SensorEventListener {
             sharedPrefs.lng = lon.toFloat()
         }
 
-        editTextSearch.setOnKeyListener{_,keyCode,keyEvent ->
-            if (keyEvent.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER){
+        editTextSearch.setOnKeyListener{_, keyCode, keyEvent ->
+            // Search if user presses enter on keyboard
+            if (keyEvent.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                 imageButtonSearch.performClick()
                 return@setOnKeyListener true
             }
@@ -440,77 +441,67 @@ class Home : Fragment(), SensorEventListener {
     override fun onSensorChanged(event: SensorEvent?) {
         when (event?.sensor?.type) {
             Sensor.TYPE_AMBIENT_TEMPERATURE -> {
-                val temp = event.values?.get(0)
+                val temp = event.values[0]
 
-                if (prevTemp != null) {
-                    val diff = temp?.minus(prevTemp!!)
-                    // Check for temperature change when there's at least 2 degrees of change
-                    if (diff?.let { abs(it) }!! >= 2) {
-                        prevTemp = temp
-
-                        // Sample recommendations based on temperature
-                        recommendations = if (temp <= 0) {
-                            "restaurant"
-                        } else if (temp > 0 && temp <= 5) {
-                            "university"
-                        } else if (temp > 5 && temp <= 15) {
-                            "library"
-                        } else if(temp > 15 && temp <= 20) {
-                            "gym"
-                        } else {
-                            "park"
-                        }
-                    }
-                } else {
+                // Check subsequent temperature when there's at least 2 degrees of change
+                if (prevTemp == null || abs(temp - prevTemp!!) >= 2) {
                     prevTemp = temp
+
+                    // Sample recommendations based on temperature
+                    recommendations = if (temp <= 0) {
+                        "restaurant"
+                    } else if (temp > 0 && temp <= 5) {
+                        "university"
+                    } else if (temp > 5 && temp <= 15) {
+                        "library"
+                    } else if (temp > 15 && temp <= 20) {
+                        "gym"
+                    } else {
+                        "park"
+                    }
                 }
             }
             Sensor.TYPE_LIGHT -> {
-                val bright= event.values[0]
+                val bright = event.values[0]
 
-                if (prevLight != null) {
-                    val diff2 = bright.minus(prevLight!!)
-                    // Check for light if there's at least a 2 lx change
-                    if (abs(diff2) >= 2) {
-                        prevLight = bright
-
-                        /* Sample recommendations based on light level
-                         * (total = 15, delta = 2500, y = e^.757x)
-                         */
-                        recommendations = if (bright <= 1) {
-                            "lodging"
-                        } else if (bright > 1 && bright <= 2) {
-                            "restaurant"
-                        } else if (bright > 2 && bright <= 5) {
-                            "movie_theater"
-                        } else if (bright > 5 && bright <= 10) {
-                            "museum"
-                        } else if (bright > 10 && bright <= 21) {
-                            "library"
-                        } else if (bright > 21 && bright <= 44) {
-                            "aquarium"
-                        } else if (bright > 44 && bright <= 94) {
-                            "bowling_alley"
-                        } else if (bright > 94 && bright <= 200) {
-                            "shopping_mall"
-                        } else if (bright > 200 && bright <= 427) {
-                            "gym"
-                        } else if (bright > 427 && bright <= 910) {
-                            "spa"
-                        } else if (bright > 910 && bright <= 1939) {
-                            "cafe"
-                        } else if (bright > 1939 && bright <= 4134) {
-                            "tourist_attraction"
-                        } else if (bright > 4134 && bright <= 8813) {
-                            "park"
-                        } else if (bright > 8813 && bright <= 18788) {
-                            "zoo"
-                        } else {
-                            "amusement_park"
-                        }
-                    }
-                } else {
+                // Check subsequent light when there's at least a 2 lx change
+                if (prevLight == null || abs(bright - prevLight!!) >= 2) {
                     prevLight = bright
+
+                    /* Sample recommendations based on light level
+                     * (total = 15, delta = 2500, y = e^.757x)
+                     */
+                    recommendations = if (bright <= 1) {
+                        "lodging"
+                    } else if (bright > 1 && bright <= 2) {
+                        "restaurant"
+                    } else if (bright > 2 && bright <= 5) {
+                        "movie_theater"
+                    } else if (bright > 5 && bright <= 10) {
+                        "museum"
+                    } else if (bright > 10 && bright <= 21) {
+                        "library"
+                    } else if (bright > 21 && bright <= 44) {
+                        "aquarium"
+                    } else if (bright > 44 && bright <= 94) {
+                        "bowling_alley"
+                    } else if (bright > 94 && bright <= 200) {
+                        "shopping_mall"
+                    } else if (bright > 200 && bright <= 427) {
+                        "gym"
+                    } else if (bright > 427 && bright <= 910) {
+                        "spa"
+                    } else if (bright > 910 && bright <= 1939) {
+                        "cafe"
+                    } else if (bright > 1939 && bright <= 4134) {
+                        "tourist_attraction"
+                    } else if (bright > 4134 && bright <= 8813) {
+                        "park"
+                    } else if (bright > 8813 && bright <= 18788) {
+                        "zoo"
+                    } else {
+                        "amusement_park"
+                    }
                 }
             }
         }

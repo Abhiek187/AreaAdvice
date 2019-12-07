@@ -27,18 +27,18 @@
     </string>
     <string name="no_schedule">Schedule not available</string>
     <!-- Settings -->
-    <string name="sensor_recommendations">Sensor Recommendations</string>
+    <string name="sensor_recommendations">Sensors</string>
     <string name="OnChoice">On</string>
     <string name="OffChoice">Off</string>
     <string name="maxRadius">Radius</string>
     <string name="startVal">25</string>
-    <string name="chooseUnit">Unit of Measurement</string>
-    <string name="unitChoiceSI">km/°C</string>
-    <string name="unitChoiceUSA">mi/°F</string>
-    <string name="RecommendationCriteria">Recommendation\nCriteria</string>
+    <string name="chooseUnit">Units</string>
+    <string name="unitChoiceSI">SI</string>
+    <string name="unitChoiceUSA">US</string>
+    <string name="RecommendationCriteria">Sort By</string>
     <string name="distance">Distance</string>
     <string name="ratings">Ratings</string>
-    <string name="ShowOpenLocationsOnly">Show Open Locations Only</string>
+    <string name="ShowOpenLocationsOnly">Open Locations Only</string>
     <string name="sensor_temp">Temperature: %1$d %2$s</string>
     <string name="sensor_light">Light: %1$d %2$s</string>
     <string name="temp_celsius">\u00B0C</string>
