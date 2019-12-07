@@ -201,6 +201,7 @@ class Home : Fragment(), SensorEventListener {
             placesList.clear()
             placesAdapter.refreshData()
             textViewLoading.text = ""
+            editTextSearch.text.clear()
         }
 
         recBtn.setOnClickListener{
