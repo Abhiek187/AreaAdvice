@@ -74,6 +74,7 @@
             android:text="@string/testStringHours"
             android:textSize="16sp"
             app:layout_constraintTop_toBottomOf="@+id/locationProximity"
+            app:layout_constraintBottom_toTopOf="@id/url"
             app:layout_constraintStart_toStartOf="parent"/>
 
         <ImageButton
@@ -98,6 +99,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/saveBtn" />
 
+        <TextView
+            android:id="@+id/url"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:linksClickable="true"
+            android:autoLink="all"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/delBtn"
+            app:layout_constraintBottom_toTopOf="@id/photo"/>
+
         <ImageView
             android:id="@+id/photo"
             android:layout_width="wrap_content"
@@ -105,7 +117,7 @@
             android:layout_marginStart="5dp"
             android:layout_marginTop="10dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/locationHours" />
+            app:layout_constraintTop_toBottomOf="@id/url" />
 
         <TextView
             android:id="@+id/textViewReviews"
@@ -118,7 +130,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/photo"
             app:layout_constraintTop_toBottomOf="@+id/photo" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

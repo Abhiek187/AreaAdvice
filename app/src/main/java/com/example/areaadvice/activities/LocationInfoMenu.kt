@@ -2,6 +2,7 @@ package com.example.areaadvice.activities
 
 import android.content.ContentValues
 import android.os.Bundle
+import android.text.method.LinkMovementMethod
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.areaadvice.R
@@ -23,6 +24,7 @@ class LocationInfoMenu : AppCompatActivity()  {
     private lateinit var locSchedule: TextView
     private lateinit var locRating: RatingBar
     private lateinit var photo: ImageView
+    private lateinit var viewUrl: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +37,7 @@ class LocationInfoMenu : AppCompatActivity()  {
         locSchedule = findViewById(R.id.locationHours)
         locRating = findViewById(R.id.ratingBar)
         photo = findViewById(R.id.photo)
+        viewUrl = findViewById(R.id.url)
         val saveBtn = findViewById<ImageButton>(R.id.saveBtn)
         val delBtn = findViewById<ImageButton>(R.id.delBtn)
         val textViewReviews = findViewById<TextView>(R.id.textViewReviews)
@@ -49,6 +52,8 @@ class LocationInfoMenu : AppCompatActivity()  {
         val currentLng = intent.getFloatExtra("long",0F)
         val open = intent.getStringExtra("isOpen")
         val url = intent.getStringExtra("url")
+        viewUrl.text = url
+        viewUrl.movementMethod=LinkMovementMethod.getInstance()
         val urlImage = intent.getStringExtra("photo")
 
         val photoRef = urlImage?.substringAfter("photo_reference")
