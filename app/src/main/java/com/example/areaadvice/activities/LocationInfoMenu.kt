@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.AsyncTask
 import android.os.Bundle
+import android.text.method.LinkMovementMethod
 import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -29,6 +30,7 @@ class LocationInfoMenu : AppCompatActivity()  {
     private lateinit var locSchedule: TextView
     private lateinit var locRating: RatingBar
     private lateinit var photo: ImageView
+    private lateinit var viewUrl: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +43,7 @@ class LocationInfoMenu : AppCompatActivity()  {
         locSchedule = findViewById(R.id.locationHours)
         locRating = findViewById(R.id.ratingBar)
         photo = findViewById(R.id.photo)
+        viewUrl = findViewById(R.id.url)
         val saveBtn = findViewById<ImageButton>(R.id.saveBtn)
         val delBtn = findViewById<ImageButton>(R.id.delBtn)
 
@@ -53,6 +56,8 @@ class LocationInfoMenu : AppCompatActivity()  {
         val currentLng = intent.getFloatExtra("long",0F)
         val open = intent.getStringExtra("isOpen")
         val url = intent.getStringExtra("url")
+        viewUrl.text = url
+        viewUrl.movementMethod=LinkMovementMethod.getInstance()
         val urlImage = intent.getStringExtra("photo")
         println("urlImage is $urlImage")
         println("Url is $url")
