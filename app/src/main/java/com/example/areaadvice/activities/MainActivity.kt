@@ -54,8 +54,6 @@ class MainActivity : AppCompatActivity() {
                 R.id.Settings -> {
                     val fragment = SettingsMenu()
                     currentFragment = strSettings
-                    /*fm.hide(Home())
-                    fm.hide(SavedLocations())*/
                     changeFragment(fragment)
                     return@setOnNavigationItemSelectedListener true
                 }
