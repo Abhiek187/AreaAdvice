@@ -69,9 +69,10 @@ class SavedLocations : Fragment() {
                 val mOpen =
                     cursor.getString(cursor.getColumnIndex(DatabasePlaces.Col_Open))
                 val openBool = mOpen == "Open"
+                val photoImage = cursor.getString(cursor.getColumnIndexOrThrow(DatabasePlaces.Col_Photo))
 
                 val place = Place(address = mLocationAddress, name = mLocationName,
-                    rating = mLocationRating, url = "", latitude = mLocationLat,
+                    rating = mLocationRating, url = "", latitude = mLocationLat, photo = photoImage,
                     longitude = mLocationLng, schedule = mSchedule, isOpen = openBool)
                 placesList.add(place)
                 cursor.moveToNext()
