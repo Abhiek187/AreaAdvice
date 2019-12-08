@@ -9,7 +9,7 @@ import java.sql.RowId
 class DatabasePlaces(context: Context): SQLiteOpenHelper(context, name,null, version) {
     private val entries = "CREATE TABLE IF NOT EXISTS $Table_Name (" +
             "$Col_Id INTEGER PRIMARY KEY AUTOINCREMENT, $Col_place_Name TEXT, $Col_Address TEXT, " +
-            "$Col_Rating TEXT, $Col_Lat TEXT, $Col_Lng TEXT, $Col_Schedule TEXT, $Col_Open TEXT)"
+            "$Col_Rating TEXT, $Col_Lat TEXT, $Col_Lng TEXT, $Col_Schedule TEXT, $Col_Open TEXT, $Col_Url TEXT, $Col_Photo TEXT)"
     private val del = "Drop Table If Exists $Table_Name"
 
     override fun onCreate(db: SQLiteDatabase){
@@ -44,6 +44,8 @@ class DatabasePlaces(context: Context): SQLiteOpenHelper(context, name,null, ver
         const val Col_Address = "Address"
         const val Col_Schedule = "Schedule"
         const val Col_Open = "Open"
+        const val Col_Url = "Url"
+        const val Col_Photo = "Photo"
         const val Col_Id = "Id"
     }
 }

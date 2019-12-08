@@ -332,9 +332,10 @@ class Home : Fragment(), SensorEventListener {
                             "formatted_address,rating,review,geometry,type,opening_hours,url"
                     ).readText()
                     val detailsJSON = JSONObject(detailsStr)
-                    //println(detailsJSON.toString(2)) note: long println
+                    println(detailsJSON.toString(2)) //note: long println
                     result = detailsJSON.getJSONObject("result")
-
+                    val image = result!!.optJSONArray("photos")?.getJSONObject(0)?.getString("photo_reference")
+                    println("Image is $image")
                     val address = result!!.getString("formatted_address")
                     val location = result!!.getJSONObject("geometry")
                         .getJSONObject("location")
@@ -365,13 +366,13 @@ class Home : Fragment(), SensorEventListener {
 
                     val place = if (isOpen != null) {
                         Place(address = address, name = name, isOpen = isOpen,
-                            rating = rating.toFloat(), url = url,
+                            rating = rating.toFloat(), url = url, photo = image,
                             latitude =location.getDouble("lat"),
                             longitude = location.getDouble("lng"),
                             schedule = schedule.toString())
                     } else {
                         Place(address = address, name = name, rating = rating.toFloat(), url = url,
-                            latitude =location.getDouble("lat"),
+                            latitude =location.getDouble("lat"), photo=image,
                             longitude = location.getDouble("lng"),
                             schedule = schedule.toString())
                     }

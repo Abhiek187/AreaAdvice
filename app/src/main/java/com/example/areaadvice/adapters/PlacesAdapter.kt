@@ -55,6 +55,8 @@ class PlacesAdapter(private var context: Context, private var placesList: ArrayL
             intent.putExtra("lat", currentLat)
             intent.putExtra("long", currentLng)
             intent.putExtra("schedule", placesList[position].schedule)
+            intent.putExtra("url", placesList[position].url)
+            intent.putExtra("photo",placesList[position].photo.toString())
 
             this.context.startActivity(intent)
         }

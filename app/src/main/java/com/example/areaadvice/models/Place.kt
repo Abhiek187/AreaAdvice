@@ -1,5 +1,7 @@
 package com.example.areaadvice.models
 
+import org.json.JSONArray
+
 data class Place(
     val address: String,
     val name: String,
@@ -9,5 +11,6 @@ data class Place(
     val url: String,
     val latitude: Double,
     val longitude: Double,
-    val schedule: String
+    val schedule: String,
+    val photo: String?
 )
