@@ -29,6 +29,7 @@ import com.example.areaadvice.models.Place
 import com.example.areaadvice.storage.Prefs
 import com.example.areaadvice.utils.miToM
 import com.google.android.gms.location.*
+import org.json.JSONArray
 import org.json.JSONObject
 import java.net.URL
 import java.net.URLEncoder
@@ -334,50 +335,25 @@ class Home : Fragment(), SensorEventListener {
                     val detailsJSON = JSONObject(detailsStr)
                     println(detailsJSON.toString(2)) //note: long println
                     result = detailsJSON.getJSONObject("result")
-                    val image = result!!.optJSONArray("photos")?.getJSONObject(0)?.getString("photo_reference")
-                    println("Image is $image")
                     val address = result!!.getString("formatted_address")
                     val location = result!!.getJSONObject("geometry")
                         .getJSONObject("location")
                     val name = result!!.getString("name")
                     val hours = result!!.optJSONObject("opening_hours")
-                    val isOpen = hours?.getBoolean("open_now")
+                    val isOpen = hours?.getBoolean("open_now") ?: false
                     val schedule = hours?.getJSONArray("weekday_text")
-                    //val photos = result!!.optJSONArray("photos")
+                    val image = result!!.optJSONArray("photos")?.getJSONObject(0)
+                        ?.getString("photo_reference")
                     val rating = result!!.optDouble("rating", 0.0)
-                    //val reviews = result!!.optJSONArray("reviews")
-                    //val placeType = result!!.optJSONArray("types")
+                    val reviews = formReview(result!!.optJSONArray("reviews"))
                     val url = result!!.getString("url")
-                    /*println(
-                        getString(
-                            R.string.place_details,
-                            photos?.length(),
-                            name,
-                            address,
-                            "%.1f".format(rating),
-                            reviews?.length(),
-                            placeType?.toString(),
-                            location.toString(2),
-                            isOpen,
-                            schedule?.toString(2),
-                            url
-                        )
-                    ) // also long println */
 
-                    val place = if (isOpen != null) {
-                        Place(address = address, name = name, isOpen = isOpen,
-                            rating = rating.toFloat(), url = url, photo = image,
-                            latitude =location.getDouble("lat"),
-                            longitude = location.getDouble("lng"),
-                            schedule = schedule.toString())
-                    } else {
-                        Place(address = address, name = name, rating = rating.toFloat(), url = url,
-                            latitude =location.getDouble("lat"), photo=image,
-                            longitude = location.getDouble("lng"),
-                            schedule = schedule.toString())
-                    }
+                    val place = Place(address = address, name = name, isOpen = isOpen,
+                        reviews = reviews, rating = rating.toFloat(), url = url, photo = image,
+                        latitude = location.getDouble("lat"),
+                        longitude = location.getDouble("lng"), schedule = schedule.toString())
+
                     placesList.add(place)
-
                     if (i == 9) break // limit to 10 results to speed up results
                 }
 
@@ -393,6 +369,23 @@ class Home : Fragment(), SensorEventListener {
                 }
             }
         }
+    }
+
+    private fun formReview(reviews: JSONArray?): String {
+        reviews ?: return "No reviews yet" // default if reviews array doesn't exist
+        var reviewStr = ""
+
+        for (i in 0 until reviews.length()) {
+            val review = reviews.getJSONObject(i)
+            val rating = review.getInt("rating")
+            val time = review.getString("relative_time_description")
+            val text = review.getString("text")
+
+            reviewStr += "Rating: $rating\t($time)\n$text\n\n"
+            if (i == 2) break // stop at 3 reviews
+        }
+
+        return reviewStr
     }
 
     private fun isOnline(): Boolean {

@@ -4,12 +4,12 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import java.sql.RowId
 
 class DatabasePlaces(context: Context): SQLiteOpenHelper(context, name,null, version) {
     private val entries = "CREATE TABLE IF NOT EXISTS $Table_Name (" +
             "$Col_Id INTEGER PRIMARY KEY AUTOINCREMENT, $Col_place_Name TEXT, $Col_Address TEXT, " +
-            "$Col_Rating TEXT, $Col_Lat TEXT, $Col_Lng TEXT, $Col_Schedule TEXT, $Col_Open TEXT, $Col_Url TEXT, $Col_Photo TEXT)"
+            "$Col_Rating TEXT, $Col_Reviews TEXT, $Col_Lat TEXT, $Col_Lng TEXT, " +
+            "$Col_Schedule TEXT, $Col_Open TEXT, $Col_Url TEXT, $Col_Photo TEXT)"
     private val del = "Drop Table If Exists $Table_Name"
 
     override fun onCreate(db: SQLiteDatabase){
@@ -37,15 +37,16 @@ class DatabasePlaces(context: Context): SQLiteOpenHelper(context, name,null, ver
         const val name = "Saved_Places.db"
         const val version = 1
         const val Table_Name = "Saved_Places"
+        const val Col_Id = "Id"
         const val Col_place_Name = "Place_Name"
         const val Col_Lat = "Latitude"
         const val Col_Lng = "Longitude"
         const val Col_Rating = "Rating"
+        const val Col_Reviews = "Reviews"
         const val Col_Address = "Address"
         const val Col_Schedule = "Schedule"
         const val Col_Open = "Open"
         const val Col_Url = "Url"
         const val Col_Photo = "Photo"
-        const val Col_Id = "Id"
     }
 }

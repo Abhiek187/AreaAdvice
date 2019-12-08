@@ -26,6 +26,9 @@
         Mon: 6:30am - 9:30pm\nTues: 6:30am - 9:30pm\nWed: 6:30am - 9:30pm\nThurs: 6:30am - 9:30pm\nFri: 6:30am - 9:30pm\nSat: 7:00am - 8:00pm\nSun: closed
     </string>
     <string name="no_schedule">Schedule not available</string>
+    <string name="sample_reviews">
+        Rating: 5\t<i>3 weeks ago</i>\nGreat place, highly recommend!\n\nRating: 3\t<i>a month ago</i>\nThe food was OK.\n\nRating: 1\t<i>6 months ago</i>\nHorrible place! Never again!\n\n
+    </string>
     <!-- Settings -->
     <string name="sensor_recommendations">Sensors</string>
     <string name="OnChoice">On</string>

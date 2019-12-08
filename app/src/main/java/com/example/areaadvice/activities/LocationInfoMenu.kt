@@ -1,11 +1,7 @@
 package com.example.areaadvice.activities
 
 import android.content.ContentValues
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.os.AsyncTask
 import android.os.Bundle
-import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.areaadvice.R
@@ -13,8 +9,6 @@ import com.example.areaadvice.storage.DatabasePlaces
 import com.example.areaadvice.storage.Prefs
 import com.example.areaadvice.utils.kmToMi
 import com.squareup.picasso.Picasso
-import java.io.InputStream
-import java.net.URL
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
@@ -43,10 +37,12 @@ class LocationInfoMenu : AppCompatActivity()  {
         photo = findViewById(R.id.photo)
         val saveBtn = findViewById<ImageButton>(R.id.saveBtn)
         val delBtn = findViewById<ImageButton>(R.id.delBtn)
+        val textViewReviews = findViewById<TextView>(R.id.textViewReviews)
 
         locName.text = intent.getStringExtra("name")
         locAddress.text = intent.getStringExtra("address")
         locRating.rating = intent.getStringExtra("rating")!!.toFloat()
+        textViewReviews.text = intent.getStringExtra("reviews")
         val lat = intent.getDoubleExtra("latitude",0.0)
         val lng = intent.getDoubleExtra("longitude",0.0)
         val currentLat = intent.getFloatExtra("lat",0F)
@@ -54,25 +50,13 @@ class LocationInfoMenu : AppCompatActivity()  {
         val open = intent.getStringExtra("isOpen")
         val url = intent.getStringExtra("url")
         val urlImage = intent.getStringExtra("photo")
-        println("urlImage is $urlImage")
-        println("Url is $url")
-        /*var sub1 = urlImage.substringAfter("http")
-        sub1="http"+sub1
-        sub1=sub1.replace("\\", "")
-        sub1=sub1.substringBefore(">")
-        sub1=sub1.substring(0,sub1.length-1)*/
-        var photoRef = urlImage.substringAfter("photo_reference")
-        //photoRef = photoRef.substringBefore("width")
-        //val photoWidth = urlImage.substringAfter("width")
-        val apikey = getString(R.string.google_places_key)
-        var photoImageUrl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=1000&photoreference=$photoRef&key=$apikey"
-        //photoImageUrl=photoImageUrl.replace("PhotoWidth","1000")
-        //photoImageUrl=photoImageUrl.replace("CnRtAAAATLZNl354RwP_9UKbQ_5Psy40texXePv4oAlgP4qNEkdIrkyse7rPXYGd9D_Uj1rVsQdWT4oRz4QrYAJNpFX7rzqqMlZw2h2E2y5IKMUZ7ouD_SlcHxYq1yL4KbKUv3qtWgTK0A6QbGh87GB3sscrHRIQiG2RrmU_jF4tENr9wGS_YxoUSSDrYjWmrNfeEHSGSc3FyhNLlBU",photoRef)
-        //photoImageUrl = photoImageUrl.replace("YOUR_API_KEY",getString(R.string.google_places_key))
-        //println("sub1 is $sub1")
-        println("PhotoImageUrl is $photoImageUrl")
+
+        val photoRef = urlImage?.substringAfter("photo_reference")
+        val apiKey = getString(R.string.google_places_key)
+        val photoImageUrl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=1000" +
+                "&photoreference=$photoRef&key=$apiKey"
         loadImage(photoImageUrl)
-        //DownloadImageTask(photo).execute(photoImageUrl)
+
         val distance = distanceBetweenPoints(lat, lng, currentLat.toDouble(), currentLng.toDouble())
         if(sharedPrefs.units == 1) {
             locProximity.text = String.format("%.2f km", distance)
@@ -117,6 +101,7 @@ class LocationInfoMenu : AppCompatActivity()  {
                     put(DatabasePlaces.Col_place_Name, locName.text.toString())
                     put(DatabasePlaces.Col_Address, locAddress.text.toString())
                     put(DatabasePlaces.Col_Rating, locRating.rating.toString())
+                    put(DatabasePlaces.Col_Reviews, textViewReviews.text.toString())
                     put(DatabasePlaces.Col_Lat, intent.getDoubleExtra("latitude",0.0))
                     put(DatabasePlaces.Col_Lng, intent.getDoubleExtra("longitude",0.0))
                     put(DatabasePlaces.Col_Schedule, schedule2.toString())
@@ -165,25 +150,7 @@ class LocationInfoMenu : AppCompatActivity()  {
     }
 
     private fun loadImage(url: String){
-        Picasso.with(this)
-            .load(url)
-            .into(photo)
-        /*return try {
-            val `is`: InputStream = URL(url).content as InputStream
-            val d = Drawable.createFromStream(`is`, "src name")
-            //photo=d.toBitmap().toIcon()
-            //photo.setImageBitmap(d.toBitmap())
-            println("in loadImage")
-            photo.setImageIcon(d.toBitmap().toIcon())
-        } catch (e: Exception) {
-            println(e)
-            println("Exception")
-        }*/
-        /*val urls =
-            URL(url)
-        val bmp = BitmapFactory.decodeStream(urls.openConnection().getInputStream())
-        photo.setImageBitmap(bmp)*/
-
+        Picasso.with(this).load(url).into(photo)
     }
 }
 
