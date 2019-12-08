@@ -380,14 +380,14 @@ class Home : Fragment(), SensorEventListener {
                     if (i == 9) break // limit to 10 results to speed up results
                 }
 
-                activity!!.runOnUiThread {
+                activity?.runOnUiThread {
                     // Remember that you can only change UI elements in the main thread
                     placesAdapter.refreshData()
                     textViewLoading.visibility = View.INVISIBLE
                 }
             } else {
                 // Try to output an error message, else show a generic "no results" message
-                activity!!.runOnUiThread {
+                activity?.runOnUiThread {
                     textViewLoading.text = getString(R.string.no_results)
                 }
             }
