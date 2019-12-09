@@ -125,7 +125,8 @@ class Home : Fragment(), SensorEventListener {
         /* Steps to hide your API key:
          * 1. Create google_apis.xml in values folder (Git will ignore this file)
          * 2. Add API key as string resource named google_places_key
-         * 3. Protect yourself from Chrysnosis by deleting his GitHub branch to avoid any running errors (sorry Krishna)
+         * 3. Protect yourself from Chrysnosis by deleting his GitHub branch to avoid any running
+         * errors (sorry Krishna)
          */
         apiKey = getString(R.string.google_places_key)
         getLocationUpdates() // track location in the background
@@ -317,8 +318,9 @@ class Home : Fragment(), SensorEventListener {
         thread {
             println("https://maps.googleapis.com/maps/api/place/nearbysearch/json" +
                     "?key=$apiKey&location=$lat,$lon&$reqParam$rankByParam$openParam")
-            val placesStr = URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json" +
-                    "?key=$apiKey&location=$lat,$lon&$reqParam$rankByParam$openParam").readText()
+            val placesStr = URL("https://maps.googleapis.com/maps/api/place/nearbysearch/" +
+                    "json?key=$apiKey&location=$lat,$lon&$reqParam$rankByParam$openParam")
+                .readText()
             val placesJSON = JSONObject(placesStr)
 
             if (placesJSON.getString("status") == "OK") {
@@ -381,7 +383,7 @@ class Home : Fragment(), SensorEventListener {
             val time = review.getString("relative_time_description")
             val text = review.getString("text")
 
-            reviewStr += "Rating: $rating\t($time)\n$text\n\n"
+            reviewStr += "<b>Rating: $rating</b>&emsp;<i>$time</i><br>$text<br><br>"
             if (i == 2) break // stop at 3 reviews
         }
 
