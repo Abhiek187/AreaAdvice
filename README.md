@@ -2,6 +2,9 @@
 Have you ever been in a situation where you have no clue where to go? With the Area Advice app, you can search for anything nearby and filter by distance or ratings, whether or not it's open. But what makes this different from a typical Google search is the app's ability to give recommendations based on sensor data. If your Android phone contains a temperature or light sensor, you can get suggested areas based on how hot or cold the weather is or whether it's day or night. You can then view more info about the location, save it for later, and view it on the map as a marker. Next time you're trying to decide a place among your group, or trying out a new place, try our app out and see what you get.
 
 ## Features
+
+<img src="screenshot.png" alt="Area Advice home screen" width="300">
+
 - Search by query using the Google Places API
 - A recommendation system based on temperature and light sensors
 - Save & delete locations on a database
