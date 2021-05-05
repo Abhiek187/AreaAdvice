@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.Fragment
 import com.example.areaadvice.R
 import com.example.areaadvice.storage.Prefs
@@ -24,7 +25,7 @@ class SettingsMenu : Fragment(), SensorEventListener {
     private lateinit var sharedPref: Prefs
 
     // UI elements
-    private lateinit var senEnable: Switch
+    private lateinit var senEnable: SwitchCompat
 
     private lateinit var radiusSeekBarText: TextView
     private lateinit var radiusSeek: SeekBar
@@ -39,7 +40,7 @@ class SettingsMenu : Fragment(), SensorEventListener {
     private lateinit var radBtnDistance: RadioButton
     private lateinit var radBtnRatings: RadioButton
 
-    private lateinit var openLocEnable: Switch
+    private lateinit var openLocEnable: SwitchCompat
 
     private lateinit var textViewSensorTemp: TextView
     private lateinit var textViewSensorLight: TextView

@@ -174,7 +174,7 @@ class LocationInfoMenu : AppCompatActivity()  {
     }
 
     private fun loadImage(url: String){
-        Picasso.with(this).load(url).into(photo)
+        Picasso.get().load(url).into(photo)
     }
 }
 

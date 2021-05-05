@@ -11,13 +11,13 @@ import android.hardware.SensorManager
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
+import android.os.Looper
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -104,16 +104,6 @@ class Home : Fragment(), SensorEventListener {
         unitChoice = sharedPrefs.units
         critChoice = sharedPrefs.criteria
         radius = sharedPrefs.radiusText
-
-        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED) {
-            // Permission is not granted
-            ActivityCompat.requestPermissions(
-                activity!!,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                0
-            )
-        }
 
         textViewLoading = view.findViewById(R.id.textViewLoading)
         recyclerViewPlaces = view.findViewById(R.id.recyclerViewPlaces)
@@ -264,11 +254,12 @@ class Home : Fragment(), SensorEventListener {
 
     private fun getLocationUpdates() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity!!)
-        locationRequest = LocationRequest()
-        locationRequest.interval = 5000
-        locationRequest.fastestInterval = 5000
-        locationRequest.smallestDisplacement = 10f
-        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        locationRequest = LocationRequest.create().apply {
+            interval = 5000
+            fastestInterval = 5000
+            smallestDisplacement = 10f
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        }
 
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult?) {
@@ -288,10 +279,20 @@ class Home : Fragment(), SensorEventListener {
         startLocationUpdates()
     }
     private fun startLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
+            ActivityCompat.requestPermissions(
+                activity!!,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                0
+            )
+        }
+
         fusedLocationClient.requestLocationUpdates(
             locationRequest,
             locationCallback,
-            null // looper
+            Looper.getMainLooper() // looper
         )
     }
 

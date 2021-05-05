@@ -13,7 +13,6 @@ import com.example.areaadvice.R
 import com.example.areaadvice.activities.LocationInfoMenu
 import com.example.areaadvice.models.Place
 import com.example.areaadvice.storage.Prefs
-import kotlinx.android.synthetic.main.adapter_places.view.*
 
 class PlacesAdapter(private var context: Context, private var placesList: ArrayList<Place>)
     : RecyclerView.Adapter<ViewHolder>() {
@@ -78,8 +77,8 @@ class PlacesAdapter(private var context: Context, private var placesList: ArrayL
 
 class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     // Get all properties from adapter_places
-    val textViewName: TextView = view.textViewName
-    val ratingBar: RatingBar = view.ratingBar
-    val textViewAddress: TextView = view.textViewAddress
-    val textViewOpen: TextView = view.textViewOpen
+    val textViewName: TextView = view.findViewById(R.id.textViewName)
+    val ratingBar: RatingBar = view.findViewById(R.id.ratingBar)
+    val textViewAddress: TextView = view.findViewById(R.id.textViewAddress)
+    val textViewOpen: TextView = view.findViewById(R.id.textViewOpen)
 }
