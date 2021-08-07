@@ -37,25 +37,25 @@ class MainActivity : AppCompatActivity() {
             changeFragment(Home()) // start at home fragment
         }
 
-        navBar.setOnNavigationItemSelectedListener { item ->
+        navBar.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.Home -> {
                     val fragment = Home()
                     currentFragment = strHome
                     changeFragment(fragment)
-                    return@setOnNavigationItemSelectedListener true
+                    return@setOnItemSelectedListener true
                 }
                 R.id.savedLocations -> {
                     val fragment = SavedLocations()
                     currentFragment = strSaved
                     changeFragment(fragment)
-                    return@setOnNavigationItemSelectedListener true
+                    return@setOnItemSelectedListener true
                 }
                 R.id.Settings -> {
                     val fragment = SettingsMenu()
                     currentFragment = strSettings
                     changeFragment(fragment)
-                    return@setOnNavigationItemSelectedListener true
+                    return@setOnItemSelectedListener true
                 }
             }
 

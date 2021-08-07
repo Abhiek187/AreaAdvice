@@ -10,13 +10,17 @@
         android:id="@+id/editTextSearch"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:autofillHints=""
         android:ems="10"
         android:hint="@string/search_hint"
         android:inputType="text"
+        android:minHeight="48dp"
+        android:textColorHint="#546E7A"
         android:textSize="18sp"
         app:layout_constraintEnd_toStartOf="@+id/imageButtonSearch"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="TextContrastCheck,TextContrastCheck,TextContrastCheck,TextContrastCheck" />
 
     <ImageButton
         android:id="@+id/imageButtonSearch"

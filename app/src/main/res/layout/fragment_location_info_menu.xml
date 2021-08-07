@@ -17,12 +17,12 @@
             android:layout_marginStart="5dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="5dp"
-            android:text="Location Name Here"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Location Name Here" />
 
         <ImageView
             android:id="@+id/photo"
@@ -43,12 +43,12 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="5dp"
             android:padding="5dp"
-            android:text="Location Address Here"
             android:textAlignment="center"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/photo" />
+            app:layout_constraintTop_toBottomOf="@+id/photo"
+            tools:text="Location Address Here" />
 
         <TextView
             android:id="@+id/url"
@@ -58,12 +58,13 @@
             android:layout_marginEnd="5dp"
             android:autoLink="all"
             android:linksClickable="true"
+            android:minHeight="48dp"
             android:padding="5dp"
-            android:text="https://maps.google.com/?cid=27594649061298"
             android:textAlignment="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/locationAddress" />
+            app:layout_constraintTop_toBottomOf="@id/locationAddress"
+            tools:text="https://maps.google.com/?cid=27594649061298" />
 
         <TextView
             android:id="@+id/locationProximity"
@@ -71,10 +72,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:layout_marginTop="20dp"
-            android:text="5.0 miles"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/url" />
+            app:layout_constraintTop_toBottomOf="@+id/url"
+            tools:text="5.0 miles" />
 
         <RatingBar
             android:id="@+id/ratingBar"

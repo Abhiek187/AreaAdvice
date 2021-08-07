@@ -66,7 +66,7 @@ class SettingsMenu : Fragment(), SensorEventListener {
         val view = inflater.inflate(R.layout.fragment_settings_menu, container, false)
         sharedPref = Prefs(mContext)
 
-        senEnable= view.findViewById(R.id.enableSensorRecToggle)
+        senEnable = view.findViewById(R.id.enableSensorRecToggle)
 
         radiusSeekBarText = view.findViewById(R.id.radiusSeekBarText)
         radiusSeek = view.findViewById(R.id.radiusSeekBar)
@@ -84,7 +84,7 @@ class SettingsMenu : Fragment(), SensorEventListener {
 
         openLocEnable = view.findViewById(R.id.showOpenPlacesToggle)
 
-        this.sensorManager = activity!!.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        this.sensorManager = requireActivity().getSystemService(Context.SENSOR_SERVICE) as SensorManager
         temp = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)
         light = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
 

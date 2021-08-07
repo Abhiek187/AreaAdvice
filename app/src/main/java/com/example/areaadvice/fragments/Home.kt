@@ -90,7 +90,7 @@ class Home : Fragment(), SensorEventListener {
 
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
-        this.sensorManager = activity!!.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        this.sensorManager = requireActivity().getSystemService(Context.SENSOR_SERVICE) as SensorManager
         temp = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)
         light = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
         unitTemp = getString(R.string.temp_celsius)
@@ -253,7 +253,7 @@ class Home : Fragment(), SensorEventListener {
     }
 
     private fun getLocationUpdates() {
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity!!)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         locationRequest = LocationRequest.create().apply {
             interval = 5000
             fastestInterval = 5000
@@ -283,7 +283,7 @@ class Home : Fragment(), SensorEventListener {
             != PackageManager.PERMISSION_GRANTED) {
             // Permission is not granted
             ActivityCompat.requestPermissions(
-                activity!!,
+                requireActivity(),
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                 0
             )
