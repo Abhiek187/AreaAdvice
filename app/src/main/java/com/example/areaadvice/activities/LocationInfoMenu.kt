@@ -153,10 +153,10 @@ class LocationInfoMenu : AppCompatActivity()  {
             val cursor = db.getAllRows()
             with(cursor) {
                 while (moveToNext()) {
-                    if (this.getString(getColumnIndex(DatabasePlaces.Col_Address))
+                    if (this.getString(getColumnIndexOrThrow(DatabasePlaces.Col_Address))
                         == locAddress.text.toString()) {
                         repeat = true
-                        id = this.getInt(getColumnIndex(DatabasePlaces.Col_Id))
+                        id = this.getInt(getColumnIndexOrThrow(DatabasePlaces.Col_Id))
                         break
                     }
                 }

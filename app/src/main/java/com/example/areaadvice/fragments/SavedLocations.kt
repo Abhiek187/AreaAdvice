@@ -55,23 +55,23 @@ class SavedLocations : Fragment() {
             cursor.moveToFirst()
             while (!cursor.isAfterLast) {
                 val mLocationName =
-                    cursor.getString(cursor.getColumnIndex(DatabasePlaces.Col_place_Name))
+                    cursor.getString(cursor.getColumnIndexOrThrow(DatabasePlaces.Col_place_Name))
                 val mLocationAddress =
-                    cursor.getString(cursor.getColumnIndex(DatabasePlaces.Col_Address))
+                    cursor.getString(cursor.getColumnIndexOrThrow(DatabasePlaces.Col_Address))
                 val mLocationRating =
-                    cursor.getFloat(cursor.getColumnIndex(DatabasePlaces.Col_Rating))
-                val reviews = cursor.getString(cursor.getColumnIndex(DatabasePlaces.Col_Reviews))
+                    cursor.getFloat(cursor.getColumnIndexOrThrow(DatabasePlaces.Col_Rating))
+                val reviews = cursor.getString(cursor.getColumnIndexOrThrow(DatabasePlaces.Col_Reviews))
                 val mLocationLat =
-                    cursor.getDouble(cursor.getColumnIndex(DatabasePlaces.Col_Lat))
+                    cursor.getDouble(cursor.getColumnIndexOrThrow(DatabasePlaces.Col_Lat))
                 val mLocationLng =
-                    cursor.getDouble(cursor.getColumnIndex(DatabasePlaces.Col_Lng))
+                    cursor.getDouble(cursor.getColumnIndexOrThrow(DatabasePlaces.Col_Lng))
                 val mSchedule =
-                    cursor.getString(cursor.getColumnIndex(DatabasePlaces.Col_Schedule))
+                    cursor.getString(cursor.getColumnIndexOrThrow(DatabasePlaces.Col_Schedule))
                 val mOpen =
-                    cursor.getString(cursor.getColumnIndex(DatabasePlaces.Col_Open))
+                    cursor.getString(cursor.getColumnIndexOrThrow(DatabasePlaces.Col_Open))
                 val openBool = mOpen == "Open"
-                val photoImage = cursor.getString(cursor.getColumnIndex(DatabasePlaces.Col_Photo))
-                val mUrl = cursor.getString(cursor.getColumnIndex(DatabasePlaces.Col_Url))
+                val photoImage = cursor.getString(cursor.getColumnIndexOrThrow(DatabasePlaces.Col_Photo))
+                val mUrl = cursor.getString(cursor.getColumnIndexOrThrow(DatabasePlaces.Col_Url))
 
                 val place = Place(address = mLocationAddress, name = mLocationName,
                     rating = mLocationRating, reviews = reviews, url = mUrl, latitude = mLocationLat,
