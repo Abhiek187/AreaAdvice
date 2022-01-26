@@ -262,9 +262,7 @@ class Home : Fragment(), SensorEventListener {
         }
 
         locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult?) {
-                locationResult ?: return
-
+            override fun onLocationResult(locationResult: LocationResult) {
                 if (locationResult.locations.isNotEmpty()) {
                     // get latest location
                     val location = locationResult.lastLocation
