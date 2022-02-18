@@ -22,14 +22,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnMapsSdkInitializ
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Use the new map renderer, if available
+        MapsInitializer.initialize(applicationContext, MapsInitializer.Renderer.LATEST, this)
+
         setContentView(R.layout.activity_maps)
 
         sharedPref = Prefs(this)
         lat = sharedPref.lat.toDouble()
         lon = sharedPref.lng.toDouble()
-
-        // Use the new map renderer, if available
-        MapsInitializer.initialize(applicationContext, MapsInitializer.Renderer.LATEST, this)
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
