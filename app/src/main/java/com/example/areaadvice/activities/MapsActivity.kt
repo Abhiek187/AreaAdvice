@@ -7,16 +7,13 @@ import android.widget.Toast
 import com.example.areaadvice.R
 import com.example.areaadvice.storage.DatabasePlaces
 import com.example.areaadvice.storage.Prefs
+import com.google.android.gms.maps.*
 import kotlin.math.abs
 
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnMapsSdkInitializedCallback {
 
     private lateinit var mMap: GoogleMap
     private lateinit var sharedPref: Prefs
@@ -31,10 +28,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         lat = sharedPref.lat.toDouble()
         lon = sharedPref.lng.toDouble()
 
+        // Use the new map renderer, if available
+        MapsInitializer.initialize(applicationContext, MapsInitializer.Renderer.LATEST, this)
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+    }
+
+    override fun onMapsSdkInitialized(renderer: MapsInitializer.Renderer) {
+        when (renderer) {
+            MapsInitializer.Renderer.LATEST -> println("The latest version of the renderer is used.")
+            MapsInitializer.Renderer.LEGACY -> println("The legacy version of the renderer is used.")
+        }
     }
 
     /**
