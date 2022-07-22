@@ -258,19 +258,19 @@ class Home : Fragment(), SensorEventListener {
             interval = 5000
             fastestInterval = 5000
             smallestDisplacement = 10f
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+            priority = Priority.PRIORITY_HIGH_ACCURACY
         }
 
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 if (locationResult.locations.isNotEmpty()) {
                     // get latest location
-                    val location = locationResult.lastLocation
-
-                    lat = location.latitude
-                    lon = location.longitude
-                    sharedPrefs.lat = lat.toFloat()
-                    sharedPrefs.lng = lon.toFloat()
+                    locationResult.lastLocation?.let { location ->
+                        lat = location.latitude
+                        lon = location.longitude
+                        sharedPrefs.lat = lat.toFloat()
+                        sharedPrefs.lng = lon.toFloat()
+                    }
                 }
             }
         }
