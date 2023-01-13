@@ -254,12 +254,10 @@ class Home : Fragment(), SensorEventListener {
 
     private fun getLocationUpdates() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-        locationRequest = LocationRequest.create().apply {
-            interval = 5000
-            fastestInterval = 5000
-            smallestDisplacement = 10f
-            priority = Priority.PRIORITY_HIGH_ACCURACY
-        }
+        locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 5000)
+            .setMinUpdateIntervalMillis(5000)
+            .setMinUpdateDistanceMeters(10f)
+            .build()
 
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
