@@ -1,6 +1,5 @@
 package com.example.areaadvice.activities
 
-import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -8,12 +7,10 @@ import com.example.areaadvice.R
 import com.example.areaadvice.storage.DatabasePlaces
 import com.example.areaadvice.storage.Prefs
 import com.google.android.gms.maps.*
-import kotlin.math.abs
-
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnMapsSdkInitializedCallback {
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
     private lateinit var sharedPref: Prefs
@@ -22,10 +19,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnMapsSdkInitializ
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Use the new map renderer, if available
-        MapsInitializer.initialize(applicationContext, MapsInitializer.Renderer.LATEST, this)
-
         setContentView(R.layout.activity_maps)
 
         sharedPref = Prefs(this)
@@ -38,13 +31,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnMapsSdkInitializ
         mapFragment.getMapAsync(this)
     }
 
-    override fun onMapsSdkInitialized(renderer: MapsInitializer.Renderer) {
-        when (renderer) {
-            MapsInitializer.Renderer.LATEST -> println("The latest version of the renderer is used.")
-            MapsInitializer.Renderer.LEGACY -> println("The legacy version of the renderer is used.")
-        }
-    }
-
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -54,23 +40,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnMapsSdkInitializ
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
-    @SuppressLint("MissingPermission")
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         mMap.uiSettings.isCompassEnabled = true
         mMap.uiSettings.isZoomControlsEnabled = true
 
-        if (abs(lat) > 90 || abs(lon) > 180) {
-            // Permission is not granted
-            Toast.makeText(this, "Location permission not granted", Toast.LENGTH_SHORT)
-                .show()
-        } else {
+        try {
             mMap.isMyLocationEnabled = true
             mMap.uiSettings.isMyLocationButtonEnabled = true
 
             // Zoom to current location
             val location = LatLng(lat, lon)
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 12f))
+        } catch (e: SecurityException) {
+            // Permission is not granted
+            Toast.makeText(this, "Location permission not granted", Toast.LENGTH_SHORT)
+                .show()
         }
 
         // Place markers on all saved locations
