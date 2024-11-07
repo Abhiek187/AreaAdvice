@@ -9,11 +9,12 @@ import android.text.method.LinkMovementMethod
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import coil3.load
 import com.example.areaadvice.R
 import com.example.areaadvice.storage.DatabasePlaces
 import com.example.areaadvice.storage.Prefs
 import com.example.areaadvice.utils.kmToMi
-import com.squareup.picasso.Picasso
+import java.util.Locale
 import kotlin.math.*
 
 
@@ -76,9 +77,17 @@ class LocationInfoMenu : AppCompatActivity()  {
 
         val distance = distanceBetweenPoints(lat, lng, currentLat.toDouble(), currentLng.toDouble())
         if(sharedPrefs.units == 1) {
-            locProximity.text = String.format("%.2f km", distance)
+            locProximity.text = String.format(
+                Locale.getDefault(),
+                "%.2f km",
+                distance
+            )
         } else {
-            locProximity.text = String.format("%.2f mi", kmToMi(distance.toFloat()))
+            locProximity.text = String.format(
+                Locale.getDefault(),
+                "%.2f mi",
+                kmToMi(distance.toFloat())
+            )
         }
 
         // Format schedule
@@ -174,7 +183,7 @@ class LocationInfoMenu : AppCompatActivity()  {
     }
 
     private fun loadImage(url: String){
-        Picasso.get().load(url).into(photo)
+        photo.load(url)
     }
 }
 
