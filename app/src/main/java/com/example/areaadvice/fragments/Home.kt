@@ -31,8 +31,11 @@ import com.example.areaadvice.utils.miToM
 import com.google.android.gms.location.*
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.io.OutputStreamWriter
+import java.net.HttpURLConnection
 import java.net.URL
-import java.net.URLEncoder
 import kotlin.concurrent.thread
 import kotlin.math.abs
 
@@ -52,7 +55,6 @@ class Home : Fragment(), SensorEventListener {
     private lateinit var mapBtn: ImageButton
     private lateinit var clearBtn: ImageButton
     private lateinit var recBtn: Button
-    private var result: JSONObject? = null
 
     // Sensor variables
     private lateinit var sensorManager: SensorManager
@@ -157,20 +159,28 @@ class Home : Fragment(), SensorEventListener {
             }
 
             val reqParam = if (useRatings) {
-                // Convert radius to meters
-                if (useMetrics) {
-                    "radius=${radius.toFloat() * 1000}"
-                } else {
-                    "radius=${miToM(radius.toFloat())}"
-                }
+                mapOf(
+                    "locationBias" to mapOf(
+                        "circle" to mapOf(
+                            "center" to mapOf(
+                                "latitude" to lat,
+                                "longitude" to lon
+                            ),
+                            // Convert radius to meters
+                            "radius" to if (useMetrics) {
+                                radius.toFloat() * 1000
+                            } else {
+                                miToM(radius.toFloat())
+                            }
+                        )
+                    )
+                )
             } else {
-                "rankby=distance"
+                mapOf("rankPreference" to "DISTANCE")
             }
             val rankByParam = when {
                 query.isNotEmpty() -> {
-                    // Need to convert user input to encoded query string
-                    val encodedQuery = URLEncoder.encode(query, "UTF-8")
-                    "&keyword=$encodedQuery"
+                    mapOf("textQuery" to query)
                 }
                 else -> {
                     Toast.makeText(mContext, "A query is required.",
@@ -178,7 +188,7 @@ class Home : Fragment(), SensorEventListener {
                     return@setOnClickListener
                 }
             }
-            val openParam = if (useHours) "&opennow" else ""
+            val openParam = mapOf("openNow" to useHours)
 
             placesList.clear()
             placesAdapter.refreshData()
@@ -219,19 +229,29 @@ class Home : Fragment(), SensorEventListener {
             }
 
             val reqParam = if (useRatings) {
-                // Convert radius to meters
-                if (useMetrics) {
-                    "radius=${radius.toFloat() * 1000}"
-                } else {
-                    "radius=${miToM(radius.toFloat())}"
-                }
+                mapOf(
+                    "locationBias" to mapOf(
+                        "circle" to mapOf(
+                            "center" to mapOf(
+                                "latitude" to lat,
+                                "longitude" to lon
+                            ),
+                            // Convert radius to meters
+                            "radius" to if (useMetrics) {
+                                radius.toFloat() * 1000
+                            } else {
+                                miToM(radius.toFloat())
+                            }
+                        )
+                    )
+                )
             } else {
-                "rankby=distance"
+                mapOf("rankPreference" to "DISTANCE")
             }
             val rankByParam = when {
                 senEnable -> {
                     // Use a preset type from the sensors
-                    "&type=$recommendations"
+                    mapOf("includedType" to recommendations)
                 }
                 else -> {
                     Toast.makeText(mContext, "Sensors are disabled, so a query is required.",
@@ -239,7 +259,7 @@ class Home : Fragment(), SensorEventListener {
                     return@setOnClickListener
                 }
             }
-            val openParam = if (useHours) "&opennow" else ""
+            val openParam = mapOf("openNow" to useHours)
 
             placesList.clear()
             placesAdapter.refreshData()
@@ -317,50 +337,75 @@ class Home : Fragment(), SensorEventListener {
         sensorManager.unregisterListener(this)
     }
 
-    private fun recommendPlaces(reqParam: String, rankByParam: String, openParam: String) {
+    private fun recommendPlaces(
+        reqParam: Map<String, Any>,
+        rankByParam: Map<String, Any>,
+        openParam: Map<String, Any>
+    ) {
         // Use Google Places API to look up locations (must be done on a separate thread)
         thread {
-            println("https://maps.googleapis.com/maps/api/place/nearbysearch/json" +
-                    "?key=$apiKey&location=$lat,$lon&$reqParam$rankByParam$openParam")
-            val placesStr = URL("https://maps.googleapis.com/maps/api/place/nearbysearch/" +
-                    "json?key=$apiKey&location=$lat,$lon&$reqParam$rankByParam$openParam")
-                .readText()
+            val placesUrl = URL("https://places.googleapis.com/v1/places:searchText")
+            val placesBody = reqParam + rankByParam + openParam + mapOf(
+                "pageSize" to 10 // limit to 10 results to speed up results
+            )
+            val placesBodyStr = JSONObject(placesBody).toString()
+            val placesResponseFields = listOf(
+                "places.id" // Essentials (IDs Only)
+            )
+
+            val placesStr = sendPlacesRequest(
+                method = "POST",
+                url = placesUrl,
+                body = placesBodyStr,
+                fields = placesResponseFields
+            )
             val placesJSON = JSONObject(placesStr)
+            val places = placesJSON.getJSONArray("places")
 
-            if (placesJSON.getString("status") == "OK") {
+            if (places.length() > 0) {
                 // At least one result is available
-                val places = placesJSON.getJSONArray("results")
-
                 for (i in 0 until places.length()) {
-                    val placeID = places.getJSONObject(i).getString("place_id")
+                    val placeID = places.getJSONObject(i).getString("id")
 
-                    val detailsStr = URL("https://maps.googleapis.com/maps/api/place/" +
-                            "details/json?key=$apiKey&place_id=$placeID&fields=photo,name," +
-                            "formatted_address,rating,review,geometry,type,opening_hours,url"
-                    ).readText()
+                    val detailsUrl = URL("https://places.googleapis.com/v1/places/$placeID")
+                    val detailsResponseFields = listOf(
+                        "photos", // Essentials (IDs Only)
+                        "displayName", // Pro
+                        "formattedAddress", // Essentials
+                        "rating", // Enterprise
+                        "reviews", // Enterprise + Atmosphere
+                        "location", // Essentials
+                        "regularOpeningHours", // Enterprise
+                        "googleMapsUri" // Pro
+                    )
+
+                    val detailsStr = sendPlacesRequest(
+                        method = "GET",
+                        url = detailsUrl,
+                        fields = detailsResponseFields
+                    )
                     val detailsJSON = JSONObject(detailsStr)
-                    println(detailsJSON.toString(2)) //note: long println
-                    result = detailsJSON.getJSONObject("result")
-                    val address = result!!.getString("formatted_address")
-                    val location = result!!.getJSONObject("geometry")
-                        .getJSONObject("location")
-                    val name = result!!.getString("name")
-                    val hours = result!!.optJSONObject("opening_hours")
-                    val isOpen = hours?.getBoolean("open_now") ?: false
-                    val schedule = hours?.getJSONArray("weekday_text")
-                    val image = result!!.optJSONArray("photos")?.getJSONObject(0)
-                        ?.getString("photo_reference")
-                    val rating = result!!.optDouble("rating", 0.0)
-                    val reviews = formReview(result!!.optJSONArray("reviews"))
-                    val url = result!!.getString("url")
+
+                    val address = detailsJSON.getString("formattedAddress")
+                    val location = detailsJSON.getJSONObject("location")
+                    val name = detailsJSON.getJSONObject("displayName")
+                        .getString("text")
+                    val hours = detailsJSON.optJSONObject("regularOpeningHours")
+                    val isOpen = hours?.getBoolean("openNow") ?: false
+                    val schedule = hours?.getJSONArray("weekdayDescriptions")
+                    val image = detailsJSON.optJSONArray("photos")?.getJSONObject(0)
+                        ?.getString("name")
+                    val rating = detailsJSON.optDouble("rating", 0.0)
+                    val reviews = formReview(detailsJSON.optJSONArray("reviews"))
+                    val url = detailsJSON.getString("googleMapsUri")
 
                     val place = Place(address = address, name = name, isOpen = isOpen,
                         reviews = reviews, rating = rating.toFloat(), url = url, photo = image,
-                        latitude = location.getDouble("lat"),
-                        longitude = location.getDouble("lng"), schedule = schedule.toString())
+                        latitude = location.getDouble("latitude"),
+                        longitude = location.getDouble("longitude"),
+                        schedule = schedule.toString())
 
                     placesList.add(place)
-                    if (i == 9) break // limit to 10 results to speed up results
                 }
 
                 activity?.runOnUiThread {
@@ -377,6 +422,45 @@ class Home : Fragment(), SensorEventListener {
         }
     }
 
+    private fun sendPlacesRequest(
+        method: String, url: URL, body: String? = null, fields: List<String>
+    ): String {
+        with(url.openConnection() as HttpURLConnection) {
+            println("Method: $method")
+            println("URL: $url")
+            println("Request Body: $body")
+
+            requestMethod = method
+            setRequestProperty("Content-Type", "application/json")
+            setRequestProperty("X-Goog-Api-Key", apiKey)
+            setRequestProperty("X-Goog-FieldMask", fields.joinToString(","))
+            println("Request Headers: $requestProperties")
+
+            if (body != null) {
+                OutputStreamWriter(outputStream).use { writer ->
+                    writer.write(body)
+                    writer.flush()
+                }
+            }
+
+            println("Response Code: $responseCode")
+
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                BufferedReader(InputStreamReader(inputStream)).use { reader ->
+                    val response = reader.readText()
+                    println("Response Body: $response")
+                    return response
+                }
+            } else {
+                BufferedReader(InputStreamReader(errorStream)).use { reader ->
+                    val response = reader.readText()
+                    println("Response Body: $response")
+                    return response
+                }
+            }
+        }
+    }
+
     private fun formReview(reviews: JSONArray?): String {
         reviews ?: return "No reviews yet" // default if reviews array doesn't exist
         var reviewStr = ""
@@ -384,8 +468,8 @@ class Home : Fragment(), SensorEventListener {
         for (i in 0 until reviews.length()) {
             val review = reviews.getJSONObject(i)
             val rating = review.getInt("rating")
-            val time = review.getString("relative_time_description")
-            val text = review.getString("text")
+            val time = review.getString("relativePublishTimeDescription")
+            val text = review.getJSONObject("text").getString("text")
 
             reviewStr += "<b>Rating: $rating</b>&emsp;<i>$time</i><br>$text<br><br>"
             if (i == 2) break // stop at 3 reviews

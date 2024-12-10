@@ -70,8 +70,10 @@ class LocationInfoMenu : AppCompatActivity()  {
             var width = (Resources.getSystem().displayMetrics.widthPixels * 0.9).roundToInt()
             if (width > 1600) width = 1600 // max width accepts 1 to 1600 pixels
             val apiKey = getString(R.string.google_places_key)
-            val photoImageUrl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=$width" +
-                    "&photoreference=$photoRef&key=$apiKey"
+
+            // Enterprise
+            val photoImageUrl = "https://places.googleapis.com/v1/$photoRef/media" +
+                    "?maxWidthPx=$width&key=$apiKey"
             loadImage(photoImageUrl)
         }
 
