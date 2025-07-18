@@ -27,6 +27,7 @@ import com.example.areaadvice.activities.MapsActivity
 import com.example.areaadvice.adapters.PlacesAdapter
 import com.example.areaadvice.models.Place
 import com.example.areaadvice.storage.Prefs
+import com.example.areaadvice.utils.getSignature
 import com.example.areaadvice.utils.miToM
 import com.google.android.gms.location.*
 import org.json.JSONArray
@@ -434,6 +435,8 @@ class Home : Fragment(), SensorEventListener {
             setRequestProperty("Content-Type", "application/json")
             setRequestProperty("X-Goog-Api-Key", apiKey)
             setRequestProperty("X-Goog-FieldMask", fields.joinToString(","))
+            setRequestProperty("X-Android-Package", context?.packageName)
+            setRequestProperty("X-Android-Cert", getSignature(context))
             println("Request Headers: $requestProperties")
 
             if (body != null) {
