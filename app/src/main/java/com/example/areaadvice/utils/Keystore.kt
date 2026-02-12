@@ -35,7 +35,7 @@ fun getSignature(context: Context?): String? {
             )
             val signatures = packageInfo.signatures
 
-            return if (signatures == null || signatures.isEmpty()) {
+            return if (signatures.isNullOrEmpty()) {
                 null
             } else {
                 signatureDigest(signatures.last())

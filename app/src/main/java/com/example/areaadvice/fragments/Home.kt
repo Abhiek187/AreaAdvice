@@ -486,7 +486,7 @@ class Home : Fragment(), SensorEventListener {
         val n = cm.activeNetwork
         n?.let {
             val nc = cm.getNetworkCapabilities(n)
-            // Check for both wifi and cellular network
+            // Check for both Wi-Fi and cellular network
             return nc!!.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
                     nc.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
         }

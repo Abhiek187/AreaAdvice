@@ -139,7 +139,7 @@ class LocationInfoMenu : AppCompatActivity()  {
                         0.0))
                     put(DatabasePlaces.Col_Lng, intent.getDoubleExtra("longitude",
                         0.0))
-                    put(DatabasePlaces.Col_Schedule, schedule2.toString())
+                    put(DatabasePlaces.Col_Schedule, schedule2)
                     put(DatabasePlaces.Col_Open, open)
                     put(DatabasePlaces.Col_Url, url)
                     put(DatabasePlaces.Col_Photo, photoRef)

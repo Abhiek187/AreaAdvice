@@ -52,7 +52,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             // Zoom to current location
             val location = LatLng(lat, lon)
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 12f))
-        } catch (e: SecurityException) {
+        } catch (_: SecurityException) {
             // Permission is not granted
             Toast.makeText(this, "Location permission not granted", Toast.LENGTH_SHORT)
                 .show()
